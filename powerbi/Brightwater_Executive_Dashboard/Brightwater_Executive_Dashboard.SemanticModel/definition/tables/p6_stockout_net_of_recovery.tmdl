@@ -1,0 +1,34 @@
+table p6_stockout_net_of_recovery
+
+	column driver
+		dataType: string
+		sourceColumn: driver
+
+	column method
+		dataType: string
+		sourceColumn: method
+
+	column variant
+		dataType: string
+		sourceColumn: variant
+
+	column estimate_eur
+		dataType: double
+		summarizeBy: none
+		sourceColumn: estimate_eur
+
+	partition p6_stockout_net_of_recovery = m
+		mode: import
+		source =
+			let
+			    Source = Csv.Document(File.Contents(AnalyticsFolder & "\p6_stockout_net_of_recovery.csv"),
+			                          [Delimiter = ",", Encoding = 65001, QuoteStyle = QuoteStyle.Csv]),
+			    Promoted = Table.PromoteHeaders(Source, [PromoteAllScalars = true]),
+			    Typed = Table.TransformColumnTypes(Promoted, {
+			        {"driver", type text},
+			        {"method", type text},
+			        {"variant", type text},
+			        {"estimate_eur", type number}
+			    }, "en-US")
+			in
+			    Typed

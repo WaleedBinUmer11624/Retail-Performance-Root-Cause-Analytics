@@ -1,0 +1,54 @@
+table p6_faulty_reasons
+
+	column return_reason
+		dataType: string
+		sourceColumn: return_reason
+
+	column returns_value_py
+		dataType: double
+		summarizeBy: none
+		sourceColumn: returns_value_py
+
+	column returns_value_cy
+		dataType: double
+		summarizeBy: none
+		sourceColumn: returns_value_cy
+
+	column returned_units_py
+		dataType: int64
+		summarizeBy: none
+		sourceColumn: returned_units_py
+
+	column returned_units_cy
+		dataType: int64
+		summarizeBy: none
+		sourceColumn: returned_units_cy
+
+	column value_change
+		dataType: double
+		summarizeBy: none
+		sourceColumn: value_change
+
+	column value_change_pct
+		dataType: double
+		summarizeBy: none
+		sourceColumn: value_change_pct
+
+	partition p6_faulty_reasons = m
+		mode: import
+		source =
+			let
+			    Source = Csv.Document(File.Contents(AnalyticsFolder & "\p6_faulty_reasons.csv"),
+			                          [Delimiter = ",", Encoding = 65001, QuoteStyle = QuoteStyle.Csv]),
+			    Promoted = Table.PromoteHeaders(Source, [PromoteAllScalars = true]),
+			    Typed = Table.TransformColumnTypes(Promoted, {
+			        {"return_reason", type text},
+			        {"returns_value_py", type number},
+			        {"returns_value_cy", type number},
+			        {"returned_units_py", Int64.Type},
+			        {"returned_units_cy", Int64.Type},
+			        {"value_change", type number},
+			        {"value_change_pct", type number}
+			    }, "en-US")
+			in
+			    Typed

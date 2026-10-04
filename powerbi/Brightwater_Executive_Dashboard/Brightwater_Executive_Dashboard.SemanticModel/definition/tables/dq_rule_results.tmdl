@@ -1,0 +1,74 @@
+table dq_rule_results
+
+	column rule_id
+		dataType: string
+		sourceColumn: rule_id
+
+	column table
+		dataType: string
+		sourceColumn: table
+
+	column dimension
+		dataType: string
+		sourceColumn: dimension
+
+	column check
+		dataType: string
+		sourceColumn: check
+
+	column severity
+		dataType: string
+		sourceColumn: severity
+
+	column treatment
+		dataType: string
+		sourceColumn: treatment
+
+	column rows_checked
+		dataType: int64
+		formatString: "#,0"
+		summarizeBy: none
+		sourceColumn: rows_checked
+
+	column rows_failed
+		dataType: int64
+		formatString: "#,0"
+		summarizeBy: none
+		sourceColumn: rows_failed
+
+	column revenue_affected
+		dataType: decimal
+		formatString: "#,0.00"
+		summarizeBy: none
+		sourceColumn: revenue_affected
+
+	column evidence
+		dataType: string
+		sourceColumn: evidence
+
+	column status
+		dataType: string
+		sourceColumn: status
+
+	column failure_rate_pct
+		dataType: double
+		formatString: "#,0.00"
+		summarizeBy: none
+		sourceColumn: failure_rate_pct
+
+	column rationale
+		dataType: string
+		sourceColumn: rationale
+
+	partition dq_rule_results = m
+		mode: import
+		source =
+			let
+			    Source = Csv.Document(File.Contents(DqFolder & "\dq_rule_results.csv"),
+			                          [Delimiter = ",", Encoding = 65001, QuoteStyle = QuoteStyle.Csv]),
+			    Promoted = Table.PromoteHeaders(Source, [PromoteAllScalars = true]),
+			    Typed = Table.TransformColumnTypes(Promoted, {
+			        {"rule_id", type text}, {"table", type text}, {"dimension", type text}, {"check", type text}, {"severity", type text}, {"treatment", type text}, {"rows_checked", Int64.Type}, {"rows_failed", Int64.Type}, {"revenue_affected", Currency.Type}, {"evidence", type text}, {"status", type text}, {"failure_rate_pct", type number}, {"rationale", type text}
+			    }, "en-US")
+			in
+			    Typed

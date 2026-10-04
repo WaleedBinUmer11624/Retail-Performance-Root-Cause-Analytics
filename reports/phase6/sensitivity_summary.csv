@@ -1,0 +1,6 @@
+driver,n_variants,min,max,central,same_sign,within_band,robust,variants_excluded_low_coverage,min_all_variants,max_all_variants
+electronics_faulty_returns,4,-31588.73,-26225.686501,-31588.73,True,True,True,0,-31588.73,-26225.686501
+electronics_stockouts_primary,21,-44460.376486,-23963.216711,-37235.346776,True,True,True,4,-44460.376486,-7160.621062
+electronics_stockouts_upper,21,-122752.866348,-62576.353847,-100410.753735,True,True,True,4,-122752.866348,-14168.265291
+home_kitchen_promotion,16,-380272.273058,97505.293502,-186146.420449,False,False,False,0,-380272.273058,97505.293502
+store_cluster_excess,13,-435210.121525,-377245.083136,-397778.209303,True,True,True,0,-435210.121525,-377245.083136

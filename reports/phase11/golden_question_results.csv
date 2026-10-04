@@ -1,0 +1,23 @@
+case_id,category,result,detail,factual_consistency,groundedness,retrieval_relevance,schema_valid,source_attribution,tool_selection,unsupported_handling
+EV01,Revenue,PASS,all metrics passed,PASS,PASS,PASS,PASS,PASS,PASS,
+EV02,Root causes,PASS,all metrics passed,PASS,PASS,PASS,PASS,PASS,PASS,
+EV03,Evidence,PASS,all metrics passed,PASS,PASS,PASS,PASS,PASS,PASS,
+EV04,Stores,PASS,all metrics passed,PASS,PASS,PASS,PASS,PASS,PASS,
+EV05,Stockouts,PASS,all metrics passed,PASS,PASS,PASS,PASS,PASS,PASS,
+EV06,Stockouts,PASS,all metrics passed,PASS,PASS,PASS,PASS,PASS,PASS,
+EV07,Returns,PASS,all metrics passed,PASS,PASS,PASS,PASS,PASS,PASS,
+EV08,Promotions,PASS,all metrics passed,PASS,PASS,PASS,PASS,PASS,PASS,
+EV09,Products,PASS,all metrics passed,PASS,PASS,PASS,PASS,PASS,PASS,
+EV10,Margin,PASS,all metrics passed,PASS,PASS,PASS,PASS,PASS,PASS,
+EV11,Forecasting,PASS,all metrics passed,PASS,PASS,PASS,PASS,PASS,PASS,
+EV12,Forecasting,PASS,all metrics passed,PASS,PASS,PASS,PASS,PASS,PASS,
+EV13,Forecasting,PASS,all metrics passed,PASS,PASS,PASS,PASS,PASS,PASS,
+EV14,Methodology,PASS,all metrics passed,PASS,PASS,PASS,PASS,PASS,PASS,
+EV15,Root causes,PASS,all metrics passed,PASS,PASS,PASS,PASS,PASS,PASS,
+EV16,Stores,PASS,all metrics passed,PASS,PASS,PASS,PASS,PASS,PASS,
+EV17,Unsupported,PASS,all metrics passed,PASS,PASS,PASS,PASS,PASS,PASS,PASS
+EV18,Unsupported,PASS,all metrics passed,PASS,PASS,PASS,PASS,PASS,PASS,PASS
+EV19,Adversarial,PASS,all metrics passed,PASS,PASS,PASS,PASS,PASS,PASS,PASS
+EV20,Adversarial,PASS,all metrics passed,PASS,PASS,PASS,PASS,PASS,PASS,PASS
+EV21,Adversarial,PASS,all metrics passed,PASS,PASS,PASS,PASS,PASS,PASS,PASS
+EV22,Adversarial,PASS,all metrics passed,PASS,PASS,PASS,PASS,PASS,PASS,PASS

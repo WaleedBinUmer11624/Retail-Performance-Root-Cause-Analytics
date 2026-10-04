@@ -1,0 +1,118 @@
+erDiagram
+    dim_retail_week ||--o{ dim_date : "rolls up"
+    dim_date ||--o{ fact_sales : "date_key"
+    dim_store ||--o{ fact_sales : "store_key"
+    dim_product ||--o{ fact_sales : "product_key"
+    dim_promotion ||--o{ fact_sales : "promotion_key"
+    dim_date ||--o{ fact_returns : "return_date_key"
+    dim_date ||--o{ fact_returns : "original_sale_date_key (role)"
+    dim_store ||--o{ fact_returns : "store_key (return store)"
+    dim_store ||--o{ fact_returns : "original_sale_store_key (role)"
+    dim_product ||--o{ fact_returns : "product_key"
+    fact_sales |o--o{ fact_returns : "original_sales_line_id"
+    dim_date ||--o{ fact_inventory : "snapshot_date_key"
+    dim_retail_week ||--o{ fact_inventory : "retail_week_key"
+    dim_store ||--o{ fact_inventory : "store_key"
+    dim_product ||--o{ fact_inventory : "product_key"
+    dim_retail_week ||--o{ fact_targets : "retail_week_key"
+    dim_store ||--o{ fact_targets : "store_key"
+    dim_promotion ||--o{ fact_promotion_coverage : "promotion_key"
+    dim_store ||--o{ fact_promotion_coverage : "store_key"
+    dim_product ||--o{ fact_promotion_coverage : "product_key"
+
+    fact_sales {
+        bigint sales_line_id UK
+        int date_key FK
+        int store_key FK
+        int product_key FK
+        int promotion_key FK
+        varchar transaction_id PK "degenerate"
+        smallint line_number PK
+        smallint quantity
+        decimal gross_amount
+        decimal discount_amount
+        decimal sales_revenue
+        decimal cost_amount
+        tinyint is_promoted
+        tinyint is_late_arriving
+        varchar source_file "lineage"
+        int source_row "lineage"
+    }
+    fact_returns {
+        varchar return_id PK
+        int return_date_key FK
+        int store_key FK
+        int product_key FK
+        int original_sale_date_key FK
+        int original_sale_store_key FK
+        bigint original_sales_line_id
+        smallint return_quantity
+        decimal refund_value
+        decimal restock_cost_credit
+        varchar return_reason
+    }
+    fact_inventory {
+        int store_key PK
+        int product_key PK
+        int snapshot_date_key PK
+        int retail_week_key FK
+        int opening_stock
+        int received_qty
+        int sold_qty
+        int closing_stock
+        tinyint is_in_stock
+    }
+    fact_targets {
+        int store_key PK
+        int retail_week_key PK
+        decimal target_net_revenue
+        varchar target_version
+    }
+    fact_promotion_coverage {
+        int promotion_key PK
+        int store_key PK
+        int product_key PK
+        date start_date
+        date end_date
+        decimal discount_pct
+    }
+    dim_date {
+        int date_key PK "yyyymmdd, -1 unknown"
+        date calendar_date
+        smallint retail_year
+        tinyint retail_week
+        int retail_week_key FK
+        varchar retail_half
+        tinyint is_trading_day
+    }
+    dim_retail_week {
+        int retail_week_key PK "yyyyww, -1 unknown"
+        smallint retail_year
+        tinyint retail_week
+        date week_start_date
+        tinyint is_comparable_week
+        int prior_year_week_key
+    }
+    dim_store {
+        int store_key PK "-1 unknown"
+        varchar store_id UK
+        varchar region
+        varchar store_format
+        int floor_area_m2
+    }
+    dim_product {
+        int product_key PK "-1 unknown"
+        varchar product_id UK
+        varchar category
+        varchar subcategory
+        varchar brand
+        varchar supplier_name
+    }
+    dim_promotion {
+        int promotion_key PK "0 none, -1 unknown"
+        varchar promotion_id UK
+        varchar promotion_type
+        varchar promotion_category
+        date start_date
+        date end_date
+    }

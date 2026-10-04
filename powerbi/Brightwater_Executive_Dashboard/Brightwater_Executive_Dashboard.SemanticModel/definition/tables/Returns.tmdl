@@ -1,0 +1,86 @@
+table Returns
+
+	column return_id
+		dataType: string
+		sourceColumn: return_id
+
+	column return_date_key
+		dataType: int64
+		summarizeBy: none
+		sourceColumn: return_date_key
+		isHidden
+
+	column store_key
+		dataType: int64
+		summarizeBy: none
+		sourceColumn: store_key
+		isHidden
+
+	column product_key
+		dataType: int64
+		summarizeBy: none
+		sourceColumn: product_key
+		isHidden
+
+	column original_sale_date_key
+		dataType: int64
+		summarizeBy: none
+		sourceColumn: original_sale_date_key
+		isHidden
+
+	column return_quantity
+		dataType: int64
+		summarizeBy: none
+		sourceColumn: return_quantity
+
+	column refund_value
+		dataType: decimal
+		summarizeBy: none
+		sourceColumn: refund_value
+
+	column restock_cost_credit
+		dataType: decimal
+		summarizeBy: none
+		sourceColumn: restock_cost_credit
+
+	column return_reason
+		dataType: string
+		sourceColumn: return_reason
+
+	column is_restockable
+		dataType: int64
+		summarizeBy: none
+		sourceColumn: is_restockable
+
+	column is_linked_to_sale
+		dataType: int64
+		summarizeBy: none
+		sourceColumn: is_linked_to_sale
+
+	column sale_promotion_status
+		dataType: string
+		sourceColumn: sale_promotion_status
+
+	partition Returns = m
+		mode: import
+		source =
+			let
+			    Source = Csv.Document(File.Contents(ModelFolder & "\returns.csv"),
+			                          [Delimiter = ",", Encoding = 65001, QuoteStyle = QuoteStyle.Csv]),
+			    Promoted = Table.PromoteHeaders(Source, [PromoteAllScalars = true]),
+			    Typed = Table.TransformColumnTypes(Promoted, {
+			        {"return_id", type text},
+			        {"return_date_key", Int64.Type},
+			        {"store_key", Int64.Type},
+			        {"product_key", Int64.Type},
+			        {"original_sale_date_key", Int64.Type},
+			        {"return_quantity", Int64.Type},
+			        {"refund_value", Currency.Type},
+			        {"restock_cost_credit", Currency.Type},
+			        {"return_reason", type text},
+			        {"is_restockable", Int64.Type},
+			        {"is_linked_to_sale", Int64.Type},
+			        {"sale_promotion_status", type text}
+			    }, "en-US")
+			in
+			    Typed

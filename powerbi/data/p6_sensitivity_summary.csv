@@ -1,0 +1,6 @@
+driver,n_variants,range_low_eur,range_high_eur,central_eur,robust,variants_excluded_low_coverage
+electronics_faulty_returns,4,-31588.73,-26225.686501,-31588.73,True,0
+electronics_stockouts_primary,21,-44460.376486,-23963.216711,-37235.346776,True,4
+electronics_stockouts_upper,21,-122752.866348,-62576.353847,-100410.753735,True,4
+home_kitchen_promotion,16,-380272.273058,97505.293502,-186146.420449,False,0
+store_cluster_excess,13,-435210.121525,-377245.083136,-397778.209303,True,0

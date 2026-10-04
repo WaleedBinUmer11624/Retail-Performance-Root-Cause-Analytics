@@ -1,0 +1,38 @@
+table dq_check_catalogue
+
+	column check_id
+		dataType: string
+		sourceColumn: check_id
+
+	column severity
+		dataType: string
+		sourceColumn: severity
+
+	column check
+		dataType: string
+		sourceColumn: check
+
+	column description
+		dataType: string
+		sourceColumn: description
+
+	column tolerance
+		dataType: string
+		sourceColumn: tolerance
+
+	column blocks_business_alerts
+		dataType: string
+		sourceColumn: blocks_business_alerts
+
+	partition dq_check_catalogue = m
+		mode: import
+		source =
+			let
+			    Source = Csv.Document(File.Contents(DqFolder & "\dq_check_catalogue.csv"),
+			                          [Delimiter = ",", Encoding = 65001, QuoteStyle = QuoteStyle.Csv]),
+			    Promoted = Table.PromoteHeaders(Source, [PromoteAllScalars = true]),
+			    Typed = Table.TransformColumnTypes(Promoted, {
+			        {"check_id", type text}, {"severity", type text}, {"check", type text}, {"description", type text}, {"tolerance", type text}, {"blocks_business_alerts", type text}
+			    }, "en-US")
+			in
+			    Typed

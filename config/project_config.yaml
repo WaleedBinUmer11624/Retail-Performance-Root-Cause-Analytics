@@ -1,0 +1,32 @@
+# Project-level settings shared by every phase.
+
+project:
+  name: Retail Performance & Root-Cause Analytics System
+  company: Brightwater Retail Ltd (fictional)
+  currency: EUR
+  vat_basis: excluding VAT
+
+paths:
+  raw_data: data/raw
+  sample_data: data/sample
+  processed_data: data/processed
+  reports: reports
+  logs: logs
+  sql: sql
+
+comparison:
+  # Week-aligned H2 comparison (retail weeks 27 to 52).
+  current_period: {retail_year: 2025, retail_week_from: 27, retail_week_to: 52}
+  prior_period: {retail_year: 2024, retail_week_from: 27, retail_week_to: 52}
+
+database:
+  # Used from Phase 3 onward. Windows authentication; no passwords in config.
+  server: localhost
+  database: BrightwaterRetail
+  driver: ODBC Driver 18 for SQL Server
+  trusted_connection: true
+  trust_server_certificate: true
+
+logging:
+  level: INFO
+  file_pattern: "logs/{run_name}_{timestamp}.log"

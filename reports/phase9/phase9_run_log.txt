@@ -1,0 +1,7 @@
+[    2.0s] freeze verified: 324 Phase 1-8 files unchanged (Phase 8 manifest chain re-verified)
+[   17.5s] model open (duckdb); monitoring SQL: 17 batches
+[   19.3s] reconciliation: 21/21 PASS; DQ gate FAIL store-weeks: 3
+[   43.3s] back-test: 155 candidate rules; 949 alerts WATCH 593, CRITICAL 246, WARNING 110
+[   44.9s] figures: 10
+[   47.8s] validation: 21/21 checks pass
+[   47.8s] PASSED; outputs in /home/claude/Retail_Performance_Root_Cause_Analytics/reports/phase9

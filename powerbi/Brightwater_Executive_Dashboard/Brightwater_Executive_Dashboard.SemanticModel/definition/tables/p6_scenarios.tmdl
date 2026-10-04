@@ -1,0 +1,79 @@
+table p6_scenarios
+
+	column scenario
+		dataType: string
+		sourceColumn: scenario
+
+	column name
+		dataType: string
+		sourceColumn: name
+
+	column question
+		dataType: string
+		sourceColumn: question
+
+	column revenue_impact_eur
+		dataType: double
+		summarizeBy: none
+		sourceColumn: revenue_impact_eur
+
+	column range_low_eur
+		dataType: double
+		summarizeBy: none
+		sourceColumn: range_low_eur
+
+	column range_high_eur
+		dataType: double
+		summarizeBy: none
+		sourceColumn: range_high_eur
+
+	column margin_impact_eur
+		dataType: double
+		summarizeBy: none
+		sourceColumn: margin_impact_eur
+
+	column assumptions
+		dataType: string
+		sourceColumn: assumptions
+
+	column confidence
+		dataType: string
+		sourceColumn: confidence
+
+	column evidence_level
+		dataType: string
+		sourceColumn: evidence_level
+
+	column robust_in_sensitivity
+		dataType: boolean
+		summarizeBy: none
+		sourceColumn: robust_in_sensitivity
+
+	column share_of_decline_recovered
+		dataType: double
+		summarizeBy: none
+		sourceColumn: share_of_decline_recovered
+
+	partition p6_scenarios = m
+		mode: import
+		source =
+			let
+			    Source = Csv.Document(File.Contents(AnalyticsFolder & "\p6_scenarios.csv"),
+			                          [Delimiter = ",", Encoding = 65001, QuoteStyle = QuoteStyle.Csv]),
+			    Promoted = Table.PromoteHeaders(Source, [PromoteAllScalars = true]),
+			    Typed = Table.TransformColumnTypes(Promoted, {
+			        {"scenario", type text},
+			        {"name", type text},
+			        {"question", type text},
+			        {"revenue_impact_eur", type number},
+			        {"range_low_eur", type number},
+			        {"range_high_eur", type number},
+			        {"margin_impact_eur", type number},
+			        {"assumptions", type text},
+			        {"confidence", type text},
+			        {"evidence_level", type text},
+			        {"robust_in_sensitivity", type logical},
+			        {"share_of_decline_recovered", type number}
+			    }, "en-US")
+			in
+			    Typed

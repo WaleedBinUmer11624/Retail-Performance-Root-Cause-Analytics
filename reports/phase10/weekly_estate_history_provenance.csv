@@ -1,0 +1,15 @@
+record,value
+authoritative_source,mart.v_performance_store_week (read-only SELECT)
+build_engine,mssql
+database,BrightwaterRetail
+database_writes,none; the extraction issues a single SELECT
+excluded,"retail weeks outside the configured retail_years, including the partial trailing week beyond the last closed retail year"
+first_week,2024-W01 (2024-01-01)
+grain,estate x retail_week
+h2_2024_net_revenue,10188727.55
+h2_2025_net_revenue,9457457.05
+last_week,2025-W52 (2025-12-22)
+retail_years,"2024, 2025"
+rounding,"net revenue aggregated in DECIMAL(38,2) per retail week before export"
+row_count,104
+target,net_revenue

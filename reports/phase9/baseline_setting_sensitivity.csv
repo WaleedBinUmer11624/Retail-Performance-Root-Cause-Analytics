@@ -1,0 +1,55 @@
+variant,signal,entity_type,selected_rule,unconfirmed_rate,alerts,detected,median_delay_weeks,episode_weeks_active_share
+as configured,EW01,store,"peer_gap_threshold: 10, 3 wk",0.019876,64,3/3,5.0,0.673092
+as configured,EW02,estate,"yoy_vs_trend_threshold: 3, 2 wk",0.0,8,1/1,0.0,0.333333
+as configured,EW02,format,"yoy_vs_trend_threshold: 5, 3 wk",0.009346,9,1/1,4.0,0.333333
+as configured,EW02,region,"yoy_vs_trend_threshold: 10, 3 wk",0.010363,9,1/1,7.0,0.291667
+as configured,EW03,category,"availability_gap_pp: 1, 2 wk",0.008696,20,1/1,1.0,0.894737
+as configured,EW03,supplier,"availability_gap_pp: 1, 2 wk",0.017083,31,1/1,1.0,0.947368
+hold release 2 weeks,EW01,store,"peer_gap_threshold: 10, 3 wk",0.012422,56,3/3,2.0,0.646425
+hold release 2 weeks,EW02,estate,"yoy_vs_trend_threshold: 3, 2 wk",0.0,8,1/1,0.0,0.333333
+hold release 2 weeks,EW02,format,"yoy_vs_trend_threshold: 10, 3 wk",0.0,0,0/1,,0.0
+hold release 2 weeks,EW02,region,"yoy_vs_trend_threshold: 10, 3 wk",0.010363,9,1/1,7.0,0.291667
+hold release 2 weeks,EW03,category,"availability_gap_pp: 1, 2 wk",0.008696,20,1/1,1.0,0.894737
+hold release 2 weeks,EW03,supplier,"availability_gap_pp: 1, 2 wk",0.017083,31,1/1,1.0,0.947368
+hold release 6 weeks,EW01,store,"peer_gap_threshold: 15, 2 wk",0.016149,62,3/3,4.0,0.683502
+hold release 6 weeks,EW02,estate,"yoy_vs_trend_threshold: 3, 2 wk",0.0,8,1/1,0.0,0.333333
+hold release 6 weeks,EW02,format,"yoy_vs_trend_threshold: 5, 3 wk",0.009346,9,1/1,4.0,0.333333
+hold release 6 weeks,EW02,region,"yoy_vs_trend_threshold: 10, 3 wk",0.010363,9,1/1,7.0,0.291667
+hold release 6 weeks,EW03,category,"availability_gap_pp: 1, 2 wk",0.008696,20,1/1,1.0,0.894737
+hold release 6 weeks,EW03,supplier,"availability_gap_pp: 1, 2 wk",0.017083,31,1/1,1.0,0.947368
+release z -1.5,EW01,store,"peer_gap_threshold: 10, 3 wk",0.016149,58,3/3,5.0,0.633092
+release z -1.5,EW02,estate,"yoy_vs_trend_threshold: 3, 2 wk",0.0,8,1/1,0.0,0.333333
+release z -1.5,EW02,format,"yoy_vs_trend_threshold: 5, 3 wk",0.009346,9,1/1,4.0,0.333333
+release z -1.5,EW02,region,"yoy_vs_trend_threshold: 10, 3 wk",0.010363,9,1/1,7.0,0.291667
+release z -1.5,EW03,category,"availability_gap_pp: 1, 2 wk",0.008696,20,1/1,1.0,0.894737
+release z -1.5,EW03,supplier,"availability_gap_pp: 1, 2 wk",0.017083,31,1/1,1.0,0.947368
+release z -0.5,EW01,store,"peer_gap_threshold: 15, 2 wk",0.016149,56,3/3,4.0,0.603502
+release z -0.5,EW02,estate,"yoy_vs_trend_threshold: 3, 2 wk",0.0,8,1/1,0.0,0.333333
+release z -0.5,EW02,format,"yoy_vs_trend_threshold: 10, 3 wk",0.0,0,0/1,,0.0
+release z -0.5,EW02,region,"yoy_vs_trend_threshold: 10, 3 wk",0.010363,9,1/1,7.0,0.291667
+release z -0.5,EW03,category,"availability_gap_pp: 1, 2 wk",0.008696,20,1/1,1.0,0.894737
+release z -0.5,EW03,supplier,"availability_gap_pp: 1, 2 wk",0.017083,31,1/1,1.0,0.947368
+no freeze,EW01,store,"peer_gap_threshold: 10, 3 wk",0.012422,48,3/3,5.0,0.532802
+no freeze,EW02,estate,"yoy_vs_trend_threshold: 3, 2 wk",0.0,7,1/1,0.0,0.291667
+no freeze,EW02,format,"yoy_vs_trend_threshold: 10, 3 wk",0.0,0,0/1,,0.0
+no freeze,EW02,region,"yoy_vs_trend_threshold: 10, 3 wk",0.010363,9,1/1,7.0,0.291667
+no freeze,EW03,category,"availability_gap_pp: 1, 2 wk",0.008696,20,1/1,1.0,0.894737
+no freeze,EW03,supplier,"availability_gap_pp: 1, 2 wk",0.017083,31,1/1,1.0,0.947368
+EW03 guard 0.5pp,EW01,store,"peer_gap_threshold: 10, 3 wk",0.019876,64,3/3,5.0,0.673092
+EW03 guard 0.5pp,EW02,estate,"yoy_vs_trend_threshold: 3, 2 wk",0.0,8,1/1,0.0,0.333333
+EW03 guard 0.5pp,EW02,format,"yoy_vs_trend_threshold: 5, 3 wk",0.009346,9,1/1,4.0,0.333333
+EW03 guard 0.5pp,EW02,region,"yoy_vs_trend_threshold: 10, 3 wk",0.010363,9,1/1,7.0,0.291667
+EW03 guard 0.5pp,EW03,category,"availability_gap_pp: 1, 2 wk",0.005797,19,1/1,1.0,0.894737
+EW03 guard 0.5pp,EW03,supplier,"availability_gap_pp: 1, 4 wk",0.003942,19,1/1,3.0,0.842105
+EW03 guard 2pp,EW01,store,"peer_gap_threshold: 10, 3 wk",0.019876,64,3/3,5.0,0.673092
+EW03 guard 2pp,EW02,estate,"yoy_vs_trend_threshold: 3, 2 wk",0.0,8,1/1,0.0,0.333333
+EW03 guard 2pp,EW02,format,"yoy_vs_trend_threshold: 5, 3 wk",0.009346,9,1/1,4.0,0.333333
+EW03 guard 2pp,EW02,region,"yoy_vs_trend_threshold: 10, 3 wk",0.010363,9,1/1,7.0,0.291667
+EW03 guard 2pp,EW03,category,"availability_gap_pp: 1, 2 wk",0.002899,18,1/1,1.0,0.894737
+EW03 guard 2pp,EW03,supplier,"availability_gap_pp: 1, 2 wk",0.014455,29,1/1,1.0,0.947368
+EW03 no guard,EW01,store,"peer_gap_threshold: 10, 3 wk",0.019876,64,3/3,5.0,0.673092
+EW03 no guard,EW02,estate,"yoy_vs_trend_threshold: 3, 2 wk",0.0,8,1/1,0.0,0.333333
+EW03 no guard,EW02,format,"yoy_vs_trend_threshold: 5, 3 wk",0.009346,9,1/1,4.0,0.333333
+EW03 no guard,EW02,region,"yoy_vs_trend_threshold: 10, 3 wk",0.010363,9,1/1,7.0,0.291667
+EW03 no guard,EW03,category,"availability_gap_pp: 1, 2 wk",0.002899,11,1/1,1.0,0.526316
+EW03 no guard,EW03,supplier,"availability_gap_pp: 1, 2 wk",0.009198,18,1/1,1.0,0.578947

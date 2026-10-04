@@ -1,0 +1,85 @@
+# Phase 6: root-cause investigation and causal diagnostics (used by src/rca).
+#
+# Comparison periods come from config/project_config.yaml. Every assumption that shapes an estimate is
+# here, with its alternatives for the sensitivity analysis.
+
+inputs:
+  # Phase 6 may read ONLY these files besides the Phase 1-5 frozen inputs and its own SQL / config.
+  allowed_files:
+    - config/project_config.yaml
+    - config/sql_model_config.yaml
+    - config/analytics_config.yaml
+    - config/rca_config.yaml
+    - reports/phase4/reconciliation_results_duckdb.csv
+    - reports/phase4/reconciliation_results_mssql.csv
+    - reports/phase5/phase1_4_input_manifest.csv
+    - reports/phase6/phase1_5_input_manifest.csv
+  rca_sql_dir: sql/analysis/rca
+  # Phase 5 files frozen for Phase 6 (added to the Phase 1-4 list in config/analytics_config.yaml).
+  # Timestamped run logs and the Phase 5 validation report (which records run time) are excluded.
+  phase5_frozen:
+    - src/analytics/*.py
+    - sql/analysis/diagnostics/*.sql
+    - config/analytics_config.yaml
+    - docs/05_exploratory_analysis.md
+    - tests/test_phase5_analytics.py
+    - reports/phase5/*.csv
+    - reports/phase5/phase5_executive_summary.md
+  freeze_manifest: reports/phase6/phase1_5_input_manifest.csv
+  # Phase 5 hand-off files Phase 6 reads (all inside the freeze)
+  phase5_store_contribution: reports/phase5/store_contribution.csv
+  phase5_headline: reports/phase5/headline_kpis.csv
+  phase5_bridge: reports/phase5/revenue_bridge.csv
+
+outputs:
+  reports: reports/phase6
+  figures: reports/phase6/figures
+
+store_cluster:
+  onset_year: 2025                 # the change point is searched in this retail year (daily data)
+  min_segment_days: 28             # each side of a change point must have at least 28 days
+  max_ramp_days: 56                # the ramp model tests transitions of 0 to 56 days
+  abrupt_max_ramp_days: 14         # a best-fitting transition of <= 14 days is "abrupt"
+  pre_weeks: [1, 26]               # DiD pre-period (current retail year, as YoY vs prior year)
+  post_weeks: [27, 52]             # DiD post-period
+  primary_control: matched         # matched | standard_non_cluster | dublin_non_cluster | all_non_cluster
+  matched_k: 5                     # nearest-neighbour controls (union over the cluster stores, then top k overall)
+  placebo_group_size: 3            # permutation inference: every 3-store group of non-cluster stores
+
+electronics:
+  category: Electronics & Tech
+  high_seller_top_share: 0.10      # "high-selling SKUs": top 10% of the category's SKUs by prior-year H2 revenue
+  bootstrap_reps: 2000
+  recovery_weeks: 2                # weeks after an episode used to measure recovery
+
+returns:
+  category: Electronics & Tech
+  reason: Faulty
+  top_k: 5                         # concentration: share of the increase held by the top 5 products / cohorts
+
+promotions:
+  category: Home & Kitchen
+  control_categories: [Health & Beauty, Toys & Games, Stationery & Crafts, Garden & Outdoor, Seasonal & Gifts]
+  pre_weeks: [1, 26]
+  post_weeks: [27, 52]
+  bootstrap_reps: 500
+
+lost_sales:                        # same method as Phase 5 (config/analytics_config.yaml); variants for sensitivity
+  windows: [4, 8, 13]
+  min_history_weeks: 3
+
+sensitivity:
+  lost_sales_windows: [[4, 8, 13], [2, 4, 8], [8, 13], [4]]
+  lost_sales_min_history: [2, 3, 5]
+  lost_sales_seasonality: [true, false]
+  control_groups: [matched, standard_non_cluster, dublin_non_cluster, all_non_cluster]
+  pre_windows: [[1, 26], [14, 26], [1, 13]]
+  promo_control_sets:
+    all_five: [Health & Beauty, Toys & Games, Stationery & Crafts, Garden & Outdoor, Seasonal & Gifts]
+    non_seasonal: [Health & Beauty, Toys & Games, Stationery & Crafts]
+    health_beauty_only: [Health & Beauty]
+  promo_event_pre_weeks: [2, 4, 6]
+  min_coverage: 0.9               # lost-sales variants below 90% baseline coverage are reported, not judged
+  robust_max_relative_spread: 0.5  # "robust": every variant has the same sign and lies within +/-50% of the central estimate
+
+seed: 20260928                     # bootstrap / permutation reproducibility

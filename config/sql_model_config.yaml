@@ -1,0 +1,60 @@
+# Phase 4: SQL analytical model configuration (used by src/sql_model).
+#
+# Database connection settings live in config/project_config.yaml (section: database).
+
+# Scripts run in this order from a clean database. Paths are relative to the project root.
+scripts:
+  - sql/schema/01_create_database_and_schemas.sql
+  - sql/staging/02_create_staging_tables.sql
+  - "@load_staging"            # runner step: load the curated CSVs into stg.*
+  - "@load_expected"           # runner step: load Phase 3 expected values into recon.expected
+  - sql/schema/03_create_dimension_tables.sql
+  - sql/schema/04_create_fact_tables.sql
+  - sql/schema/05_create_keys_and_constraints.sql
+  - sql/schema/06_create_indexes.sql
+  - sql/transformations/07_load_dimensions.sql
+  - sql/transformations/08_load_facts.sql
+  - sql/validation/09_reconciliation.sql
+  - sql/analysis/10_analytical_views.sql
+  - sql/validation/11_kpi_validation.sql
+
+# The ONLY files Phase 4 production code may read (besides its own SQL and config).
+inputs:
+  curated_dir: data/processed/curated
+  curated_tables: [dim_date, dim_store, dim_product, fact_sales, fact_returns, fact_inventory, fact_promotions, fact_targets]
+  phase3_lineage: reports/phase3/lineage.json              # curated row counts and SHA-256 (verified before loading)
+  phase3_kpis: reports/phase3/kpi_reconciliation.csv       # trusted KPI values, column clean_complete
+
+# Explicit reconciliation tolerances (absolute). A difference above tolerance fails the build.
+tolerances:
+  row_count: 0            # rows must match exactly
+  eur: 0.01               # money totals (DECIMAL in SQL vs float in Phase 3)
+  ratio: 0.000001         # AOV/UPT/ASP in EUR or units, and 0-1 ratios such as GM %
+  yoy_pct_points: 0.0001  # YoY growth expressed in percent
+
+# Phase 3 KPI name -> tolerance class (every KPI in kpi_reconciliation.csv is reconciled)
+kpi_tolerance_class:
+  sales_lines: row_count
+  gross_sales: eur
+  discount_value: eur
+  sales_revenue: eur
+  returns_value: eur
+  net_revenue: eur
+  cogs: eur
+  gross_margin: eur
+  gross_margin_pct: ratio
+  transactions: row_count
+  units: row_count
+  aov: ratio
+  upt: ratio
+  asp: ratio
+  return_rate_value: ratio
+  promo_revenue_share: ratio
+  returns_rows: row_count
+  stock_availability_2024: ratio
+  h2_2024_net_revenue: eur
+  h2_2025_net_revenue: eur
+  h2_yoy_pct: yoy_pct_points
+
+outputs:
+  reports: reports/phase4

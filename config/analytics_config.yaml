@@ -1,0 +1,87 @@
+# Phase 5: exploratory business analysis and diagnostic analytics (used by src/analytics).
+#
+# Comparison periods come from config/project_config.yaml (section: comparison).
+# Every threshold that shapes a finding lives here, so a reviewer can see and change it.
+
+inputs:
+  # Phase 5 may read ONLY these files (plus its own SQL, config and the database built from them).
+  # Anything else, including every evaluation-only asset, is refused by src/analytics/model_access.py.
+  allowed_files:
+    - config/project_config.yaml
+    - config/sql_model_config.yaml
+    - config/analytics_config.yaml
+    - reports/phase4/reconciliation_results_duckdb.csv   # Phase 4 trusted benchmark (DuckDB build)
+    - reports/phase4/reconciliation_results_mssql.csv    # Phase 4 trusted benchmark (SQL Server build), if present
+    - reports/phase5/phase1_4_input_manifest.csv         # freeze manifest recorded at the start of Phase 5
+  diagnostics_sql_dir: sql/analysis/diagnostics
+  # Files whose checksums are frozen for Phase 5 (Phase 1 to 4 inputs Phase 5 depends on).
+  frozen_inputs:
+    - docs/01_business_requirements.md
+    - docs/04_data_model_design.md
+    - config/project_config.yaml
+    - config/sql_model_config.yaml
+    - sql/schema/*.sql
+    - sql/staging/*.sql
+    - sql/transformations/*.sql
+    - sql/validation/*.sql
+    - sql/analysis/10_analytical_views.sql
+    - sql/run_all_sqlcmd.sql
+    - src/sql_model/*.py
+    - reports/phase3/lineage.json
+    - reports/phase3/kpi_reconciliation.csv
+    - data/processed/curated/*.csv
+    - reports/phase4/reconciliation_results_duckdb.csv
+    - reports/phase4/kpi_validation_duckdb.csv
+  freeze_manifest: reports/phase5/phase1_4_input_manifest.csv
+
+outputs:
+  reports: reports/phase5
+  figures: reports/phase5/figures
+  model_build: reports/phase5/model_build   # Phase 4 build log of the model Phase 5 analysed (DuckDB engine)
+
+tolerances:                 # Phase 4 reconciliation tolerances are reused (config/sql_model_config.yaml)
+  bridge_eur: 0.01          # bridge components must add up to the net revenue change within 1 cent
+  sql_vs_python_eur: 0.01   # the SQL views and the Python recomputation must agree
+  sql_vs_python_ratio: 0.000001
+
+trend:
+  rolling_weeks: 4          # rolling window for the sustained-decline onset
+  step_min_segment_weeks: 4 # the step test only considers splits leaving at least this many weeks each side
+  abrupt_min_step_pp: 3.0   # a step of at least this many YoY points, fitting better than a linear trend ...
+  step_min_r2: 0.25         # ... and explaining at least 25% of the weekly variance, is a "step change"
+  top_weeks: 5
+  cluster_cover: 0.5        # the "decline cluster": fewest stores (largest decline first) covering this share of the decline
+
+products:
+  material_category_share: 0.15    # drill into categories carrying at least 15% of the estate decline
+  high_impact_cover: 0.5           # smallest product set covering 50% of the category's gross decline ...
+  high_impact_max: 12              # ... capped at 12 products per category
+  high_pct_min_decline_pct: -30.0  # "high % but low impact": YoY <= -30% ...
+  high_pct_max_abs_change: 1000.0  # ... and an absolute change under EUR 1,000
+  availability_drop_pp: 10.0       # availability-affected: availability down >= 10 pp
+  returns_rate_rise_pp: 5.0        # returns-affected: return rate (value) up >= 5 pp ...
+  returns_min_change_eur: 500.0    # ... and returns up by at least EUR 500
+  promo_share_change_pp: 20.0      # promotion change: promoted revenue share moved >= 20 pp
+
+returns:
+  concentration_share: 0.10        # a store x category cell is a concentration if it holds >= 10% of the GROSS returns increase
+  zscore: 3.0                      # ... or its return-rate change is >= 3 standard deviations above the mean cell
+
+lost_sales:                        # BR-05 Estimated Lost Sales (an ESTIMATE; method in docs/05)
+  windows: [4, 8, 13]              # +/- weeks searched for baseline weeks; wider only if the narrower has too few
+  min_history_weeks: 3             # baseline needs at least 3 in-stock, non-promoted weeks of the same store-SKU
+  mechanism_max_actual_to_expected: 0.6   # stock-out weeks must sell <= 60% of expected for "mechanism visible"
+  backtest_max_abs_bias: 0.15      # the estimator must predict in-stock weeks within +/-15% in aggregate
+
+promotions:
+  promo_week_min_days: 4           # a week is a promotion week when >= 4 of its days are covered
+  pre_weeks: 4                     # baseline: up to 4 non-promoted, in-stock weeks before the promotion
+  min_baseline_weeks: 2
+  post_weeks: 2                    # pull-forward check: the 2 weeks after the promotion
+
+targets:
+  last_n_weeks: 13
+  persistent_min_misses: 8         # BRD Q9: missed in 8 or more of the last 13 weeks
+
+evidence:
+  association_alpha: 0.05          # p-value below which an association is reported as statistically significant

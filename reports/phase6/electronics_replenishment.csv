@@ -1,0 +1,9 @@
+supplier_name,retail_year,cell_weeks,received_units,weeks_with_receipt,units_sold,mean_opening_stock,received_per_cell_week,receipt_week_share,received_to_sold
+Emerald Electronics Wholesale,2024,6031,6089,2862,5790.0,2.687448,1.009617,0.474548,1.051641
+Emerald Electronics Wholesale,2025,4970,4210,2069,4084.0,2.521127,0.847082,0.416298,1.030852
+Northbridge Tech Supplies,2024,14007,18028,7162,17316.0,3.070608,1.287071,0.511316,1.041118
+Northbridge Tech Supplies,2025,13535,15231,6389,14804.0,2.86184,1.125305,0.472035,1.028844
+Unknown supplier,2024,960,838,468,791.0,2.614583,0.872917,0.4875,1.059418
+Unknown supplier,2025,962,613,375,597.0,1.560291,0.637214,0.389813,1.026801
+Voltix Distribution Ltd,2024,13458,12004,5723,11446.0,2.579581,0.89196,0.425249,1.048751
+Voltix Distribution Ltd,2025,14472,12727,5743,12075.0,1.830224,0.879422,0.396835,1.053996

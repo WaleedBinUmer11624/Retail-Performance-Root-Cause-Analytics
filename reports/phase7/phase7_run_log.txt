@@ -1,0 +1,9 @@
+[   10.9s] freeze verified: 170 Phase 1-6 files unchanged (and the Phase 6 manifest re-verified)
+[   98.8s] model loaded from pbi views: 2,316,890 rows in 86.7s
+[   99.3s] 33 Phase 5/6 analytical extracts written to E:\Retail_Performance_Root_Cause_Analytics\powerbi\data
+[  116.4s] star-schema CSVs written to data/powerbi
+[  156.2s] reconciliation and static DAX checks: 102/102 pass
+[  162.9s] dashboard number register: 146 numbers, every one with a source
+[  166.0s] assets: 92 DAX measures, 49 Power Query files, theme, model definition, 54 DAX validation cases
+[  182.3s] 7 page mockups drawn
+[  182.6s] PASSED; outputs in E:\Retail_Performance_Root_Cause_Analytics\reports\phase7

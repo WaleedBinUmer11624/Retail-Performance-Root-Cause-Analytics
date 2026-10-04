@@ -1,0 +1,22 @@
+check_id,check,status,detail
+V01,Phase 1-8 files unchanged since the Phase 9 freeze,PASS,324 files
+V02,Monitoring KPIs reconcile to Phases 4-7,PASS,21/21
+V03,alert_id is unique,PASS,949 alerts
+V04,Every alert has a valid severity and lifecycle status NEW,PASS,
+V05,DQ gate: held alerts are capped at WATCH and no store alert above WATCH in a failed store-week,PASS,41 held
+V06,EW08 alerts are exactly the failed store-weeks,PASS,"S13 202442, S16 202551, S16 202552"
+V07,"Required wordings used (EW01 cause wording, EW05 faulty-return wording)",PASS,
+V08,"No causal, defect or supplier-blame wording and no em dash in alerts and reports",PASS,
+V09,"No fabricated management responses (owner, acknowledged, resolved all empty)",PASS,
+V10,Owners are proposed roles,PASS,
+V11,"Every selected rule, the secondary change-point rule and each rule as operated stay inside the budget",PASS,EW01/store 1.99% (operated 1.99%); EW02/estate 0.00% (operated 0.00%); EW02/format 0.93% (operated 0.93%); EW02/region 1.04% (operated 1.55%); EW03/category 0.87% (operated 0.87%); EW03/supplier 1.71% (operated 1.71%); EW04/product 0.00% (operated 0.00%); EW05/category 1.03% (operated 1.03%); EW05/store 0.13% (operated 0.13%); EW06/category 1.17% (operated 1.17%); EW07/category 0.63% (operated 0.63%); EW08/store 0.00% (operated 0.00%)
+V12,"Selection reads only the noise budget: scrambling every detection metric (delay, coverage, exposure) gives the same rules (the episode mask's own effect is reported in selection_mask_sensitivity.csv)",PASS,
+V13,"No leakage: perturbing later weeks leaves earlier baselines, z-scores and change-point statistics unchanged",PASS,
+V14,Week alignment: every alert is on a complete retail week; business alerts in 2025 (the year with a prior year),PASS,
+V15,Prior-year logic: each 2025 week maps to the same retail week of 2024,PASS,
+V16,Exposure is never totalled across signals (no all-signal total in any output),PASS,
+V17,"S03, S04 and S05 each detected by the operational EW01 rule",PASS,S03 2025-W31; S04 2025-W33; S05 2025-W33
+V18,Ten figures written,PASS,
+V19,No evaluation-only or refused path opened,PASS,
+V21,Stock-out context reproduces Phase 6 supplier figures (Voltix full-week stock-outs and availability),PASS,Voltix full-week stock-out cells H2: 0 -> 674
+V20,Lifecycle has the seven required statuses,PASS,

@@ -1,0 +1,4 @@
+supplier,metric,supplier_skus,other_skus,supplier_mean,other_mean,difference,ci_low,ci_high,permutation_p_two_sided,leave_one_sku_out_min,leave_one_sku_out_max,supplier_median,other_median,supplier_skus_worse_than_other_median,variant
+Voltix Distribution Ltd,oos_rate_change_pp,35,46,8.485767,1.64057,6.845197,2.49766,11.168854,0.002499,6.13324,7.238752,1.282051,0.405983,19,
+Voltix Distribution Ltd,lost_primary_change,35,46,753.852013,135.63205,618.219963,97.34915,1262.270858,0.016492,368.83832,640.392081,0.0,0.0,14,
+Voltix Distribution Ltd,oos_rate_change_pp,34,46,7.77381,1.64057,6.13324,2.093501,10.317728,0.002999,5.524013,6.517147,0.897436,0.405983,18,excluding the SKU with the largest lost-sales increase

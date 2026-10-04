@@ -1,0 +1,135 @@
+# Phase 7: Power BI executive decision-support dashboard (used by src/powerbi).
+#
+# Phase 7 consumes the frozen Phase 1-6 results. It never recomputes a root-cause figure: every
+# analytical number on the dashboard is read from a frozen Phase 6 (or Phase 5) output and traced
+# in reports/phase7/dashboard_number_register.csv.
+
+inputs:
+  # Files Phase 7 may read besides the frozen Phase 1-6 files below.
+  allowed_files:
+    - config/project_config.yaml
+    - config/sql_model_config.yaml
+    - config/analytics_config.yaml
+    - config/rca_config.yaml
+    - config/powerbi_config.yaml
+    - reports/phase5/phase1_4_input_manifest.csv
+    - reports/phase6/phase1_5_input_manifest.csv
+    - reports/phase7/phase1_6_input_manifest.csv
+  pbi_sql_dir: sql/powerbi
+  # Phase 6 files frozen for Phase 7 (added to the Phase 1-5 lists in the analytics and rca configs).
+  # The Phase 6 validation report and run log record run times and are excluded.
+  phase6_frozen:
+    - src/rca/*.py
+    - sql/analysis/rca/*.sql
+    - config/rca_config.yaml
+    - docs/06_root_cause_analysis.md
+    - tests/test_phase6_rca.py
+    - reports/phase6/*.csv
+    - reports/phase6/phase6_root_cause_report.md
+    - reports/phase6/figures/*.png
+  freeze_manifest: reports/phase7/phase1_6_input_manifest.csv
+
+outputs:
+  reports: reports/phase7
+  mockups: reports/phase7/mockups
+  powerbi_dir: powerbi
+  analytics_extracts: powerbi/data              # small Phase 5/6 tables the report imports (committed)
+  model_extracts: data/powerbi                  # star-schema CSVs for the no-SQL-Server route (generated, git-ignored)
+
+# The headline the dashboard must reproduce (Phase 6 brief, section 1). Checked against Phase 4, 5 and 6.
+headline:
+  py_label: H2 2024
+  cy_label: H2 2025
+  retail_year_py: 2024
+  retail_year_cy: 2025
+  half: H2
+  net_revenue_py: 10188727.55
+  net_revenue_cy: 9457457.05
+  change: -731270.50
+  yoy_pct: -7.177251
+
+tolerances:
+  eur: 0.01
+  pct_points: 0.000001
+  ratio: 0.000001
+
+store_cluster: [S03, S04, S05]
+focus_category_availability: Electronics & Tech
+focus_category_promotions: Home & Kitchen
+focus_supplier: Voltix Distribution Ltd
+
+# Evidence labels shown on the dashboard. The four BRD levels are the matrix levels; UNRESOLVED marks a
+# quantified change whose cause the data cannot identify. Colours are used with a text label, never alone.
+# `strength` is the strength of CAUSAL evidence (0-3), shown as bars on the evidence page: an Observed change is
+# a certain measurement but claims no cause, so it ranks below a tested association; an untested Hypothesis is 0.
+evidence_levels:
+  Root-cause evidence: {code: RCE, colour: "#1BAF7A", strength: 3}
+  Statistical association: {code: ASSOC, colour: "#EDA100", strength: 2}
+  Observed change:     {code: OBS, colour: "#2A78D6", strength: 1}
+  Hypothesis:          {code: HYP, colour: "#8F8D87", strength: 0}
+  Unresolved:          {code: UNRES, colour: "#52514E", strength: 0}
+
+# Proposed owners for the investigation page. These are suggestions for management to confirm,
+# not findings of the analysis.
+investigation_owners:
+  D02: Retail Operations / Commercial
+  D04: Supply Chain / Buying
+  D06: Quality / Buying
+  D07: Commercial / Marketing
+  D08: Category Management / Buying
+  D03: Supply Chain / Store Operations
+
+# How each Phase 6 driver is labelled on the dashboard. `evidence_level` is copied from the Phase 6 evidence
+# matrix at build time (never typed here); this block only adds a short name and the status of the CAUSE,
+# which the Phase 6 report states in words (tests check the two agree).
+drivers:
+  D01: {short: "Store-cluster transaction loss (S03, S04, S05)", cause_status: Unresolved,
+        display: "Observed and quantified; underlying cause UNRESOLVED"}
+  D02: {short: "External / local cause of the cluster loss", cause_status: Unresolved,
+        display: "HYPOTHESIS; cannot be tested with internal data"}
+  D03: {short: "Electronics full-week stock-outs", cause_status: Established,
+        display: "ROOT-CAUSE EVIDENCE for the stock-out mechanism; effect small"}
+  D04: {short: "Voltix stock-out concentration", cause_status: Not established,
+        display: "STATISTICAL ASSOCIATION; supplier responsibility NOT proven"}
+  D05: {short: "Electronics 'Faulty' returns increase", cause_status: Not established,
+        display: "Observed increase; product defect remains a HYPOTHESIS"}
+  D06: {short: "Product quality vs recording practice", cause_status: Unresolved,
+        display: "HYPOTHESIS; needs QA, batch and RMA data"}
+  D07: {short: "Home & Kitchen promotion behaviour", cause_status: Not established,
+        display: "STATISTICAL ASSOCIATION only; methods disagree in sign"}
+  D08: {short: "Electronics range and distribution change", cause_status: Not established,
+        display: "Observed change; SKU switching is a HYPOTHESIS"}
+  D09: {short: "Residual (not attributed)", cause_status: Not attributed,
+        display: "Not attributed; mostly Electronics outside the cluster"}
+
+# Attribution components (Phase 6 driver_attribution.csv, in file order) -> driver id shown on the dashboard.
+attribution_drivers: [D01, D03, D05, D07, D09]
+
+# Page 7: investigation priorities. Wording summarises the Phase 6 conclusions; the EUR size and the data list
+# are read from the Phase 6 evidence matrix for `driver`. Owners are proposals for management to confirm.
+investigations:
+  - topic: Customer traffic decline in S03, S04, S05
+    driver: D02
+    known: "A sudden, broad loss of receipts from mid-July 2025, measured against matched control stores."
+    unknown: "Why customers stopped visiting: no internal lever (price, promotions, availability, range, returns) explains it."
+    why_it_matters: "Largest single component of the decline."
+  - topic: Electronics availability (Voltix SKUs)
+    driver: D04
+    known: "Full-week stock-outs rose, concentrated on Voltix SKUs; opening stock fell while weekly receipts per SKU did not."
+    unknown: "Whether the supplier under-delivered or Brightwater ordered or replenished too little."
+    why_it_matters: "The only mechanism with root-cause evidence; responsibility decides who acts."
+  - topic: Electronics 'Faulty' returns
+    driver: D06
+    known: "Recorded 'Faulty' refunds rose, concentrated in a few stores and in sales from September 2025 onward."
+    unknown: "Whether products are genuinely defective or stores record returns differently."
+    why_it_matters: "A quality problem and a process problem need different owners."
+  - topic: Home & Kitchen promotions
+    driver: D07
+    known: "Discount rate and promotion frequency rose sharply; the category fell relative to other categories."
+    unknown: "Whether the promotions caused the decline: the four counterfactual methods disagree in sign."
+    why_it_matters: "The commercial effect of the promotion programme is uncertain in both direction and size."
+  - topic: Electronics continuing-SKU sales
+    driver: D08
+    known: "Outside the cluster, new SKUs more than replaced delisted ones; continuing SKUs sold less per ranged week."
+    unknown: "Whether shoppers switched to new models, or partial-week stock-outs and substitution explain it."
+    why_it_matters: "Most of the unattributed residual sits here."

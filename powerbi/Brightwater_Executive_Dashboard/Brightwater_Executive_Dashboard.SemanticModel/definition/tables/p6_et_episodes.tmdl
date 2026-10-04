@@ -1,0 +1,60 @@
+table p6_et_episodes
+
+	column supplier_name
+		dataType: string
+		sourceColumn: supplier_name
+
+	column retail_year
+		dataType: int64
+		summarizeBy: none
+		sourceColumn: retail_year
+
+	column episodes
+		dataType: int64
+		summarizeBy: none
+		sourceColumn: episodes
+
+	column mean_weeks_out
+		dataType: double
+		summarizeBy: none
+		sourceColumn: mean_weeks_out
+
+	column median_weeks_out
+		dataType: double
+		summarizeBy: none
+		sourceColumn: median_weeks_out
+
+	column max_weeks_out
+		dataType: int64
+		summarizeBy: none
+		sourceColumn: max_weeks_out
+
+	column share_4plus_weeks
+		dataType: double
+		summarizeBy: none
+		sourceColumn: share_4plus_weeks
+
+	column full_weeks_out
+		dataType: int64
+		summarizeBy: none
+		sourceColumn: full_weeks_out
+
+	partition p6_et_episodes = m
+		mode: import
+		source =
+			let
+			    Source = Csv.Document(File.Contents(AnalyticsFolder & "\p6_et_episodes.csv"),
+			                          [Delimiter = ",", Encoding = 65001, QuoteStyle = QuoteStyle.Csv]),
+			    Promoted = Table.PromoteHeaders(Source, [PromoteAllScalars = true]),
+			    Typed = Table.TransformColumnTypes(Promoted, {
+			        {"supplier_name", type text},
+			        {"retail_year", Int64.Type},
+			        {"episodes", Int64.Type},
+			        {"mean_weeks_out", type number},
+			        {"median_weeks_out", type number},
+			        {"max_weeks_out", Int64.Type},
+			        {"share_4plus_weeks", type number},
+			        {"full_weeks_out", Int64.Type}
+			    }, "en-US")
+			in
+			    Typed

@@ -1,0 +1,48 @@
+{
+  "run_at": "2026-09-29T14:15:02",
+  "engine": "duckdb",
+  "engine_note": "DuckDB verification engine: T-SQL parsed by sqlglot (tsql dialect) and executed in DuckDB; @tsql-only batches (constraints, columnstore indexes, THROW) not executed",
+  "runtime_seconds": 38.4,
+  "passed": true,
+  "error": null,
+  "curated_inputs_verified": {
+    "dim_date": {
+      "rows": 731,
+      "sha256": "9ea2455ab6daf1b9d0e4c8ad34d3edc273872f3bd0ebd6c8c661a87fd24576b4"
+    },
+    "dim_store": {
+      "rows": 20,
+      "sha256": "5b2aacd7d1b3d12890964edf61c6f56fc8952c6d4f3ea8f107857c900b77a1cf"
+    },
+    "dim_product": {
+      "rows": 601,
+      "sha256": "be934d7735c669e30a5947a5a7d4f54615f156965f1e7c0c2029ab645c17551f"
+    },
+    "fact_sales": {
+      "rows": 1339510,
+      "sha256": "3b3e2f4382881ef2765f869583d06d58a3b4d6363a3d39baa9af049f7ce767bb"
+    },
+    "fact_returns": {
+      "rows": 34562,
+      "sha256": "efc8b4f1dcf8750df1330ea136b8e56c50ce61c5013764f54d80e52d2893b02f"
+    },
+    "fact_inventory": {
+      "rows": 939249,
+      "sha256": "9b78c9096d5f7eb9ca3a6859b8965b9238fcee2dabe51c0b320faf8df7455edb"
+    },
+    "fact_promotions": {
+      "rows": 49430,
+      "sha256": "20dd3e783dec853569fa5744b480c4835fc5e6e8792bc762bd1583326697ab7f"
+    },
+    "fact_targets": {
+      "rows": 2077,
+      "sha256": "3d37b1b814e797e710b5dc1ebb986c6f3bc86ff3433200902420970f48a70050"
+    }
+  },
+  "reconciliation": {
+    "PASS": 45
+  },
+  "kpi_validation": {
+    "PASS": 38
+  }
+}

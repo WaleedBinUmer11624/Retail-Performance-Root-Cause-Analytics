@@ -1,0 +1,10 @@
+check,recomputed,reference,abs_difference,tolerance,reference_source,status,phase5_bridge_rows
+H2 2024 net revenue vs Phase 4,10188727.55,10188727.55,0.0,0.01,Phase 4,PASS,7
+H2 2025 net revenue vs Phase 4,9457457.05,9457457.05,0.0,0.01,Phase 4,PASS,7
+H2 YoY % vs Phase 4,-7.177251,-7.177251,0.0,0.0001,Phase 4,PASS,7
+H2 2024 net revenue vs direct fact query,10188727.55,10188727.55,0.0,0.01,facts,PASS,7
+H2 2025 net revenue vs direct fact query,9457457.05,9457457.05,0.0,0.01,facts,PASS,7
+net_revenue change vs Phase 5 headline,-731270.5,-731270.5,0.0,0.01,Phase 5 headline_kpis.csv,PASS,7
+sales_revenue change vs Phase 5 headline,-716613.03,-716613.03,0.0,0.01,Phase 5 headline_kpis.csv,PASS,7
+returns_value change vs Phase 5 headline,14657.47,14657.47,0.0,0.01,Phase 5 headline_kpis.csv,PASS,7
+transactions change vs Phase 5 headline,-13419.0,-13419.0,0.0,0.0,Phase 5 headline_kpis.csv,PASS,7

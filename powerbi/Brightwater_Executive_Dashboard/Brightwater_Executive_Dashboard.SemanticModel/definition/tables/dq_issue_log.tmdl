@@ -1,0 +1,47 @@
+table dq_issue_log
+
+	column rule_id
+		dataType: string
+		sourceColumn: rule_id
+
+	column table_name
+		dataType: string
+		sourceColumn: table_name
+
+	column row_key
+		dataType: string
+		sourceColumn: row_key
+		isHidden
+
+	column column_name
+		dataType: string
+		sourceColumn: column_name
+
+	column raw_value
+		dataType: string
+		sourceColumn: raw_value
+
+	column new_value
+		dataType: string
+		sourceColumn: new_value
+
+	column action
+		dataType: string
+		sourceColumn: action
+
+	column severity
+		dataType: string
+		sourceColumn: severity
+
+	partition dq_issue_log = m
+		mode: import
+		source =
+			let
+			    Source = Csv.Document(File.Contents(DqFolder & "\dq_issue_log.csv"),
+			                          [Delimiter = ",", Encoding = 65001, QuoteStyle = QuoteStyle.Csv]),
+			    Promoted = Table.PromoteHeaders(Source, [PromoteAllScalars = true]),
+			    Typed = Table.TransformColumnTypes(Promoted, {
+			        {"rule_id", type text}, {"table_name", type text}, {"row_key", type text}, {"column_name", type text}, {"raw_value", type text}, {"new_value", type text}, {"action", type text}, {"severity", type text}
+			    }, "en-US")
+			in
+			    Typed

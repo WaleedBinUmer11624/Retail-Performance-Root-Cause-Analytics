@@ -1,0 +1,49 @@
+table p6_cluster_placebo
+
+	column actual
+		dataType: double
+		summarizeBy: none
+		sourceColumn: actual
+
+	column placebo_n
+		dataType: int64
+		summarizeBy: none
+		sourceColumn: placebo_n
+
+	column p_value_one_sided
+		dataType: double
+		summarizeBy: none
+		sourceColumn: p_value_one_sided
+
+	column placebo_min
+		dataType: double
+		summarizeBy: none
+		sourceColumn: placebo_min
+
+	column placebo_p05
+		dataType: double
+		summarizeBy: none
+		sourceColumn: placebo_p05
+
+	column placebo_median
+		dataType: double
+		summarizeBy: none
+		sourceColumn: placebo_median
+
+	partition p6_cluster_placebo = m
+		mode: import
+		source =
+			let
+			    Source = Csv.Document(File.Contents(AnalyticsFolder & "\p6_cluster_placebo.csv"),
+			                          [Delimiter = ",", Encoding = 65001, QuoteStyle = QuoteStyle.Csv]),
+			    Promoted = Table.PromoteHeaders(Source, [PromoteAllScalars = true]),
+			    Typed = Table.TransformColumnTypes(Promoted, {
+			        {"actual", type number},
+			        {"placebo_n", Int64.Type},
+			        {"p_value_one_sided", type number},
+			        {"placebo_min", type number},
+			        {"placebo_p05", type number},
+			        {"placebo_median", type number}
+			    }, "en-US")
+			in
+			    Typed

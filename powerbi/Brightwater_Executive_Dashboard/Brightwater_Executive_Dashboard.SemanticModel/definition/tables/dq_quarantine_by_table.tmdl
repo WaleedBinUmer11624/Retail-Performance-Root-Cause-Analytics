@@ -1,0 +1,24 @@
+table dq_quarantine_by_table
+
+	column table
+		dataType: string
+		sourceColumn: table
+
+	column rows_quarantined
+		dataType: int64
+		formatString: "#,0"
+		summarizeBy: none
+		sourceColumn: rows_quarantined
+
+	partition dq_quarantine_by_table = m
+		mode: import
+		source =
+			let
+			    Source = Csv.Document(File.Contents(DqFolder & "\dq_quarantine_by_table.csv"),
+			                          [Delimiter = ",", Encoding = 65001, QuoteStyle = QuoteStyle.Csv]),
+			    Promoted = Table.PromoteHeaders(Source, [PromoteAllScalars = true]),
+			    Typed = Table.TransformColumnTypes(Promoted, {
+			        {"table", type text}, {"rows_quarantined", Int64.Type}
+			    }, "en-US")
+			in
+			    Typed

@@ -1,0 +1,17 @@
+# Core (Phase 2)
+numpy>=1.26
+pandas>=2.2
+PyYAML>=6.0
+pytest>=8.0
+
+# Database access (from Phase 3)
+SQLAlchemy>=2.0
+pyodbc>=5.0
+
+# Statistical analysis and figures
+scipy>=1.18.1
+matplotlib>=3.11.2
+
+# SQL model and dialect parsing
+duckdb>=1.5.6
+sqlglot>=30.20.0

@@ -1,0 +1,13 @@
+signal,entity_type,rule_with_episode_mask,rule_without_mask,same_rule,non_episode_entity_weeks,budget_measurable,detected_with_mask,delay_with_mask,detected_without_mask,delay_without_mask
+EW01,store,"peer_gap_threshold: 10, 3 wk","robust_z: 4.0, 2 wk",False,805,True,3/3,5.0,2/3,8.5
+EW02,estate,"yoy_vs_trend_threshold: 3, 2 wk","yoy_vs_trend_threshold: 5, 3 wk",False,20,False,1/1,0.0,0/1,
+EW02,format,"yoy_vs_trend_threshold: 5, 3 wk","yoy_vs_trend_threshold: 10, 3 wk",False,107,True,1/1,4.0,0/1,
+EW02,region,"yoy_vs_trend_threshold: 10, 3 wk","yoy_vs_trend_threshold: 10, 3 wk",True,193,True,1/1,7.0,1/1,7.0
+EW03,category,"availability_gap_pp: 1, 2 wk","availability_gap_pp: 5, 4 wk",False,345,True,1/1,1.0,1/1,5.0
+EW03,supplier,"availability_gap_pp: 1, 2 wk","availability_gap_pp: 2, 4 wk",False,761,True,1/1,1.0,1/1,3.0
+EW04,product,"stores_out_count: 1, 2 wk","stores_out_count: 1, 2 wk",True,5306,True,7/9,3.0,7/9,3.0
+EW05,category,"binomial_excess: p<0.05, excess>=3, 2 wk","binomial_excess: p<0.001, excess>=5, 2 wk",False,291,True,1/1,1.0,1/1,3.0
+EW05,store,"binomial_excess: p<0.05, excess>=3, 2 wk","binomial_excess: p<0.001, excess>=5, 2 wk",False,795,True,5/5,2.0,5/5,6.0
+EW06,category,"margin_gap_pp: 1, 4 wk","margin_gap_pp: 5, 2 wk",False,256,True,2/2,5.5,2/2,23.5
+EW07,category,"discount_gap_pp: 5, 3 wk","discount_gap_pp: 5, 3 wk",True,317,True,1/1,5.0,1/1,5.0
+EW08,store,"dq_gate_fail: gate FAIL, 1 wk","dq_gate_fail: gate FAIL, 1 wk",True,2077,True,2/2,0.0,2/2,0.0

@@ -1,0 +1,4 @@
+dimension,entities,entities_with_increase,net_increase,gross_increase,top_k,top_k_share_of_gross,top_entities,hhi_of_increase,entities_significant_p01
+product_id,90,48,31588.73,37592.35,5,0.530918,"P00149, P00151, P00214, P00205, P00146",0.088462,9
+supplier_name,4,4,31588.73,31588.73,5,1.0,"Voltix Distribution Ltd, Northbridge Tech Supplies, Emerald Electronics Wholesale, Unknown supplier",0.60977,2
+store_id,20,11,31588.73,40457.88,5,0.894625,"S13, S14, S07, S15, S16",0.185612,5

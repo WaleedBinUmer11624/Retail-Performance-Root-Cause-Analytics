@@ -1,0 +1,109 @@
+variant,signal,entity_type,warning_plus,critical,critical_unconfirmed
+as configured,EW01,store,75,57,2
+as configured,EW02,estate,8,1,0
+as configured,EW02,format,9,3,0
+as configured,EW02,region,10,2,0
+as configured,EW03,category,20,14,0
+as configured,EW03,supplier,31,17,2
+as configured,EW04,product,71,57,0
+as configured,EW05,category,19,13,0
+as configured,EW05,store,59,51,0
+as configured,EW06,category,36,25,0
+as configured,EW07,category,15,6,0
+as configured,EW08,store,3,0,0
+persistence 3 weeks,EW01,store,75,57,2
+persistence 3 weeks,EW02,estate,8,2,0
+persistence 3 weeks,EW02,format,9,4,0
+persistence 3 weeks,EW02,region,10,2,0
+persistence 3 weeks,EW03,category,20,15,0
+persistence 3 weeks,EW03,supplier,31,19,3
+persistence 3 weeks,EW04,product,71,57,0
+persistence 3 weeks,EW05,category,19,14,0
+persistence 3 weeks,EW05,store,59,51,0
+persistence 3 weeks,EW06,category,36,27,0
+persistence 3 weeks,EW07,category,15,8,0
+persistence 3 weeks,EW08,store,3,0,0
+persistence 6 weeks,EW01,store,75,57,2
+persistence 6 weeks,EW02,estate,8,0,0
+persistence 6 weeks,EW02,format,9,1,0
+persistence 6 weeks,EW02,region,10,2,0
+persistence 6 weeks,EW03,category,20,12,0
+persistence 6 weeks,EW03,supplier,31,16,1
+persistence 6 weeks,EW04,product,71,57,0
+persistence 6 weeks,EW05,category,19,11,0
+persistence 6 weeks,EW05,store,59,51,0
+persistence 6 weeks,EW06,category,36,22,0
+persistence 6 weeks,EW07,category,15,2,0
+persistence 6 weeks,EW08,store,3,0,0
+breadth rule off,EW01,store,75,55,0
+breadth rule off,EW02,estate,8,1,0
+breadth rule off,EW02,format,9,3,0
+breadth rule off,EW02,region,10,2,0
+breadth rule off,EW03,category,20,14,0
+breadth rule off,EW03,supplier,31,17,2
+breadth rule off,EW04,product,71,39,0
+breadth rule off,EW05,category,19,13,0
+breadth rule off,EW05,store,59,37,0
+breadth rule off,EW06,category,36,25,0
+breadth rule off,EW07,category,15,6,0
+breadth rule off,EW08,store,3,0,0
+breadth 5 entities,EW01,store,75,55,0
+breadth 5 entities,EW02,estate,8,1,0
+breadth 5 entities,EW02,format,9,3,0
+breadth 5 entities,EW02,region,10,2,0
+breadth 5 entities,EW03,category,20,14,0
+breadth 5 entities,EW03,supplier,31,17,2
+breadth 5 entities,EW04,product,71,53,0
+breadth 5 entities,EW05,category,19,13,0
+breadth 5 entities,EW05,store,59,38,0
+breadth 5 entities,EW06,category,36,25,0
+breadth 5 entities,EW07,category,15,6,0
+breadth 5 entities,EW08,store,3,0,0
+exposure 0.5 week,EW01,store,75,65,10
+exposure 0.5 week,EW02,estate,8,1,0
+exposure 0.5 week,EW02,format,9,6,0
+exposure 0.5 week,EW02,region,10,10,3
+exposure 0.5 week,EW03,category,20,14,0
+exposure 0.5 week,EW03,supplier,31,18,2
+exposure 0.5 week,EW04,product,71,59,0
+exposure 0.5 week,EW05,category,19,13,0
+exposure 0.5 week,EW05,store,59,51,0
+exposure 0.5 week,EW06,category,36,25,0
+exposure 0.5 week,EW07,category,15,9,0
+exposure 0.5 week,EW08,store,3,0,0
+exposure 2 weeks,EW01,store,75,57,2
+exposure 2 weeks,EW02,estate,8,1,0
+exposure 2 weeks,EW02,format,9,3,0
+exposure 2 weeks,EW02,region,10,0,0
+exposure 2 weeks,EW03,category,20,14,0
+exposure 2 weeks,EW03,supplier,31,17,2
+exposure 2 weeks,EW04,product,71,57,0
+exposure 2 weeks,EW05,category,19,13,0
+exposure 2 weeks,EW05,store,59,51,0
+exposure 2 weeks,EW06,category,36,25,0
+exposure 2 weeks,EW07,category,15,6,0
+exposure 2 weeks,EW08,store,3,0,0
+exposure rule off,EW01,store,75,57,2
+exposure rule off,EW02,estate,8,1,0
+exposure rule off,EW02,format,9,3,0
+exposure rule off,EW02,region,10,0,0
+exposure rule off,EW03,category,20,14,0
+exposure rule off,EW03,supplier,31,17,2
+exposure rule off,EW04,product,71,57,0
+exposure rule off,EW05,category,19,13,0
+exposure rule off,EW05,store,59,51,0
+exposure rule off,EW06,category,36,25,0
+exposure rule off,EW07,category,15,6,0
+exposure rule off,EW08,store,3,0,0
+record rule off,EW01,store,75,57,2
+record rule off,EW02,estate,8,1,0
+record rule off,EW02,format,9,3,0
+record rule off,EW02,region,9,2,0
+record rule off,EW03,category,20,14,0
+record rule off,EW03,supplier,31,17,2
+record rule off,EW04,product,71,57,0
+record rule off,EW05,category,19,13,0
+record rule off,EW05,store,59,51,0
+record rule off,EW06,category,36,25,0
+record rule off,EW07,category,15,6,0
+record rule off,EW08,store,3,0,0

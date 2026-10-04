@@ -1,0 +1,370 @@
+# =====================================================================
+# Brightwater Retail Ltd : synthetic data generator configuration
+# =====================================================================
+# Generic business assumptions used to simulate a "normal" retailer.
+# Scenario-specific behaviours (the hidden answer key) are NOT in this
+# file. They live in config/_hidden_scenario.yaml and are applied on top.
+#
+# Every number here is an assumption. Change it here, not in the code.
+# =====================================================================
+
+seed: 20260927                    # fixed seed: same config + seed = identical data
+
+calendar:
+  start_date: "2024-01-01"        # Monday. Retail week 1 of retail year 2024
+  end_date: "2025-12-31"          # last day in the extract
+  simulated_weeks: 105            # 104 full weeks + partial week 105 (29-31 Dec 2025)
+  inventory_weeks: 104            # snapshots only exist for completed weeks
+  day_of_week_weights: [0.11, 0.11, 0.12, 0.14, 0.16, 0.21, 0.15]  # Mon..Sun
+  closed_dates: ["2024-12-25", "2025-12-25"]
+  day_multipliers:                # applied before re-normalising within the week
+    bank_holiday: 1.20
+    st_stephens_day: 1.45
+    christmas_eve: 1.30
+  bank_holidays:
+    "2024-01-01": "New Year's Day"
+    "2024-02-05": "St Brigid's Day"
+    "2024-03-18": "St Patrick's Day (observed)"
+    "2024-04-01": "Easter Monday"
+    "2024-05-06": "May Bank Holiday"
+    "2024-06-03": "June Bank Holiday"
+    "2024-08-05": "August Bank Holiday"
+    "2024-10-28": "October Bank Holiday"
+    "2024-12-25": "Christmas Day"
+    "2024-12-26": "St Stephen's Day"
+    "2025-01-01": "New Year's Day"
+    "2025-02-03": "St Brigid's Day"
+    "2025-03-17": "St Patrick's Day"
+    "2025-04-21": "Easter Monday"
+    "2025-05-05": "May Bank Holiday"
+    "2025-06-02": "June Bank Holiday"
+    "2025-08-04": "August Bank Holiday"
+    "2025-10-27": "October Bank Holiday"
+    "2025-12-25": "Christmas Day"
+    "2025-12-26": "St Stephen's Day"
+  trading_hours:                  # hourly share of transactions (opening 09:00 to 21:00)
+    hours: [9, 10, 11, 12, 13, 14, 15, 16, 17, 18, 19, 20]
+    weights: [0.04, 0.07, 0.09, 0.11, 0.12, 0.10, 0.09, 0.10, 0.11, 0.08, 0.06, 0.03]
+
+run_modes:
+  sample:
+    # 4 of 20 stores, all SKUs, full two years. Chosen to cover every format
+    # and three regions: Dublin Standard, Munster Flagship, Munster Standard,
+    # Connacht Compact. Keeping all SKUs preserves range changes, cannibalisation
+    # and category mix, which a SKU sample distorts.
+    store_ids: [S04, S13, S16, S19]
+    output_dir: "data/sample"
+  full:
+    store_ids: all
+    output_dir: "data/raw"
+
+volume:
+  # Expected demand LINES per week for a Standard store at seasonal index 1.0.
+  base_weekly_lines_standard_store: 660
+  format_factor: {Flagship: 1.80, Standard: 1.00, Compact: 0.55}
+  region_factor: {Dublin: 1.08, Leinster: 1.00, Munster: 0.98, Connacht: 0.95, "Ulster (ROI)": 0.93}
+  store_factor_sigma: 0.08        # store-specific level (location quality), lognormal
+  store_drift_sigma_per_year: 0.03  # natural store trend (some stores grow, some decline)
+  store_week_noise_sigma: 0.06    # store-week shocks (local events, staffing, weather)
+  chain_week_noise_sigma: 0.035   # chain-wide weekly shocks (weather, consumer mood)
+  cell_noise_sigma: 0.20          # store-SKU-week idiosyncratic noise
+  market_volume_trend_per_year: -0.005  # soft Irish discretionary retail market
+  basket_new_transaction_prob: 0.62     # each sold line starts a new receipt with this prob.
+                                        # mean lines per transaction = 1 / p  (about 1.6)
+
+products:
+  sku_popularity_sigma: 1.0       # lognormal spread of SKU popularity within a category
+  price_popularity_exponent: -0.45  # cheaper SKUs sell more lines
+  launch_2025_share: 0.05         # SKUs launched during 2025 (range change)
+  discontinued_share: 0.04        # SKUs discontinued during the period
+  ranging_share:                  # share of each category's SKUs ranged, by store format
+    Flagship: 1.00
+    Standard: 0.86
+    Compact: 0.60
+
+pricing:
+  price_increase_2025:            # list price change applied from 1 Jan 2025
+    Home & Kitchen: 0.025
+    Electronics & Tech: 0.010
+    Health & Beauty: 0.035
+    Toys & Games: 0.020
+    Garden & Outdoor: 0.030
+    Stationery & Crafts: 0.030
+    Seasonal & Gifts: 0.025
+  cost_increase_2025: 0.020       # standard cost inflation from 1 Jan 2025
+  price_elasticity: -0.8          # volume response to list price change
+  price_sigma_within_subcategory: 0.45
+  markdown_line_share: 0.015      # non-promo line discounts (damaged box, price match)
+  markdown_depths: [0.10, 0.15, 0.20]
+
+categories:
+  # line_share: share of a store's annual lines.  median_price: EUR ex VAT.
+  # qty_probs: P(qty=1), P(2), P(3), P(4)
+  Home & Kitchen:
+    sku_count: 140
+    line_share: 0.21
+    median_price: 36.0
+    price_band: [5, 150]
+    target_margin: 0.45
+    qty_probs: [0.84, 0.11, 0.03, 0.02]
+    season: {q4_amp: 0.45, bf_amp: 0.35, summer_amp: 0.0, bts_amp: 0.0, jan_dip: 0.12, off_season_base: 1.0}
+    subcategories:
+      Cookware: {weight: 0.18, price_mult: 1.6}
+      Kitchen Utensils: {weight: 0.20, price_mult: 0.5}
+      Small Appliances: {weight: 0.12, price_mult: 2.8}
+      Tableware: {weight: 0.15, price_mult: 0.8}
+      Storage: {weight: 0.13, price_mult: 0.6}
+      Home Fragrance: {weight: 0.12, price_mult: 0.6}
+      Bedding & Textiles: {weight: 0.10, price_mult: 1.4}
+    suppliers: {Hearthline Homewares: 0.45, Castlegate Kitchen Supply: 0.35, Liffey Living Imports: 0.20}
+    brands: [Hearthline, Oakmere, Kitchcraft Pro, Linden Home, Brightwater Home]
+  Electronics & Tech:
+    sku_count: 90
+    line_share: 0.09
+    median_price: 63.0
+    price_band: [15, 600]
+    target_margin: 0.22
+    qty_probs: [0.93, 0.06, 0.01, 0.00]
+    season: {q4_amp: 0.80, bf_amp: 0.90, summer_amp: 0.0, bts_amp: 0.15, jan_dip: 0.15, off_season_base: 1.0}
+    subcategories:
+      Audio: {weight: 0.20, price_mult: 1.8}
+      Phone Accessories: {weight: 0.24, price_mult: 0.55}
+      Computer Accessories: {weight: 0.16, price_mult: 1.0}
+      Smart Home: {weight: 0.12, price_mult: 1.9}
+      Gaming Accessories: {weight: 0.13, price_mult: 1.3}
+      Cables & Power: {weight: 0.15, price_mult: 0.4}
+    suppliers: {Voltix Distribution Ltd: 0.45, Northbridge Tech Supplies: 0.35, Emerald Electronics Wholesale: 0.20}
+    brands: [Voltix, Nordwave, Pulse Audio, Corelink, Brightwater Tech]
+  Health & Beauty:
+    sku_count: 110
+    line_share: 0.23
+    median_price: 14.0
+    price_band: [3, 60]
+    target_margin: 0.50
+    qty_probs: [0.72, 0.19, 0.06, 0.03]
+    season: {q4_amp: 0.30, bf_amp: 0.20, summer_amp: 0.08, bts_amp: 0.0, jan_dip: 0.05, off_season_base: 1.0}
+    subcategories:
+      Skincare: {weight: 0.25, price_mult: 1.2}
+      Haircare: {weight: 0.20, price_mult: 0.8}
+      Oral Care: {weight: 0.14, price_mult: 0.5}
+      Fragrance: {weight: 0.12, price_mult: 2.2}
+      Personal Care Appliances: {weight: 0.09, price_mult: 3.0}
+      Wellness: {weight: 0.20, price_mult: 0.9}
+    suppliers: {Atlantic Beauty Distributors: 0.55, Glenview Health Supply: 0.45}
+    brands: [Glow & Co, Purely Irish, Seabreeze, Dermacare, Brightwater Beauty]
+  Toys & Games:
+    sku_count: 80
+    line_share: 0.10
+    median_price: 27.0
+    price_band: [5, 120]
+    target_margin: 0.40
+    qty_probs: [0.86, 0.10, 0.03, 0.01]
+    season: {q4_amp: 2.40, bf_amp: 0.70, summer_amp: 0.10, bts_amp: 0.0, jan_dip: 0.25, off_season_base: 1.0}
+    subcategories:
+      Board Games: {weight: 0.20, price_mult: 1.3}
+      Building Sets: {weight: 0.18, price_mult: 1.8}
+      Dolls & Figures: {weight: 0.20, price_mult: 1.0}
+      Outdoor Toys: {weight: 0.12, price_mult: 1.2}
+      Puzzles: {weight: 0.15, price_mult: 0.7}
+      Craft Kits: {weight: 0.15, price_mult: 0.8}
+    suppliers: {Playwell Ireland: 0.60, Kingfisher Toys Ltd: 0.40}
+    brands: [Playwell, Tinkertown, Brickhaven, Puzzleworks]
+  Garden & Outdoor:
+    sku_count: 60
+    line_share: 0.08
+    median_price: 24.0
+    price_band: [5, 250]
+    target_margin: 0.42
+    qty_probs: [0.80, 0.13, 0.05, 0.02]
+    season: {q4_amp: 0.0, bf_amp: 0.05, summer_amp: 1.40, bts_amp: 0.0, jan_dip: 0.0, off_season_base: 0.45}
+    subcategories:
+      Garden Tools: {weight: 0.25, price_mult: 1.2}
+      Plant Care: {weight: 0.28, price_mult: 0.5}
+      Outdoor Furniture: {weight: 0.10, price_mult: 5.0}
+      BBQ: {weight: 0.17, price_mult: 1.5}
+      Outdoor Lighting: {weight: 0.20, price_mult: 1.1}
+    suppliers: {Greenacre Garden Supply: 0.65, Burren Outdoor Ltd: 0.35}
+    brands: [Greenacre, Burren, Sunpatch, Brightwater Garden]
+  Stationery & Crafts:
+    sku_count: 70
+    line_share: 0.18
+    median_price: 7.0
+    price_band: [1, 40]
+    target_margin: 0.55
+    qty_probs: [0.62, 0.22, 0.10, 0.06]
+    season: {q4_amp: 0.40, bf_amp: 0.10, summer_amp: 0.0, bts_amp: 1.10, jan_dip: 0.05, off_season_base: 1.0}
+    subcategories:
+      Writing: {weight: 0.22, price_mult: 0.6}
+      Paper & Notebooks: {weight: 0.22, price_mult: 1.0}
+      School Supplies: {weight: 0.20, price_mult: 1.1}
+      Art Supplies: {weight: 0.18, price_mult: 1.4}
+      Gift Wrap & Cards: {weight: 0.18, price_mult: 0.8}
+    suppliers: {Inkwell Stationery Ltd: 0.60, Shannon Paper Co: 0.40}
+    brands: [Inkwell, Scribe & Co, Paperbark, Brightwater Studio]
+  Seasonal & Gifts:
+    sku_count: 50
+    line_share: 0.11
+    median_price: 18.0
+    price_band: [3, 80]
+    target_margin: 0.48
+    qty_probs: [0.76, 0.16, 0.05, 0.03]
+    season: {q4_amp: 5.50, bf_amp: 0.60, summer_amp: 0.0, bts_amp: 0.0, jan_dip: 0.0, off_season_base: 0.25}
+    subcategories:
+      Christmas Decorations: {weight: 0.35, price_mult: 1.0}
+      Gift Sets: {weight: 0.30, price_mult: 1.6}
+      Confectionery Gifts: {weight: 0.20, price_mult: 0.6}
+      Party & Occasions: {weight: 0.15, price_mult: 0.7}
+    suppliers: {Evergreen Seasonal Imports: 0.70, Liffey Living Imports: 0.30}
+    brands: [Evergreen, Joyful Days, Brightwater Gifts]
+
+seasonality:
+  q4_centre_week: 50              # retail week of the Christmas peak
+  q4_width_weeks: 2.2
+  black_friday_week: 48
+  summer_centre_week: 21
+  summer_width_weeks: 6.0
+  bts_centre_week: 34             # back to school (late August)
+  bts_width_weeks: 1.6
+  jan_dip_weeks: [1, 2, 3, 4, 5]
+
+promotions:
+  # Chain-wide promotion events. Each event covers a share of a category's SKUs.
+  default:
+    cadence_weeks: 6              # a new event every N weeks
+    duration_weeks: 2
+    sku_coverage: 0.22
+    depths: [0.10, 0.15, 0.20, 0.25]
+    depth_probs: [0.25, 0.40, 0.25, 0.10]
+    store_participation: 0.92
+    elasticity: 2.2               # uplift = 1 + elasticity * depth + display_effect
+    display_effect: 0.10
+    pull_forward_share: 0.30      # share of incremental units borrowed from the next weeks
+    pull_forward_weeks: 2
+  overrides:                      # category-specific differences to the default
+    Electronics & Tech: {elasticity: 2.8, pull_forward_share: 0.25}
+    Health & Beauty: {cadence_weeks: 4, elasticity: 2.0, pull_forward_share: 0.40}
+    Stationery & Crafts: {cadence_weeks: 8, elasticity: 1.5}
+    Home & Kitchen: {elasticity: 2.4, pull_forward_share: 0.35}
+  clearance:                      # post-Christmas clearance on Seasonal & Gifts
+    category: Seasonal & Gifts
+    retail_weeks: [1, 2, 3]
+    depths: [0.40, 0.50]
+    sku_coverage: 0.70
+
+inventory:
+  cover_weeks: {Flagship: 1.6, Standard: 1.8, Compact: 2.1}
+  safety_z: 1.3
+  min_presentation_stock: 2
+  forecast_error_sigma: 0.18      # replenishment forecast error (drives natural stock-outs)
+  supplier_fill_rate_mean: 0.97
+  supplier_fill_rate_sd: 0.02
+  substitution_rate: 0.25         # share of stocked-out lines where customer buys a substitute
+  shrinkage_prob: 0.015           # prob. of losing 1 unit per store-SKU-week (damage, theft)
+
+returns:
+  base_return_prob:               # probability a sold line is returned
+    Home & Kitchen: 0.035
+    Electronics & Tech: 0.050
+    Health & Beauty: 0.010
+    Toys & Games: 0.030
+    Garden & Outdoor: 0.025
+    Stationery & Crafts: 0.008
+    Seasonal & Gifts: 0.020
+  christmas_gift_uplift: 1.8      # lines sold 15 Nov to 24 Dec
+  lag_gamma_shape: 1.4
+  lag_gamma_scale: 6.0
+  policy_days: 30
+  christmas_extended_until: "01-31"   # Christmas purchases returnable until 31 Jan
+  full_quantity_prob: 0.85
+  other_store_prob: 0.06          # returned to a different store in the same region
+  no_receipt_prob: 0.03           # legitimate no-receipt returns (store credit)
+  reasons: [Changed mind, Faulty, Not as described, Damaged, Gift return]
+  reason_probs: [0.42, 0.22, 0.14, 0.10, 0.12]
+  restockable_reasons: [Changed mind, Not as described, Gift return]
+
+targets:
+  plan_growth: {2024: 0.020, 2025: 0.030}
+  store_plan_error_sigma: 0.03
+  week_phasing_error_sigma: 0.05
+  set_dates: {2024: "2023-11-20", 2025: "2024-11-18"}
+
+data_quality_issues:
+  # Rates are per row of the affected table unless stated.  Kept small and
+  # realistic: a real POS extract is mostly clean with a long tail of problems.
+  fact_sales:
+    duplicate_transaction_rate: 0.0015      # whole receipts re-sent by the till
+    missing_product_id_rate: 0.0008
+    missing_store_id_rate: 0.0005
+    invalid_store_id_rate: 0.0001
+    invalid_product_id_rate: 0.0002
+    null_unit_price_rate: 0.0003
+    null_discount_rate: 0.0010
+    price_x100_rate: 0.0001                 # cents keyed as euros
+    zero_price_rate: 0.0001
+    negative_price_rate: 0.00005
+    negative_quantity_rate: 0.0004
+    malformed_date_rate: 0.0001
+    out_of_range_date_rate: 0.00005
+    extreme_quantity_rate: 0.00003
+    revenue_mismatch_rate: 0.0004
+    inconsistent_category_rate: 0.015       # legacy till category labels
+    legacy_date_format_store: S19           # this store's till exported DD/MM/YYYY ...
+    legacy_date_format_until: "2024-02-29"  # ... until a till upgrade
+    orphan_promotion_id_rate: 0.0002
+  dim_product:
+    duplicate_product_records: 10
+    inconsistent_category_records: 14
+    missing_supplier_records: 5
+    negative_cost_records: 1
+  dim_store:
+    whitespace_name_records: 1
+    inconsistent_region_records: 1
+  fact_inventory:
+    negative_stock_rate: 0.0002
+    broken_flow_rate: 0.0010                # opening stock != previous closing stock
+    duplicate_snapshot_rate: 0.0002
+    missing_snapshot_rate: 0.0005
+    null_received_rate: 0.0003
+  fact_returns:
+    invalid_transaction_ref_rate: 0.004
+    qty_exceeds_sold_rate: 0.002
+    return_before_sale_rate: 0.001
+    duplicate_return_rate: 0.002
+  fact_promotions:
+    end_before_start_records: 2
+    duplicate_rows: 4
+    unknown_product_records: 3
+  fact_targets:
+    duplicate_rows: 2
+    missing_rows: 3
+    x100_rows: 1
+  missing_batches:                          # store-days never delivered (POS outage)
+    - {store_id: S13, date: "2024-10-15"}
+    - {store_id: S13, date: "2024-10-16"}
+
+stores:
+  # store_id: [name, town, county, region, format, open_year, latitude, longitude]
+  S01: [Dublin Grafton Street, Dublin, Dublin, Dublin, Flagship, 2009, 53.3409, -6.2606]
+  S02: [Dublin Dundrum, Dublin, Dublin, Dublin, Flagship, 2011, 53.2868, -6.2417]
+  S03: [Dublin Blanchardstown, Dublin, Dublin, Dublin, Standard, 2012, 53.3930, -6.3920]
+  S04: [Dublin Swords, Swords, Dublin, Dublin, Standard, 2014, 53.4597, -6.2181]
+  S05: [Dublin Tallaght, Tallaght, Dublin, Dublin, Standard, 2013, 53.2859, -6.3733]
+  S06: [Bray, Bray, Wicklow, Leinster, Compact, 2016, 53.2028, -6.0983]
+  S07: [Naas, Naas, Kildare, Leinster, Standard, 2015, 53.2159, -6.6669]
+  S08: [Navan, Navan, Meath, Leinster, Compact, 2017, 53.6528, -6.6814]
+  S09: [Drogheda, Drogheda, Louth, Leinster, Standard, 2014, 53.7189, -6.3478]
+  S10: [Kilkenny, Kilkenny, Kilkenny, Leinster, Compact, 2018, 52.6541, -7.2448]
+  S11: [Wexford, Wexford, Wexford, Leinster, Compact, 2018, 52.3369, -6.4633]
+  S12: [Athlone, Athlone, Westmeath, Leinster, Standard, 2016, 53.4239, -7.9407]
+  S13: [Cork Patrick Street, Cork, Cork, Munster, Flagship, 2010, 51.8985, -8.4730]
+  S14: [Cork Mahon Point, Cork, Cork, Munster, Standard, 2013, 51.8845, -8.3940]
+  S15: [Limerick, Limerick, Limerick, Munster, Standard, 2012, 52.6638, -8.6267]
+  S16: [Waterford, Waterford, Waterford, Munster, Standard, 2015, 52.2593, -7.1101]
+  S17: [Tralee, Tralee, Kerry, Munster, Compact, 2019, 52.2713, -9.7026]
+  S18: [Galway, Galway, Galway, Connacht, Standard, 2011, 53.2707, -9.0568]
+  S19: [Sligo, Sligo, Sligo, Connacht, Compact, 2019, 54.2766, -8.4761]
+  S20: [Letterkenny, Letterkenny, Donegal, "Ulster (ROI)", Compact, 2020, 54.9558, -7.7342]
+  format_attributes:
+    Flagship: {floor_area_m2: 1200, headcount_fte: 28, weekly_trading_hours: 84}
+    Standard: {floor_area_m2: 700, headcount_fte: 16, weekly_trading_hours: 80}
+    Compact: {floor_area_m2: 350, headcount_fte: 9, weekly_trading_hours: 72}

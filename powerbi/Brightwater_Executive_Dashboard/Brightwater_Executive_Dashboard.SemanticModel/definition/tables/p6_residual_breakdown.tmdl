@@ -1,0 +1,30 @@
+table p6_residual_breakdown
+
+	column part
+		dataType: string
+		sourceColumn: part
+
+	column amount_eur
+		dataType: double
+		summarizeBy: none
+		sourceColumn: amount_eur
+
+	column share_of_residual
+		dataType: double
+		summarizeBy: none
+		sourceColumn: share_of_residual
+
+	partition p6_residual_breakdown = m
+		mode: import
+		source =
+			let
+			    Source = Csv.Document(File.Contents(AnalyticsFolder & "\p6_residual_breakdown.csv"),
+			                          [Delimiter = ",", Encoding = 65001, QuoteStyle = QuoteStyle.Csv]),
+			    Promoted = Table.PromoteHeaders(Source, [PromoteAllScalars = true]),
+			    Typed = Table.TransformColumnTypes(Promoted, {
+			        {"part", type text},
+			        {"amount_eur", type number},
+			        {"share_of_residual", type number}
+			    }, "en-US")
+			in
+			    Typed

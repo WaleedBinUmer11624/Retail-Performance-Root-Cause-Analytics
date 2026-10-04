@@ -1,0 +1,8 @@
+status,meaning,allowed_next_status
+NEW,Created by the weekly run,"ACKNOWLEDGED, FALSE POSITIVE"
+ACKNOWLEDGED,An owner has read it and accepted responsibility,"INVESTIGATING, MONITORING, FALSE POSITIVE"
+INVESTIGATING,Data or evidence is being gathered (Phase 8 data requests),"ACTIONED, MONITORING, RESOLVED, FALSE POSITIVE"
+ACTIONED,A decision was taken and logged in the Phase 8 decision log,"MONITORING, RESOLVED"
+MONITORING,Watching whether the deviation persists or recovers,"INVESTIGATING, RESOLVED"
+RESOLVED,Deviation ended or explained; the baseline may be reset to the new level,
+FALSE POSITIVE,Investigated and found not to be a real change (reason required),

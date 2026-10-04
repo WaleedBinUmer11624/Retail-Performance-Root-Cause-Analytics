@@ -1,0 +1,26 @@
+measure,value
+weeks,26
+weeks_negative,20
+share_weeks_negative,0.7692307692307693
+persistence,persistent
+first_negative_week,28
+sustained_onset_week_rolling,30
+sustained_onset_week_weekly,49
+top_negative_weeks,"[50, 52, 35, 38, 44]"
+top_negative_weeks_change,-405338.03
+top_negative_weeks_share,0.5542928779432507
+first_half_yoy_pct,-7.063712697996172
+second_half_yoy_pct,-7.253890616094905
+first_half_weeks,27-39
+second_half_weeks,40-52
+step_split_week,32
+step_mean_before_pct,-1.4103969198110209
+step_mean_after_pct,-8.828929341882745
+step_pp,-7.418532422071724
+r2_step,0.12318672273242826
+r2_linear,0.010242019814337588
+slope_pp_per_week,-0.11240584439753018
+slope_p_value,0.6227742177479147
+shape,a persistent decline with no clear trend within the period
+h1_yoy_pct,1.4383674384908618
+context_sustained_onset_week,29

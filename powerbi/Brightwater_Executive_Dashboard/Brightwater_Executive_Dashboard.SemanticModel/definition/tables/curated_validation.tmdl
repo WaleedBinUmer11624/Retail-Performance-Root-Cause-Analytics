@@ -1,0 +1,30 @@
+table curated_validation
+
+	column group
+		dataType: string
+		sourceColumn: group
+
+	column check
+		dataType: string
+		sourceColumn: check
+
+	column status
+		dataType: string
+		sourceColumn: status
+
+	column value
+		dataType: string
+		sourceColumn: value
+
+	partition curated_validation = m
+		mode: import
+		source =
+			let
+			    Source = Csv.Document(File.Contents(DqFolder & "\curated_validation.csv"),
+			                          [Delimiter = ",", Encoding = 65001, QuoteStyle = QuoteStyle.Csv]),
+			    Promoted = Table.PromoteHeaders(Source, [PromoteAllScalars = true]),
+			    Typed = Table.TransformColumnTypes(Promoted, {
+			        {"group", type text}, {"check", type text}, {"status", type text}, {"value", type text}
+			    }, "en-US")
+			in
+			    Typed

@@ -1,0 +1,23 @@
+table p6_store_groups
+
+	column store_id
+		dataType: string
+		sourceColumn: store_id
+
+	column store_group
+		dataType: string
+		sourceColumn: store_group
+
+	partition p6_store_groups = m
+		mode: import
+		source =
+			let
+			    Source = Csv.Document(File.Contents(AnalyticsFolder & "\p6_store_groups.csv"),
+			                          [Delimiter = ",", Encoding = 65001, QuoteStyle = QuoteStyle.Csv]),
+			    Promoted = Table.PromoteHeaders(Source, [PromoteAllScalars = true]),
+			    Typed = Table.TransformColumnTypes(Promoted, {
+			        {"store_id", type text},
+			        {"store_group", type text}
+			    }, "en-US")
+			in
+			    Typed

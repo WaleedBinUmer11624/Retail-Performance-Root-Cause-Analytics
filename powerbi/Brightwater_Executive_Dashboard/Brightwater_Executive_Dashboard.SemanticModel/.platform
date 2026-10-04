@@ -1,0 +1,11 @@
+{
+  "$schema": "https://developer.microsoft.com/json-schemas/fabric/gitIntegration/platformProperties/2.0.0/schema.json",
+  "metadata": {
+    "type": "SemanticModel",
+    "displayName": "Brightwater_Executive_Dashboard"
+  },
+  "config": {
+    "version": "2.0",
+    "logicalId": "1116ce4e-47ef-48ca-af26-cd18dea4aedc"
+  }
+}

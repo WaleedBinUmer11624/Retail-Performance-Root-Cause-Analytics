@@ -1,0 +1,7 @@
+method,effect_eur,ci_low,ci_high,detail
+M1 category DiD (sales),-186146.420449,-248937.43698,-121581.1347,"delta -7.07% sales, -1.73% units"
+"M1 category DiD (gross margin log DiD, not used)",-223281.161115,,,delta log margin -0.217; not used: inconsistent with the unit response
+M1 category DiD (gross margin = revenue effect minus cost of the unit change),-159257.988425,,,cost counterfactual follows the M1 unit response
+"M2 dose-response (promotion coverage lags 0-2, depth, store FE)",97505.293502,87311.804371,161233.668809,within R2 0.38
+M3 event-level net programme revenue (current minus prior programme),79059.330917,,,"baseline contamination {2024: 0.2130201895344046, 2025: 0.6408227848101266}"
+M4 discount-rate accounting (net volume response 0; range = volume response at the M1 units CI bounds),-265003.364503,-380272.273058,-243387.050924,discount rate 2.4% to 11.9% of gross sales

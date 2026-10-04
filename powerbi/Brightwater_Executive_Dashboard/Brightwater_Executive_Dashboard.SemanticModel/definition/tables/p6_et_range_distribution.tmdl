@@ -1,0 +1,77 @@
+table p6_et_range_distribution
+
+	column supplier_name
+		dataType: string
+		sourceColumn: supplier_name
+
+	column sku_status
+		dataType: string
+		sourceColumn: sku_status
+
+	column skus_py
+		dataType: double
+		summarizeBy: none
+		sourceColumn: skus_py
+
+	column skus_cy
+		dataType: double
+		summarizeBy: none
+		sourceColumn: skus_cy
+
+	column ranged_cells_py
+		dataType: double
+		summarizeBy: none
+		sourceColumn: ranged_cells_py
+
+	column ranged_cells_cy
+		dataType: double
+		summarizeBy: none
+		sourceColumn: ranged_cells_cy
+
+	column sales_py
+		dataType: double
+		summarizeBy: none
+		sourceColumn: sales_py
+
+	column sales_cy
+		dataType: double
+		summarizeBy: none
+		sourceColumn: sales_cy
+
+	column sales_change
+		dataType: double
+		summarizeBy: none
+		sourceColumn: sales_change
+
+	column distribution_effect
+		dataType: double
+		summarizeBy: none
+		sourceColumn: distribution_effect
+
+	column rate_effect
+		dataType: double
+		summarizeBy: none
+		sourceColumn: rate_effect
+
+	partition p6_et_range_distribution = m
+		mode: import
+		source =
+			let
+			    Source = Csv.Document(File.Contents(AnalyticsFolder & "\p6_et_range_distribution.csv"),
+			                          [Delimiter = ",", Encoding = 65001, QuoteStyle = QuoteStyle.Csv]),
+			    Promoted = Table.PromoteHeaders(Source, [PromoteAllScalars = true]),
+			    Typed = Table.TransformColumnTypes(Promoted, {
+			        {"supplier_name", type text},
+			        {"sku_status", type text},
+			        {"skus_py", type number},
+			        {"skus_cy", type number},
+			        {"ranged_cells_py", type number},
+			        {"ranged_cells_cy", type number},
+			        {"sales_py", type number},
+			        {"sales_cy", type number},
+			        {"sales_change", type number},
+			        {"distribution_effect", type number},
+			        {"rate_effect", type number}
+			    }, "en-US")
+			in
+			    Typed

@@ -1,0 +1,86 @@
+table Store
+
+	column store_key
+		dataType: int64
+		summarizeBy: none
+		sourceColumn: store_key
+		isKey
+		isHidden
+
+	column store_id
+		dataType: string
+		sourceColumn: store_id
+
+	column store_name
+		dataType: string
+		sourceColumn: store_name
+
+	column store_label
+		dataType: string
+		sourceColumn: store_label
+
+	column town
+		dataType: string
+		sourceColumn: town
+
+	column county
+		dataType: string
+		sourceColumn: county
+
+	column region
+		dataType: string
+		sourceColumn: region
+
+	column store_format
+		dataType: string
+		sourceColumn: store_format
+
+	column floor_area_m2
+		dataType: int64
+		summarizeBy: none
+		sourceColumn: floor_area_m2
+
+	column open_date
+		dataType: dateTime
+		summarizeBy: none
+		sourceColumn: open_date
+
+	column weekly_trading_hours
+		dataType: int64
+		summarizeBy: none
+		sourceColumn: weekly_trading_hours
+
+	column is_unknown
+		dataType: int64
+		summarizeBy: none
+		sourceColumn: is_unknown
+
+	column store_group =
+			VAR _g = LOOKUPVALUE ( p6_store_groups[store_group], p6_store_groups[store_id], Store[store_id] )
+			RETURN IF ( ISBLANK ( _g ), "Unknown", _g )
+		dataType: string
+		summarizeBy: none
+
+	partition Store = m
+		mode: import
+		source =
+			let
+			    Source = Csv.Document(File.Contents(ModelFolder & "\store.csv"),
+			                          [Delimiter = ",", Encoding = 65001, QuoteStyle = QuoteStyle.Csv]),
+			    Promoted = Table.PromoteHeaders(Source, [PromoteAllScalars = true]),
+			    Typed = Table.TransformColumnTypes(Promoted, {
+			        {"store_key", Int64.Type},
+			        {"store_id", type text},
+			        {"store_name", type text},
+			        {"store_label", type text},
+			        {"town", type text},
+			        {"county", type text},
+			        {"region", type text},
+			        {"store_format", type text},
+			        {"floor_area_m2", Int64.Type},
+			        {"open_date", type date},
+			        {"weekly_trading_hours", Int64.Type},
+			        {"is_unknown", Int64.Type}
+			    }, "en-US")
+			in
+			    Typed

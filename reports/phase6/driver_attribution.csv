@@ -1,0 +1,6 @@
+component,amount_eur,overlap_removed_eur,basis,share_of_change
+Store-cluster excess decline (vs matched control stores),-397778.209303,0.0,DiD counterfactual; defined relative to control stores,0.543955
+Electronics & Tech full-week stock-outs (ESTIMATE),-37235.346776,-0.0,"Full-week lost sales change (ESTIMATE), all stores, minus the cluster's above-control share",0.050919
+Electronics & Tech 'Faulty' returns increase,-31588.73,-0.0,"'Faulty' refund change in the category, minus the cluster's above-control share",0.043197
+Home & Kitchen category-specific change (promotion period),-186146.420449,-0.0,"M1 category DiD effect, minus the cluster's above-control share",0.254552
+Residual: not attributed,-78521.793472,0.0,Total minus the components above (closes the attribution exactly),0.107377

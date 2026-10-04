@@ -1,0 +1,15 @@
+prior_period,current_period,metric,label,unit,h2_prior,h2_current,change,yoy_pct,change_pp,contribution_pp
+H2 2024,H2 2025,sales_revenue,Sales Revenue (EUR),EUR,10557440.91,9840827.88,-716613.03,-6.787753,,-7.033391
+H2 2024,H2 2025,returns_value,Returns Value (EUR),EUR,368713.36,383370.83,14657.47,3.975302,,-0.14386
+H2 2024,H2 2025,net_revenue,Net Revenue (EUR),EUR,10188727.55,9457457.05,-731270.5,-7.177251,,-7.177251
+H2 2024,H2 2025,gross_margin,Gross Margin (EUR),EUR,3962593.91,3525708.45,-436885.46,-11.025239,,
+H2 2024,H2 2025,gross_margin_pct,Gross Margin %,ratio (0-1),0.388919,0.372797,-0.016123,,-1.612275,
+H2 2024,H2 2025,transactions,Transactions,count,229446.0,216027.0,-13419.0,-5.848435,,
+H2 2024,H2 2025,units_sold,Units Sold,count,487993.0,457916.0,-30077.0,-6.163408,,
+H2 2024,H2 2025,aov,Average Order Value (EUR),EUR or units,46.012748,45.553694,-0.459054,-0.997666,,
+H2 2024,H2 2025,upt,Units per Transaction,EUR or units,2.126832,2.119717,-0.007115,-0.334538,,
+H2 2024,H2 2025,asp,Average Selling Price (EUR),EUR or units,21.634411,21.490465,-0.143945,-0.665354,,
+H2 2024,H2 2025,return_rate_value,Return Rate % (value),ratio (0-1),0.034925,0.038957,0.004033,,0.403267,
+H2 2024,H2 2025,return_rate_units,Return Rate % (units),ratio (0-1),0.024886,0.026267,0.001381,,0.138122,
+H2 2024,H2 2025,promo_revenue_share,Promo Revenue Share %,ratio (0-1),0.127479,0.169029,0.041551,,4.155062,
+H2 2024,H2 2025,discount_value,Discount Value (EUR),EUR,289926.67,547251.1,257324.43,88.755005,,

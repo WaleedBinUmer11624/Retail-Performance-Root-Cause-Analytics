@@ -1,0 +1,379 @@
+{
+  "$schema": "https://developer.microsoft.com/json-schemas/fabric/item/report/definition/visualContainer/2.13.0/schema.json",
+  "name": "page7Investigations",
+  "position": {
+    "x": 16,
+    "y": 84,
+    "z": 0,
+    "height": 498,
+    "width": 1248,
+    "tabOrder": 0
+  },
+  "visual": {
+    "visualType": "tableEx",
+    "query": {
+      "queryState": {
+        "Values": {
+          "projections": [
+            {
+              "field": {
+                "Column": {
+                  "Expression": {
+                    "SourceRef": {
+                      "Entity": "p6_investigations"
+                    }
+                  },
+                  "Property": "priority"
+                }
+              },
+              "queryRef": "i.priority",
+              "displayName": "Priority",
+              "nativeQueryRef": "Priority"
+            },
+            {
+              "field": {
+                "Column": {
+                  "Expression": {
+                    "SourceRef": {
+                      "Entity": "p6_investigations"
+                    }
+                  },
+                  "Property": "topic"
+                }
+              },
+              "queryRef": "i.topic",
+              "displayName": "Topic",
+              "nativeQueryRef": "Topic"
+            },
+            {
+              "field": {
+                "Column": {
+                  "Expression": {
+                    "SourceRef": {
+                      "Entity": "p6_investigations"
+                    }
+                  },
+                  "Property": "evidence_level"
+                }
+              },
+              "queryRef": "i.evidence_level",
+              "displayName": "Evidence level",
+              "nativeQueryRef": "Evidence level"
+            },
+            {
+              "field": {
+                "Column": {
+                  "Expression": {
+                    "SourceRef": {
+                      "Entity": "p6_investigations"
+                    }
+                  },
+                  "Property": "known"
+                }
+              },
+              "queryRef": "i.known",
+              "displayName": "Known",
+              "nativeQueryRef": "Known"
+            },
+            {
+              "field": {
+                "Column": {
+                  "Expression": {
+                    "SourceRef": {
+                      "Entity": "p6_investigations"
+                    }
+                  },
+                  "Property": "unknown"
+                }
+              },
+              "queryRef": "i.unknown",
+              "displayName": "Unknown",
+              "nativeQueryRef": "Unknown"
+            },
+            {
+              "field": {
+                "Column": {
+                  "Expression": {
+                    "SourceRef": {
+                      "Entity": "p6_investigations"
+                    }
+                  },
+                  "Property": "why_it_matters"
+                }
+              },
+              "queryRef": "i.why_it_matters",
+              "displayName": "Why it matters",
+              "nativeQueryRef": "Why it matters"
+            },
+            {
+              "field": {
+                "Column": {
+                  "Expression": {
+                    "SourceRef": {
+                      "Entity": "p6_investigations"
+                    }
+                  },
+                  "Property": "slice_of_decline_eur"
+                }
+              },
+              "queryRef": "i.slice_of_decline_eur",
+              "displayName": "Slice of decline (EUR)",
+              "nativeQueryRef": "Slice of decline (EUR)"
+            },
+            {
+              "field": {
+                "Column": {
+                  "Expression": {
+                    "SourceRef": {
+                      "Entity": "p6_investigations"
+                    }
+                  },
+                  "Property": "data_required"
+                }
+              },
+              "queryRef": "i.data_required",
+              "displayName": "Data required",
+              "nativeQueryRef": "Data required"
+            },
+            {
+              "field": {
+                "Column": {
+                  "Expression": {
+                    "SourceRef": {
+                      "Entity": "p6_investigations"
+                    }
+                  },
+                  "Property": "proposed_owner"
+                }
+              },
+              "queryRef": "i.proposed_owner",
+              "displayName": "Proposed owner",
+              "nativeQueryRef": "Proposed owner"
+            },
+            {
+              "field": {
+                "Column": {
+                  "Expression": {
+                    "SourceRef": {
+                      "Entity": "p6_investigations"
+                    }
+                  },
+                  "Property": "owner_note"
+                }
+              },
+              "queryRef": "i.owner_note",
+              "displayName": "Owner note",
+              "nativeQueryRef": "Owner note"
+            }
+          ]
+        }
+      }
+    },
+    "objects": {
+      "columnHeaders": [
+        {
+          "properties": {
+            "show": {
+              "expr": {
+                "Literal": {
+                  "Value": "true"
+                }
+              }
+            },
+            "fontSize": {
+              "expr": {
+                "Literal": {
+                  "Value": "9L"
+                }
+              }
+            },
+            "wordWrap": {
+              "expr": {
+                "Literal": {
+                  "Value": "true"
+                }
+              }
+            }
+          }
+        }
+      ],
+      "values": [
+        {
+          "properties": {
+            "fontSize": {
+              "expr": {
+                "Literal": {
+                  "Value": "9L"
+                }
+              }
+            },
+            "wordWrap": {
+              "expr": {
+                "Literal": {
+                  "Value": "true"
+                }
+              }
+            }
+          }
+        }
+      ],
+      "total": [
+        {
+          "properties": {
+            "show": {
+              "expr": {
+                "Literal": {
+                  "Value": "false"
+                }
+              }
+            },
+            "totals": {
+              "expr": {
+                "Literal": {
+                  "Value": "false"
+                }
+              }
+            }
+          }
+        }
+      ]
+    },
+    "visualContainerObjects": {
+      "title": [
+        {
+          "properties": {
+            "show": {
+              "expr": {
+                "Literal": {
+                  "Value": "true"
+                }
+              }
+            },
+            "text": {
+              "expr": {
+                "Literal": {
+                  "Value": "'All 5 open investigations need additional data before the cause can be confirmed'"
+                }
+              }
+            },
+            "fontSize": {
+              "expr": {
+                "Literal": {
+                  "Value": "12D"
+                }
+              }
+            },
+            "titleWrap": {
+              "expr": {
+                "Literal": {
+                  "Value": "true"
+                }
+              }
+            }
+          }
+        }
+      ],
+      "subTitle": [
+        {
+          "properties": {
+            "show": {
+              "expr": {
+                "Literal": {
+                  "Value": "false"
+                }
+              }
+            }
+          }
+        }
+      ],
+      "background": [
+        {
+          "properties": {
+            "show": {
+              "expr": {
+                "Literal": {
+                  "Value": "true"
+                }
+              }
+            },
+            "color": {
+              "solid": {
+                "color": {
+                  "expr": {
+                    "Literal": {
+                      "Value": "'#FFFFFF'"
+                    }
+                  }
+                }
+              }
+            },
+            "transparency": {
+              "expr": {
+                "Literal": {
+                  "Value": "0D"
+                }
+              }
+            }
+          }
+        }
+      ],
+      "border": [
+        {
+          "properties": {
+            "show": {
+              "expr": {
+                "Literal": {
+                  "Value": "true"
+                }
+              }
+            },
+            "color": {
+              "solid": {
+                "color": {
+                  "expr": {
+                    "Literal": {
+                      "Value": "'#E1DFDB'"
+                    }
+                  }
+                }
+              }
+            },
+            "radius": {
+              "expr": {
+                "Literal": {
+                  "Value": "6D"
+                }
+              }
+            }
+          }
+        }
+      ],
+      "visualHeader": [
+        {
+          "properties": {
+            "show": {
+              "expr": {
+                "Literal": {
+                  "Value": "false"
+                }
+              }
+            }
+          }
+        }
+      ],
+      "general": [
+        {
+          "properties": {
+            "altText": {
+              "expr": {
+                "Literal": {
+                  "Value": "'Governance register: P6 investigations register.'"
+                }
+              }
+            }
+          }
+        }
+      ]
+    }
+  }
+}

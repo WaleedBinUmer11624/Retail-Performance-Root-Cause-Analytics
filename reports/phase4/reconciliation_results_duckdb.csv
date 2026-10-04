@@ -1,0 +1,46 @@
+metric_name,metric_group,expected_value,actual_value,abs_difference,tolerance_abs,status,expected_source,computed_from
+rows_stg_dim_date,row_count,731.0,731.0,0.0,0.0,PASS,reports/phase3/lineage.json (curated row counts),stg.dim_date
+rows_stg_dim_store,row_count,20.0,20.0,0.0,0.0,PASS,reports/phase3/lineage.json (curated row counts),stg.dim_store
+rows_stg_dim_product,row_count,601.0,601.0,0.0,0.0,PASS,reports/phase3/lineage.json (curated row counts),stg.dim_product
+rows_stg_fact_sales,row_count,1339510.0,1339510.0,0.0,0.0,PASS,reports/phase3/lineage.json (curated row counts),stg.fact_sales
+rows_stg_fact_returns,row_count,34562.0,34562.0,0.0,0.0,PASS,reports/phase3/lineage.json (curated row counts),stg.fact_returns
+rows_stg_fact_inventory,row_count,939249.0,939249.0,0.0,0.0,PASS,reports/phase3/lineage.json (curated row counts),stg.fact_inventory
+rows_stg_fact_promotions,row_count,49430.0,49430.0,0.0,0.0,PASS,reports/phase3/lineage.json (curated row counts),stg.fact_promotions
+rows_stg_fact_targets,row_count,2077.0,2077.0,0.0,0.0,PASS,reports/phase3/lineage.json (curated row counts),stg.fact_targets
+rows_dw_dim_date,row_count,731.0,731.0,0.0,0.0,PASS,reports/phase3/lineage.json (curated row counts),dw.dim_date (excl. -1)
+rows_dw_dim_store,row_count,20.0,20.0,0.0,0.0,PASS,reports/phase3/lineage.json (curated row counts),dw.dim_store (excl. -1)
+rows_dw_dim_product,row_count,601.0,601.0,0.0,0.0,PASS,reports/phase3/lineage.json (curated row counts),dw.dim_product (incl. curated UNKNOWN)
+rows_dw_fact_sales,row_count,1339510.0,1339510.0,0.0,0.0,PASS,reports/phase3/lineage.json (curated row counts),dw.fact_sales
+rows_dw_fact_returns,row_count,34562.0,34562.0,0.0,0.0,PASS,reports/phase3/lineage.json (curated row counts),dw.fact_returns
+rows_dw_fact_inventory,row_count,939249.0,939249.0,0.0,0.0,PASS,reports/phase3/lineage.json (curated row counts),dw.fact_inventory
+rows_dw_fact_targets,row_count,2077.0,2077.0,0.0,0.0,PASS,reports/phase3/lineage.json (curated row counts),dw.fact_targets
+rows_dw_fact_promotion_coverage,row_count,49430.0,49430.0,0.0,0.0,PASS,reports/phase3/lineage.json (curated row counts),dw.fact_promotion_coverage
+rows_dw_dim_promotion,row_count,136.0,136.0,0.0,0.0,PASS,data/processed/curated (Phase 3 output): distinct promotion_id,"dw.dim_promotion (excl. 0, -1)"
+unknown_product_sales_lines,unknown_member,1293.0,1293.0,0.0,0.0,PASS,data/processed/curated (Phase 3 output): product_id = UNKNOWN,dw.fact_sales product_key = -1
+unknown_promotion_sales_lines,unknown_member,1.0,1.0,0.0,0.0,PASS,data/processed/curated (Phase 3 output): promotion_id = UNKNOWN,dw.fact_sales promotion_key = -1
+not_promoted_sales_lines,unknown_member,1077994.0,1077994.0,0.0,0.0,PASS,data/processed/curated (Phase 3 output): promotion_id blank,dw.fact_sales promotion_key = 0
+unknown_store_fact_rows,unknown_member,0.0,0.0,0.0,0.0,PASS,must be zero: every curated key is valid (Phase 3 validation),store_key = -1 in all facts
+unknown_date_fact_rows,unknown_member,0.0,0.0,0.0,0.0,PASS,must be zero: every curated key is valid (Phase 3 validation),date/week key = -1 in all facts
+unknown_product_other_fact_rows,unknown_member,0.0,0.0,0.0,0.0,PASS,must be zero: every curated key is valid (Phase 3 validation),product_key = -1 outside fact_sales
+conversion_failures,load_integrity,0.0,0.0,0.0,0.0,PASS,must be zero: every curated key is valid (Phase 3 validation),stg value present but typed value NULL
+sales_lines,kpi,1339510.0,1339510.0,0.0,0.0,PASS,reports/phase3/kpi_reconciliation.csv (clean_complete),COUNT(*) dw.fact_sales
+gross_sales,kpi,39877276.35,39877276.35,0.0,0.01,PASS,reports/phase3/kpi_reconciliation.csv (clean_complete),SUM(quantity x unit_price)
+discount_value,kpi,1665652.67,1665652.67,0.0,0.01,PASS,reports/phase3/kpi_reconciliation.csv (clean_complete),SUM(discount)
+sales_revenue,kpi,38211623.68000001,38211623.68,7.450580596923828e-09,0.01,PASS,reports/phase3/kpi_reconciliation.csv (clean_complete),Gross Sales - Discount Value
+returns_value,kpi,1288620.48,1288620.48,0.0,0.01,PASS,reports/phase3/kpi_reconciliation.csv (clean_complete),SUM(refund_value)
+net_revenue,kpi,36923003.20000001,36923003.2,7.450580596923828e-09,0.01,PASS,reports/phase3/kpi_reconciliation.csv (clean_complete),Sales Revenue - Returns Value
+cogs,kpi,22948014.045,22948014.045,0.0,0.01,PASS,reports/phase3/kpi_reconciliation.csv (clean_complete),SUM(cost) - returned-to-stock cost
+gross_margin,kpi,13974989.155000009,13974989.155,9.313225746154785e-09,0.01,PASS,reports/phase3/kpi_reconciliation.csv (clean_complete),Net Revenue - COGS
+gross_margin_pct,kpi,0.3784900453330406,0.3784900453330405,1.1102230246251565e-16,1e-06,PASS,reports/phase3/kpi_reconciliation.csv (clean_complete),Gross Margin / Net Revenue
+transactions,kpi,835568.0,835568.0,0.0,0.0,PASS,reports/phase3/kpi_reconciliation.csv (clean_complete),COUNT(DISTINCT transaction_id)
+units,kpi,1768568.0,1768568.0,0.0,0.0,PASS,reports/phase3/kpi_reconciliation.csv (clean_complete),SUM(quantity)
+aov,kpi,45.731315320835655,45.73131532083565,7.105427357601002e-15,1e-06,PASS,reports/phase3/kpi_reconciliation.csv (clean_complete),Sales Revenue / Transactions
+upt,kpi,2.1166057101277214,2.1166057101277214,0.0,1e-06,PASS,reports/phase3/kpi_reconciliation.csv (clean_complete),Units / Transactions
+asp,kpi,21.60596803741785,21.605968037417842,7.105427357601002e-15,1e-06,PASS,reports/phase3/kpi_reconciliation.csv (clean_complete),Sales Revenue / Units
+return_rate_value,kpi,0.0337232589431802,0.0337232589431803,9.71445146547012e-17,1e-06,PASS,reports/phase3/kpi_reconciliation.csv (clean_complete),Returns Value / Sales Revenue
+promo_revenue_share,kpi,0.1539298572930988,0.15392985729309894,1.3877787807814457e-16,1e-06,PASS,reports/phase3/kpi_reconciliation.csv (clean_complete),Promoted Sales Revenue / Sales Revenue
+returns_rows,kpi,34562.0,34562.0,0.0,0.0,PASS,reports/phase3/kpi_reconciliation.csv (clean_complete),COUNT(*) dw.fact_returns
+stock_availability_2024,kpi,0.9550318650063134,0.9550318650063134,0.0,1e-06,PASS,reports/phase3/kpi_reconciliation.csv (clean_complete),"In-stock store-SKU-weeks / ranged store-SKU-weeks, retail 2024"
+h2_2024_net_revenue,kpi,10188727.55,10188727.55,0.0,0.01,PASS,reports/phase3/kpi_reconciliation.csv (clean_complete),Retail 2024 weeks 27-52
+h2_2025_net_revenue,kpi,9457457.05,9457457.05,0.0,0.01,PASS,reports/phase3/kpi_reconciliation.csv (clean_complete),Retail 2025 weeks 27-52
+h2_yoy_pct,kpi,-7.1772505095594745,-7.177250509559463,1.1546319456101628e-14,0.0001,PASS,reports/phase3/kpi_reconciliation.csv (clean_complete),"(H2 2025 / H2 2024 - 1) x 100, week-aligned"

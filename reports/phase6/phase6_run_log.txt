@@ -1,0 +1,10 @@
+[    0.4s] freeze verified: 84 Phase 1-5 files unchanged
+[   20.7s] data loaded: 1,981,266 rows
+[   20.7s] headline reconciled: -731,270.50 (-7.177251%)
+[   23.1s] store cluster: onset 2025-07-15, excess -397,778
+[   24.7s] electronics: full-week lost-sales change 37,235
+[   29.8s] promotions: M1 -186,146, M4 -265,003, M2 97,505, M3 79,059
+[   29.8s] overlap and exclusive attribution built
+[   36.2s] sensitivity: 83 variants
+[   36.4s] checks: 36/36 pass
+[   39.6s] PASSED; outputs in /home/claude/Retail_Performance_Root_Cause_Analytics/reports/phase6

@@ -1,0 +1,7 @@
+table,rows_quarantined
+dim_product,10
+fact_inventory,188
+fact_promotions,4
+fact_returns,171
+fact_sales,2005
+fact_targets,2

@@ -1,0 +1,54 @@
+table p6_et_lost_sales_totals
+
+	column scope
+		dataType: string
+		sourceColumn: scope
+
+	column primary_py
+		dataType: double
+		summarizeBy: none
+		sourceColumn: primary_py
+
+	column primary_cy
+		dataType: double
+		summarizeBy: none
+		sourceColumn: primary_cy
+
+	column upper_py
+		dataType: double
+		summarizeBy: none
+		sourceColumn: upper_py
+
+	column upper_cy
+		dataType: double
+		summarizeBy: none
+		sourceColumn: upper_cy
+
+	column primary_change
+		dataType: double
+		summarizeBy: none
+		sourceColumn: primary_change
+
+	column upper_change
+		dataType: double
+		summarizeBy: none
+		sourceColumn: upper_change
+
+	partition p6_et_lost_sales_totals = m
+		mode: import
+		source =
+			let
+			    Source = Csv.Document(File.Contents(AnalyticsFolder & "\p6_et_lost_sales_totals.csv"),
+			                          [Delimiter = ",", Encoding = 65001, QuoteStyle = QuoteStyle.Csv]),
+			    Promoted = Table.PromoteHeaders(Source, [PromoteAllScalars = true]),
+			    Typed = Table.TransformColumnTypes(Promoted, {
+			        {"scope", type text},
+			        {"primary_py", type number},
+			        {"primary_cy", type number},
+			        {"upper_py", type number},
+			        {"upper_cy", type number},
+			        {"primary_change", type number},
+			        {"upper_change", type number}
+			    }, "en-US")
+			in
+			    Typed

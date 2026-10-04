@@ -1,0 +1,22 @@
+category,status,products,net_revenue_py,net_revenue_cy,net_revenue_change
+Electronics & Tech,sold in both periods,81,2160487.3,1723781.83,-436705.47
+Electronics & Tech,sold in current period only,5,0.0,274573.9,274573.9
+Electronics & Tech,sold in prior period only,4,106386.76,0.0,-106386.76
+Garden & Outdoor,sold in both periods,56,463725.21,458820.07,-4905.14
+Garden & Outdoor,sold in current period only,2,0.0,4977.14,4977.14
+Garden & Outdoor,sold in prior period only,2,7086.44,0.0,-7086.44
+Health & Beauty,sold in both periods,104,1505406.86,1481395.28,-24011.58
+Health & Beauty,sold in current period only,4,0.0,8968.46,8968.46
+Health & Beauty,sold in prior period only,2,6403.59,0.0,-6403.59
+Home & Kitchen,sold in both periods,131,2579805.52,2270479.63,-309325.89
+Home & Kitchen,sold in current period only,5,0.0,80548.96,80548.96
+Home & Kitchen,sold in prior period only,2,11216.86,0.0,-11216.86
+Seasonal & Gifts,sold in both periods,49,1368447.61,1286071.68,-82375.93
+Seasonal & Gifts,sold in prior period only,1,1744.45,0.0,-1744.45
+Stationery & Crafts,sold in both periods,63,664019.05,612023.91,-51995.14
+Stationery & Crafts,sold in current period only,2,0.0,20098.86,20098.86
+Stationery & Crafts,sold in prior period only,3,9550.11,0.0,-9550.11
+Toys & Games,sold in both periods,74,1291779.59,1200323.97,-91455.62
+Toys & Games,sold in current period only,4,0.0,26005.28,26005.28
+Toys & Games,sold in prior period only,2,1663.39,0.0,-1663.39
+Unknown,sold in both periods,1,11004.81,9388.08,-1616.73

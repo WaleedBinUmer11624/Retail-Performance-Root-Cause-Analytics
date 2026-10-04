@@ -1,0 +1,39 @@
+step,table_name,rule_id,action,column_name,rows_affected,metric,metric_before,metric_after,metric_change,note
+1,dim_store,DS-02,STANDARDISE,text columns,1,,,,,trimmed spaces
+2,dim_store,DS-03,STANDARDISE,"region, store_format",1,,,,,
+3,dim_product,DP-01,DEDUPLICATE,product_id,10,rows,610.0,600.0,-10.0,
+4,dim_product,DP-03,STANDARDISE,text columns,2,,,,,
+5,dim_product,DP-02,STANDARDISE,category,12,,,,,
+6,dim_product,DP-04,UNKNOWN_MEMBER,"supplier_id, supplier_name",5,,,,,
+7,dim_product,DP-05,CORRECT,"list_price, unit_cost",1,,,,,sign corrected
+8,fact_promotions,FP-01,DEDUPLICATE,,4,rows,49434.0,49430.0,-4.0,
+9,fact_promotions,FP-02,CORRECT,"start_date, end_date",2,,,,,window restored from the promotion's other rows
+10,fact_promotions,FP-04,QUARANTINE,product_id,3,,,,,
+11,fact_targets,FT-01,DEDUPLICATE,,2,target EUR,41806740.0,41751750.0,-54990.0,
+12,fact_targets,FT-02,CORRECT,target_net_revenue,1,target EUR,41751750.0,40150920.0,-1600830.0,decimal shift divided by 100
+13,fact_sales,TC-01,INCLUDE,all,2270,sales revenue EUR,38643327.63,38709470.66,66143.03,late sales file appended to the main extract
+14,fact_sales,FS-01,DEDUPLICATE,all,1965,sales revenue EUR,38709470.66,38654975.11,-54495.55,
+15,fact_sales,FS-02,STANDARDISE,transaction_date,2966,,,,,
+16,fact_sales,FS-03,CORRECT,transaction_date,201,,,,,date taken from transaction_id
+17,fact_sales,FS-04,CORRECT,store_id,803,,,,,store taken from transaction_id
+18,fact_sales,FS-08,CORRECT,"quantity, discount, revenue, cost, margin",535,sales revenue EUR,38654975.11,38686592.43,31617.32,sign inverted back
+19,fact_sales,FS-12,CORRECT,"unit_price, discount, revenue, margin",67,sales revenue EUR,38686592.43,38691612.91,5020.48,
+20,fact_sales,FS-09,QUARANTINE,all,40,sales revenue EUR,38691612.91,38570500.43,-121112.48,
+21,fact_sales,FS-05,CORRECT/UNKNOWN_MEMBER,product_id,1070,,,,,
+22,fact_sales,FS-06,UNKNOWN_MEMBER,product_id,267,,,,,
+23,fact_sales,FS-10,CORRECT,unit_price,401,,,,,(revenue + discount) / quantity
+24,fact_sales,FS-15,CORRECT,discount,1337,,,,,quantity x price - revenue
+25,fact_sales,FS-13,CORRECT,"unit_price, revenue, margin",134,sales revenue EUR,38570500.43,38208367.34,-362133.09,price / 100; discount also rescaled on 0 lines
+26,fact_sales,FS-11,IMPUTE,"unit_price, discount, revenue, margin",134,sales revenue EUR,38208367.34,38211851.13,3483.79,reference price x quantity less promotion depth
+27,fact_sales,FS-17,CORRECT,revenue,535,sales revenue EUR,38211851.13,38211623.68,-227.45,revenue recomputed from confirmed components
+28,fact_sales,FS-18,CORRECT,margin,0,,,,,margin = revenue - cost
+29,fact_sales,FS-07,STANDARDISE,category,20059,,,,,category from product master
+30,fact_sales,FS-19,CORRECT/UNKNOWN_MEMBER,promotion_id,267,,,,,
+31,fact_promotions,FP-04,CORRECT,product_id,3,,,,,restored from quarantine: POS lines of the promotion and store identify one product
+32,fact_returns,FR-01,DEDUPLICATE,all,69,returns value EUR,1295646.12,1292232.0099999998,-3414.11,
+33,fact_returns,FR-05/FR-06,QUARANTINE,all,102,returns value EUR,1292232.0099999998,1288620.48,-3611.53,
+34,fact_inventory,FI-01,DEDUPLICATE,,188,rows,939437.0,939249.0,-188.0,
+35,fact_inventory,FI-03,STANDARDISE,received_qty,938967,,,,,cast to integer
+36,fact_inventory,FI-04,CORRECT,received_qty,282,,,,,from the stock identity
+37,fact_inventory,FI-05,CORRECT,closing_stock,188,,,,,sign corrected
+38,fact_inventory,FI-06,CORRECT,"opening_stock, closing_stock",926,,,,,14 rows left flagged

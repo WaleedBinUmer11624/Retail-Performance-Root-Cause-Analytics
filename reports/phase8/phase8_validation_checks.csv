@@ -1,0 +1,115 @@
+group,check,status,detail
+Freeze,Phase 1-7 files unchanged since the Phase 8 freeze (and the Phase 7 and 6 manifests re-verified),PASS,289 files
+Headline,H2 2024 net revenue recomputed from the model = brief,PASS,"10,188,727.55"
+Headline,H2 2025 net revenue recomputed from the model = brief,PASS,"9,457,457.05"
+Headline,Change recomputed = brief,PASS,"-731,270.50"
+Headline,YoY % recomputed = brief (6 dp),PASS,-7.177251
+Headline,Phase 7 validation checks all PASS,PASS,102 checks
+Headline,Phase 7 register: H2 2025 = brief,PASS,9457457.049999999
+Headline,Phase 7 register: H2 2024 = brief,PASS,10188727.55
+Headline,Phase 7 register: change = brief,PASS,-731270.5000000019
+Headline,Phase 7 register: YoY = brief (6 dp),PASS,-7.1772505095594745
+Attribution,Components sum to the H2 change,PASS,-731270.5
+Attribution,Shares sum to 100%,PASS,1.0
+Attribution,Register components (P1-20a to P1-24a) sum to the change,PASS,-731270.5
+Attribution,"d01_eur rounds to the brief's -397,778",PASS,-397778.209303
+Attribution,"d03_eur rounds to the brief's -37,235",PASS,-37235.346776
+Attribution,"d05_eur rounds to the brief's -31,589",PASS,-31588.73
+Attribution,"d07_eur rounds to the brief's -186,146",PASS,-186146.420449
+Attribution,"d09_eur rounds to the brief's -78,522",PASS,-78521.793472
+Brief figures,"m1 rounds to the brief's -186,146",PASS,-186146.420449
+Brief figures,"m4 rounds to the brief's -265,003",PASS,-265003.364503
+Brief figures,"m2 rounds to the brief's 97,505",PASS,97505.293502
+Brief figures,"m3 rounds to the brief's 79,059",PASS,79059.330917
+Brief figures,"ls_gross rounds to the brief's 37,235",PASS,37235.346776
+Brief figures,"ls_net rounds to the brief's -23,963",PASS,-23963.216711
+Brief figures,"ls_high rounds to the brief's -44,460",PASS,-44460.376486
+Brief figures,"et_change rounds to the brief's -268,518",PASS,-268518.3299999996
+Brief figures,vx_full_cy rounds to the brief's 674,PASS,674.0
+Brief figures,vx_full_py rounds to the brief's 0,PASS,0.0
+Brief figures,"hk_ev_py rounds to the brief's 2,427",PASS,2427.0
+Brief figures,"hk_ev_cy rounds to the brief's 8,848",PASS,8848.0
+Brief figures,"fy_change rounds to the brief's 31,589",PASS,31588.729999999996
+Attribution,d01_share rounds to the brief's 54%,PASS,0.543955
+Attribution,d03_share rounds to the brief's 5%,PASS,0.050919
+Attribution,d05_share rounds to the brief's 4%,PASS,0.043197
+Attribution,d07_share rounds to the brief's 25%,PASS,0.254552
+Attribution,d09_share rounds to the brief's 11%,PASS,0.107377
+Attribution,Residual keeps its sign and size (not absorbed by any driver),PASS,-78521.793472
+Evidence,D01 evidence level unchanged (Observed change),PASS,Observed change
+Evidence,D02 evidence level unchanged (Hypothesis),PASS,Hypothesis
+Evidence,D03 evidence level unchanged (Root-cause evidence),PASS,Root-cause evidence
+Evidence,D04 evidence level unchanged (Statistical association),PASS,Statistical association
+Evidence,D05 evidence level unchanged (Observed change),PASS,Observed change
+Evidence,D06 evidence level unchanged (Hypothesis),PASS,Hypothesis
+Evidence,D07 evidence level unchanged (Statistical association),PASS,Statistical association
+Evidence,D01 cause status unchanged (Unresolved),PASS,Unresolved
+Evidence,D02 cause status unchanged (Unresolved),PASS,Unresolved
+Evidence,D03 cause status unchanged (Established),PASS,Established
+Evidence,D04 cause status unchanged (Not established),PASS,Not established
+Evidence,D05 cause status unchanged (Not established),PASS,Not established
+Evidence,D06 cause status unchanged (Unresolved),PASS,Unresolved
+Evidence,D07 cause status unchanged (Not established),PASS,Not established
+Evidence,D09 cause status unchanged (Not attributed),PASS,Not attributed
+Evidence,Decision framework evidence levels = Phase 6 matrix,PASS,
+Evidence,Evidence-to-action levels = Phase 6 matrix,PASS,
+Evidence,Decision log evidence levels come from the Phase 6 matrix,PASS,
+Evidence,No output states a hypothesis or association as a finding (claim scan),PASS,
+Evidence,Required promotion wording present,PASS,
+Evidence,Cluster cause labelled UNRESOLVED in the plan,PASS,
+Evidence,I1 cause status is Unresolved for both D01 and D02,PASS,
+Promotions,No sum or average of the four H&K methods appears anywhere,PASS,[]
+Promotions,No output column or row presents a combined promotion impact,PASS,
+Residual,Residual issue I7 is NO ACTION YET,PASS,
+Residual,Residual labelled UNEXPLAINED / NOT ATTRIBUTED in the framework and impact tables,PASS,
+Residual,Residual has no recoverable value,PASS,
+KPIs,Unavailable KPIs carry no value,PASS,"['Footfall', 'Conversion Rate', 'Confirmed defect rate', 'Promotion Incrementality', 'Supplier OTIF', 'Supplier Fill Rate', 'Forecast Accuracy']"
+KPIs,Available KPIs carry a traced H2 2025 value,PASS,
+KPIs,Conversion Rate is marked Not available (no data in the project),PASS,
+KPIs,Promotion Incrementality is marked Not available (no data in the project),PASS,
+KPIs,Supplier OTIF is marked Not available (no data in the project),PASS,
+KPIs,Supplier Fill Rate is marked Not available (no data in the project),PASS,
+KPIs,Forecast Accuracy is marked Not available (no data in the project),PASS,
+KPIs,No KPI threshold is presented as calibrated,PASS,
+KPIs,Every brief KPI is in the framework,PASS,
+Impact,"Recoverable value is 'Not estimated' or 'Scenario only', never a historical figure",PASS,
+Impact,Only the issue with root-cause evidence (I2) has scenarios,PASS,
+Impact,Scenarios are labelled not a forecast and not a target,PASS,
+Impact,Every scenario states assumptions,PASS,
+Impact,Conservative scenario assumes nothing is avoidable,PASS,
+Impact,No scenario counts demand that came back after restock: the largest is the net-of-deferred estimate,PASS,
+Impact,"Gross, sensitivity-high and upper-bound figures are never offered as avoidable value",PASS,
+Impact,Scenarios describe H2 2025 only (no per-period or future framing),PASS,
+Impact,Every impact row is marked not a forecast,PASS,
+Impact,The plan promises no revenue recovery,PASS,
+Actions,Every action has an evidence basis,PASS,
+Actions,Every action's issue exists,PASS,
+Actions,Every action category is one of the four,PASS,
+Actions,All four decision categories are used,PASS,
+Actions,"ACT NOW actions are reversible, low effort, and rest on root-cause evidence or capture evidence / govern",PASS,"['A07', 'A08', 'A13', 'A18', 'A25']"
+Actions,Operational controls exist only where the evidence is root-cause evidence,PASS,
+Actions,"Hold decisions exist for the unresolved cluster, the Voltix association and the promotion methods",PASS,"['I1', 'I3', 'I5']"
+Actions,I1 has at least one action,PASS,
+Actions,I2 has at least one action,PASS,
+Actions,I3 has at least one action,PASS,
+Actions,I4 has at least one action,PASS,
+Actions,I5 has at least one action,PASS,
+Actions,I6 has at least one action,PASS,
+Actions,I7 has at least one action,PASS,
+Decision rule,Every issue's category follows the documented rule,PASS,
+Decision rule,The largest amount is not ACT NOW (size alone never decides),PASS,I1: INVESTIGATE FIRST
+Decision rule,ACT NOW issues have High causal evidence,PASS,
+Data,Every unresolved or unestablished issue names additional data,PASS,"['I1', 'I3', 'I4', 'I5', 'I6', 'I7']"
+Data,Every data requirement serves an issue,PASS,[]
+Data,Brief data items for the cluster are all requested,PASS,
+Data,Brief inventory items are all covered,PASS,
+Owners,"Every owner, supporting team and alert recipient is labelled PROPOSED",PASS,[]
+Early warning,No threshold is presented as calibrated,PASS,
+Early warning,Every brief signal type is specified,PASS,
+Early warning,"Each signal has metric, baseline, frequency, owner, recipient and response",PASS,
+Traceability,"Config text holds no typed euro amount, percentage or large count (all come from facts)",PASS,[]
+Traceability,Every euro amount in the outputs is a formatted fact,PASS,[]
+Traceability,Every euro amount in docs/08 is a formatted fact,PASS,[]
+Traceability,No unresolved placeholder in any output,PASS,[]
+Data,Availability of every data item is stated as No or Partial,PASS,
+Style,"No em dash in any Phase 8 output, config or doc",PASS,

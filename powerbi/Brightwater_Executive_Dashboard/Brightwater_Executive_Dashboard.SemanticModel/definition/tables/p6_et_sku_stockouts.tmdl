@@ -1,0 +1,143 @@
+table p6_et_sku_stockouts
+
+	column product_id
+		dataType: string
+		sourceColumn: product_id
+
+	column supplier_name
+		dataType: string
+		sourceColumn: supplier_name
+
+	column cells_py
+		dataType: double
+		summarizeBy: none
+		sourceColumn: cells_py
+
+	column cells_cy
+		dataType: double
+		summarizeBy: none
+		sourceColumn: cells_cy
+
+	column out_py
+		dataType: double
+		summarizeBy: none
+		sourceColumn: out_py
+
+	column out_cy
+		dataType: double
+		summarizeBy: none
+		sourceColumn: out_cy
+
+	column full_py
+		dataType: double
+		summarizeBy: none
+		sourceColumn: full_py
+
+	column full_cy
+		dataType: double
+		summarizeBy: none
+		sourceColumn: full_cy
+
+	column revenue_py
+		dataType: double
+		summarizeBy: none
+		sourceColumn: revenue_py
+
+	column revenue_cy
+		dataType: double
+		summarizeBy: none
+		sourceColumn: revenue_cy
+
+	column units_py
+		dataType: double
+		summarizeBy: none
+		sourceColumn: units_py
+
+	column units_cy
+		dataType: double
+		summarizeBy: none
+		sourceColumn: units_cy
+
+	column est_lost_sales_eur_py
+		dataType: double
+		summarizeBy: none
+		sourceColumn: est_lost_sales_eur_py
+
+	column est_lost_sales_eur_cy
+		dataType: double
+		summarizeBy: none
+		sourceColumn: est_lost_sales_eur_cy
+
+	column est_lost_sales_upper_eur_py
+		dataType: double
+		summarizeBy: none
+		sourceColumn: est_lost_sales_upper_eur_py
+
+	column est_lost_sales_upper_eur_cy
+		dataType: double
+		summarizeBy: none
+		sourceColumn: est_lost_sales_upper_eur_cy
+
+	column oos_rate_py
+		dataType: double
+		summarizeBy: none
+		sourceColumn: oos_rate_py
+
+	column oos_rate_cy
+		dataType: double
+		summarizeBy: none
+		sourceColumn: oos_rate_cy
+
+	column oos_rate_change_pp
+		dataType: double
+		summarizeBy: none
+		sourceColumn: oos_rate_change_pp
+
+	column lost_primary_change
+		dataType: double
+		summarizeBy: none
+		sourceColumn: lost_primary_change
+
+	column prior_year_revenue_rank
+		dataType: int64
+		summarizeBy: none
+		sourceColumn: prior_year_revenue_rank
+
+	column high_seller
+		dataType: boolean
+		summarizeBy: none
+		sourceColumn: high_seller
+
+	partition p6_et_sku_stockouts = m
+		mode: import
+		source =
+			let
+			    Source = Csv.Document(File.Contents(AnalyticsFolder & "\p6_et_sku_stockouts.csv"),
+			                          [Delimiter = ",", Encoding = 65001, QuoteStyle = QuoteStyle.Csv]),
+			    Promoted = Table.PromoteHeaders(Source, [PromoteAllScalars = true]),
+			    Typed = Table.TransformColumnTypes(Promoted, {
+			        {"product_id", type text},
+			        {"supplier_name", type text},
+			        {"cells_py", type number},
+			        {"cells_cy", type number},
+			        {"out_py", type number},
+			        {"out_cy", type number},
+			        {"full_py", type number},
+			        {"full_cy", type number},
+			        {"revenue_py", type number},
+			        {"revenue_cy", type number},
+			        {"units_py", type number},
+			        {"units_cy", type number},
+			        {"est_lost_sales_eur_py", type number},
+			        {"est_lost_sales_eur_cy", type number},
+			        {"est_lost_sales_upper_eur_py", type number},
+			        {"est_lost_sales_upper_eur_cy", type number},
+			        {"oos_rate_py", type number},
+			        {"oos_rate_cy", type number},
+			        {"oos_rate_change_pp", type number},
+			        {"lost_primary_change", type number},
+			        {"prior_year_revenue_rank", Int64.Type},
+			        {"high_seller", type logical}
+			    }, "en-US")
+			in
+			    Typed

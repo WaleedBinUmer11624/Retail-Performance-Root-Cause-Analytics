@@ -1,0 +1,80 @@
+group,check,status,value,expected
+keys,dim_store: 20 unique store_id,PASS,20,20 unique
+keys,dim_product: 600 distinct product_id,PASS,600,600
+keys,dim_date: 731 contiguous days,PASS,731,731
+keys,fact_sales (clean): transaction_id + line_number unique,PASS,,
+transaction integrity,line numbers are 1..n within each transaction,PASS,,
+transaction integrity,each transaction has one store and one date,PASS,,
+transaction integrity,transaction_id encodes store and date,PASS,,
+keys,fact_inventory (clean): store + product + snapshot unique,PASS,,
+keys,fact_returns (clean): return_id unique,PASS,,
+keys,fact_promotions (clean): promotion + product + store unique,PASS,,
+keys,fact_targets (clean): one row per store-week,PASS,,
+keys,fact_targets: raw rows = stores x 104 - missing + duplicates,PASS,415,415
+referential integrity,sales.store_id in dim_store,PASS,,
+referential integrity,sales.product_id in dim_product,PASS,,
+referential integrity,sales.promotion_id in fact_promotions,PASS,,
+referential integrity,promoted sales line matches its promotion's product and store,PASS,"9 unmatched lines, all from planted promotion rows",
+referential integrity,inventory keys in dimensions,PASS,,
+referential integrity,promotion product and store in dimensions,PASS,,
+referential integrity,every orphan return is planted or points at a missing batch,PASS,"37 orphans, 37 explained",
+dates,all clean sales dates parse and are in range,PASS,,
+dates,no sales on Christmas Day,PASS,,
+dates,every simulated store trades every trading day (except missing batches),PASS,2 gaps,"only [('S13', '2024-10-15'), ('S13', '2024-10-16')]"
+dates,return dates within extract,PASS,,
+business rules,revenue = quantity x unit_price - discount (every clean line),PASS,,
+business rules,margin = revenue - cost (every clean line),PASS,,
+business rules,"quantity between 1 and 10, prices positive",PASS,,
+business rules,discount between 0% and 50% of gross,PASS,,
+business rules,promoted lines carry a discount,PASS,1.0000,> 0.99
+business rules,return quantity <= quantity sold,PASS,,
+business rules,return date after sale date and within 30 days (Christmas: 31 Jan),PASS,lag 1 to 51 days,
+business rules,inventory: closing = opening + received - sold + adjustment,PASS,,
+business rules,inventory: no negative stock,PASS,,
+business rules,inventory: opening = previous week's closing,PASS,,
+business rules,promotions: start_date <= end_date,PASS,,
+reconciliation,sales units = inventory sold_qty for untouched store-SKU-weeks,PASS,"195,171 cells, 0 mismatches",0 mismatches
+KPI identities,Sales Revenue = Gross Sales - Discount Value,PASS,"8,634,130.18 vs 8,634,130.18",
+KPI identities,Sales Revenue = Transactions x UPT x ASP,PASS,"8,634,130.18",
+KPI identities,Net Revenue = Sales Revenue - Returns Value,PASS,,
+KPI identities,Gross Margin = Net Revenue - COGS,PASS,,
+KPI identities,sum(line margin) = sum(revenue) - sum(cost),PASS,,
+KPI identities,AOV = UPT x ASP,PASS,,
+expected ranges,"aov in [38, 55]",PASS,46.1918,BRD: basket about EUR 45
+expected ranges,"upt in [1.5, 2.5]",PASS,2.1238,retail norm
+expected ranges,"asp in [15, 30]",PASS,21.7496,price bands
+expected ranges,"lines_per_transaction in [1.3, 1.9]",PASS,1.6063,config p=0.62
+expected ranges,"gross_margin_pct in [0.33, 0.45]",PASS,0.3777,blend of category target margins
+expected ranges,"return_rate_value in [0.02, 0.05]",PASS,0.0339,config return probabilities
+expected ranges,"promo_revenue_share in [0.08, 0.35]",PASS,0.1501,promotion calendar
+expected ranges,"2024 stock availability in [0.92, 0.98]",PASS,0.9548,normal retail availability
+seasonality,Toys & Games: December > 2.5 x June,PASS,2.9,
+seasonality,Garden & Outdoor: May-June > 2 x Nov-Jan (monthly average),PASS,3.98,
+seasonality,Seasonal & Gifts: Q4 > 60% of annual revenue,PASS,0.693,
+seasonality,Stationery & Crafts: August > 1.4 x average month,PASS,1.58,
+seasonality,Electronics: Black Friday week (48) > 1.5 x weeks 40-44 average,PASS,2.16,
+seasonality,Saturday is the busiest trading day,PASS,5,5 = Saturday
+store/product,compact stores sell fewer distinct SKUs than flagships,PASS,"{'S04': 516, 'S13': 600, 'S16': 516, 'S19': 360}",
+store/product,flagship revenue > 2 x compact revenue,PASS,"{'S04': 1927526.0, 'S13': 3840434.0, 'S16': 1872647.0, 'S19': 993523.0}",
+store/product,no sales before a SKU's launch date,PASS,0,
+store/product,no sales more than a week after discontinuation,PASS,0,
+store/product,every category has at least 4% of revenue,PASS,"{'Electronics & Tech': 0.228, 'Garden & Outdoor': 0.075, 'Health & Beauty': 0.159, 'Home & Kitchen': 0.262, 'Seasonal & Gifts': 0.096, 'Stationery & Crafts': 0.062, 'Toys & Games': 0.119}",
+planted issues,issue_id unique,PASS,9808,
+planted issues,every planted fact_sales issue is present in the raw file,PASS,all present,
+planted issues,late batch rows are absent from the main extract,PASS,2198,
+planted issues,missing batch store-days have no sales rows,PASS,0,
+planted issues,planted issue types cover every table,PASS,"{'dim_product': 4, 'dim_store': 2, 'fact_inventory': 5, 'fact_promotions': 3, 'fact_returns': 4, 'fact_sales': 20, 'fact_targets': 3}",
+headline,reported H2 decline is larger than underlying decline,PASS,"reported -9.83%, underlying -7.12%",
+headline,underlying minus reported H2 2025 net revenue = late batch revenue,PASS,"EUR 61,849.38",
+headline,late batch affects H2 2025 only,PASS,,
+headline,late batch revenue in the data equals the answer key,PASS,"data 61,849.38 vs key 61,849.38",
+headline,data-derived underlying YoY within 0.5pp of the answer key,PASS,data -7.12 vs key -7.36,difference = rows excluded for planted DQ problems
+headline,answer key: reported minus underlying YoY equals the artefact,PASS,,
+headline,missing batch has revenue in the key but no rows in the data,PASS,"EUR 6,023.12",
+calibration,estate reported H2 YoY within BRD band,PASS,-7.83%,-8.5% to -7.5%
+calibration,estate underlying decline smaller than reported decline,PASS,underlying -7.25% vs reported -7.83%,
+calibration,reported = underlying + DQ artefact (pp),PASS,-7.25 + -0.58,
+calibration,drivers + residual sum to underlying change,PASS,-7.25 vs -7.25,
+calibration,every planted business driver reduces revenue,PASS,"{'Suburban traffic decline': -4.0, 'Supplier stock-outs (affected SKUs)': -2.43, 'Home & Kitchen promotion change': -1.97, 'Faulty batch returns': -0.38}",
+calibration,projected full fact_sales rows within 1.2M to 1.5M,PASS,"1,339,245",
+scenario separation,no Phase 3+ code references any evaluation-only asset,PASS,none,

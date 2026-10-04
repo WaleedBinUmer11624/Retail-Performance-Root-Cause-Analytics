@@ -1,0 +1,22 @@
+group,check,value,reference,abs_difference,tolerance,reference_source,status
+KPI reconciliation,H2 2024 net revenue (monitoring layer) = approved headline,10188727.55,10188727.55,0.0,0.01,config/powerbi_config.yaml (brief),PASS
+KPI reconciliation,H2 2025 net revenue (monitoring layer) = approved headline,9457457.05,9457457.05,0.0,0.01,config/powerbi_config.yaml (brief),PASS
+KPI reconciliation,H2 change = approved headline,-731270.5,-731270.5,0.0,0.01,config/powerbi_config.yaml (brief),PASS
+KPI reconciliation,"Weekly estate net revenue 2025, all 52 weeks: max difference to Phase 5",0.0,0.0,0.0,0.01,reports/phase5/weekly_yoy_full_year.csv,PASS
+KPI reconciliation,"Weekly estate transactions 2025, all 52 weeks: max difference to Phase 5",0.0,0.0,0.0,0.0,reports/phase5/weekly_yoy_full_year.csv,PASS
+KPI reconciliation,Weekly estate net revenue 2024 (PY weeks): max difference to Phase 5,0.0,0.0,0.0,0.01,reports/phase5/weekly_yoy_full_year.csv,PASS
+KPI reconciliation,Electronics & Tech H2 2025 net revenue = Phase 5,1998355.73,1998355.73,0.0,0.01,reports/phase5/category_contribution.csv,PASS
+KPI reconciliation,Electronics & Tech H2 2025 availability = Phase 5,0.892808,0.892808,0.0,1e-06,reports/phase5/category_contribution.csv (6 dp),PASS
+KPI reconciliation,Electronics & Tech H2 2024 availability = Phase 5,0.953796,0.953796,0.0,1e-06,reports/phase5/category_contribution.csv (6 dp),PASS
+KPI reconciliation,Electronics & Tech H2 2025 gross margin = Phase 5,310782.67,310782.67,0.0,0.01,reports/phase5/category_contribution.csv,PASS
+KPI reconciliation,Home & Kitchen H2 2025 net revenue = Phase 5,2351028.59,2351028.59,0.0,0.01,reports/phase5/category_contribution.csv,PASS
+KPI reconciliation,Home & Kitchen H2 2025 availability = Phase 5,0.958605,0.958605,0.0,1e-06,reports/phase5/category_contribution.csv (6 dp),PASS
+KPI reconciliation,Home & Kitchen H2 2024 availability = Phase 5,0.951179,0.951179,0.0,1e-06,reports/phase5/category_contribution.csv (6 dp),PASS
+KPI reconciliation,Home & Kitchen H2 2025 gross margin = Phase 5,864752.63,864752.63,0.0,0.01,reports/phase5/category_contribution.csv,PASS
+KPI reconciliation,E&T full-week stock-outs H2 2025 = Phase 6 (all suppliers),786.0,786.0,0.0,0.0,reports/phase6/electronics_stockout_episodes.csv,PASS
+KPI reconciliation,E&T full-week stock-outs H2 2024 = Phase 6,0.0,0.0,0.0,0.0,reports/phase6/electronics_stockout_episodes.csv,PASS
+KPI reconciliation,E&T 'Faulty' refunds H2 2025 = Phase 6,66778.42,66778.42,0.0,0.01,reports/phase6/faulty_returns_reasons.csv,PASS
+KPI reconciliation,E&T 'Faulty' refunds H2 2024 = Phase 6,35189.69,35189.69,0.0,0.01,reports/phase6/faulty_returns_reasons.csv,PASS
+KPI reconciliation,Home & Kitchen H2 2024 discount rate = Phase 7 register (P5-09),0.023628,0.023628,0.0,0.0,reports/phase7/dashboard_number_register.csv,PASS
+KPI reconciliation,Home & Kitchen H2 2025 discount rate = Phase 7 register (P5-10),0.119046,0.119046,0.0,0.0,reports/phase7/dashboard_number_register.csv,PASS
+KPI reconciliation,S03-S05 transactions YoY H2 = Phase 7 register (P2-01),-0.277572,-0.277572,0.0,0.0,reports/phase7/dashboard_number_register.csv,PASS

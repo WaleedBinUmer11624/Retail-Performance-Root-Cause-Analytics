@@ -1,0 +1,60 @@
+table p5_revenue_bridge
+
+	column step
+		dataType: string
+		sourceColumn: step
+		sortByColumn: sort_order
+
+	column value_eur
+		dataType: double
+		summarizeBy: none
+		sourceColumn: value_eur
+
+	column kind
+		dataType: string
+		sourceColumn: kind
+
+	column running_total_eur
+		dataType: double
+		summarizeBy: none
+		sourceColumn: running_total_eur
+
+	column contribution_pp
+		dataType: double
+		summarizeBy: none
+		sourceColumn: contribution_pp
+
+	column share_of_change
+		dataType: double
+		summarizeBy: none
+		sourceColumn: share_of_change
+
+	column method_note
+		dataType: string
+		sourceColumn: method_note
+
+	column sort_order
+		dataType: int64
+		summarizeBy: none
+		sourceColumn: sort_order
+		isHidden
+
+	partition p5_revenue_bridge = m
+		mode: import
+		source =
+			let
+			    Source = Csv.Document(File.Contents(AnalyticsFolder & "\p5_revenue_bridge.csv"),
+			                          [Delimiter = ",", Encoding = 65001, QuoteStyle = QuoteStyle.Csv]),
+			    Promoted = Table.PromoteHeaders(Source, [PromoteAllScalars = true]),
+			    Typed = Table.TransformColumnTypes(Promoted, {
+			        {"step", type text},
+			        {"value_eur", type number},
+			        {"kind", type text},
+			        {"running_total_eur", type number},
+			        {"contribution_pp", type number},
+			        {"share_of_change", type number},
+			        {"method_note", type text}
+			    }, "en-US"),
+			    WithSortOrder = Table.AddIndexColumn(Typed, "sort_order", 1, 1, Int64.Type)
+			in
+			    WithSortOrder

@@ -1,0 +1,49 @@
+{
+  "$schema": "https://developer.microsoft.com/json-schemas/fabric/item/report/definition/page/2.1.0/schema.json",
+  "name": "41bc1d56d5d8fd964e59",
+  "displayName": "Page 1",
+  "displayOption": "FitToPage",
+  "height": 1080,
+  "width": 1920,
+  "filterConfig": {
+    "filters": [
+      {
+        "name": "c6d10c0cf37e70308dfd",
+        "field": {
+          "Column": {
+            "Expression": {
+              "SourceRef": {
+                "Entity": "Table"
+              }
+            },
+            "Property": "Column1"
+          }
+        },
+        "type": "Categorical",
+        "howCreated": "Drillthrough"
+      }
+    ]
+  },
+  "pageBinding": {
+    "name": "9f8c724b52b36bf6eab3",
+    "type": "Drillthrough",
+    "parameters": [
+      {
+        "name": "3ea7743dd564df2ce2b1",
+        "boundFilter": "c6d10c0cf37e70308dfd",
+        "asAggregation": false,
+        "qnaSingleSelectRequired": false,
+        "fieldExpr": {
+          "Column": {
+            "Expression": {
+              "SourceRef": {
+                "Entity": "Table"
+              }
+            },
+            "Property": "Column1"
+          }
+        }
+      }
+    ]
+  }
+}

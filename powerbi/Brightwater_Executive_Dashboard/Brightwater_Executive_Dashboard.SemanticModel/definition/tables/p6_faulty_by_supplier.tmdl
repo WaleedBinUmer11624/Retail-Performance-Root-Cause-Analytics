@@ -1,0 +1,96 @@
+table p6_faulty_by_supplier
+
+	column supplier_name
+		dataType: string
+		sourceColumn: supplier_name
+
+	column returned_units_py
+		dataType: int64
+		summarizeBy: none
+		sourceColumn: returned_units_py
+
+	column returned_units_cy
+		dataType: int64
+		summarizeBy: none
+		sourceColumn: returned_units_cy
+
+	column returns_value_py
+		dataType: double
+		summarizeBy: none
+		sourceColumn: returns_value_py
+
+	column returns_value_cy
+		dataType: double
+		summarizeBy: none
+		sourceColumn: returns_value_cy
+
+	column units_sold_py
+		dataType: double
+		summarizeBy: none
+		sourceColumn: units_sold_py
+
+	column units_sold_cy
+		dataType: double
+		summarizeBy: none
+		sourceColumn: units_sold_cy
+
+	column rate_per_100_py
+		dataType: double
+		summarizeBy: none
+		sourceColumn: rate_per_100_py
+
+	column rate_per_100_cy
+		dataType: double
+		summarizeBy: none
+		sourceColumn: rate_per_100_cy
+
+	column expected_units_cy_at_py_rate
+		dataType: double
+		summarizeBy: none
+		sourceColumn: expected_units_cy_at_py_rate
+
+	column excess_units
+		dataType: double
+		summarizeBy: none
+		sourceColumn: excess_units
+
+	column excess_value_eur
+		dataType: double
+		summarizeBy: none
+		sourceColumn: excess_value_eur
+
+	column p_increase
+		dataType: double
+		summarizeBy: none
+		sourceColumn: p_increase
+
+	column value_change
+		dataType: double
+		summarizeBy: none
+		sourceColumn: value_change
+
+	partition p6_faulty_by_supplier = m
+		mode: import
+		source =
+			let
+			    Source = Csv.Document(File.Contents(AnalyticsFolder & "\p6_faulty_by_supplier.csv"),
+			                          [Delimiter = ",", Encoding = 65001, QuoteStyle = QuoteStyle.Csv]),
+			    Promoted = Table.PromoteHeaders(Source, [PromoteAllScalars = true]),
+			    Typed = Table.TransformColumnTypes(Promoted, {
+			        {"supplier_name", type text},
+			        {"returned_units_py", Int64.Type},
+			        {"returned_units_cy", Int64.Type},
+			        {"returns_value_py", type number},
+			        {"returns_value_cy", type number},
+			        {"units_sold_py", type number},
+			        {"units_sold_cy", type number},
+			        {"rate_per_100_py", type number},
+			        {"rate_per_100_cy", type number},
+			        {"expected_units_cy_at_py_rate", type number},
+			        {"excess_units", type number},
+			        {"excess_value_eur", type number},
+			        {"p_increase", type number},
+			        {"value_change", type number}
+			    }, "en-US")
+			in
+			    Typed

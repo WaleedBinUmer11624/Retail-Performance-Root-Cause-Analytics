@@ -1,0 +1,48 @@
+table kpi_reconciliation
+
+	column kpi
+		dataType: string
+		sourceColumn: kpi
+
+	column raw_as_reported
+		dataType: double
+		formatString: "#,0.00"
+		summarizeBy: none
+		sourceColumn: raw_as_reported
+
+	column clean_main_only
+		dataType: double
+		formatString: "#,0.00"
+		summarizeBy: none
+		sourceColumn: clean_main_only
+
+	column clean_complete
+		dataType: double
+		formatString: "#,0.00"
+		summarizeBy: none
+		sourceColumn: clean_complete
+
+	column change_raw_to_complete
+		dataType: double
+		formatString: "#,0.00"
+		summarizeBy: none
+		sourceColumn: change_raw_to_complete
+
+	column change_pct
+		dataType: double
+		formatString: "#,0.00"
+		summarizeBy: none
+		sourceColumn: change_pct
+
+	partition kpi_reconciliation = m
+		mode: import
+		source =
+			let
+			    Source = Csv.Document(File.Contents(DqFolder & "\kpi_reconciliation.csv"),
+			                          [Delimiter = ",", Encoding = 65001, QuoteStyle = QuoteStyle.Csv]),
+			    Promoted = Table.PromoteHeaders(Source, [PromoteAllScalars = true]),
+			    Typed = Table.TransformColumnTypes(Promoted, {
+			        {"kpi", type text}, {"raw_as_reported", type number}, {"clean_main_only", type number}, {"clean_complete", type number}, {"change_raw_to_complete", type number}, {"change_pct", type number}
+			    }, "en-US")
+			in
+			    Typed

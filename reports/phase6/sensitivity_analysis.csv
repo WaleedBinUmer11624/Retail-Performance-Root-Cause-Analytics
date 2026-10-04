@@ -1,0 +1,84 @@
+driver,method,variant,estimate_eur,coverage,eligible_for_robustness
+store_cluster_excess,ratio DiD (net revenue),control=matched; pre=weeks 1-26,-397778.209303,,True
+store_cluster_excess,ratio DiD (net revenue),control=matched; pre=weeks 14-26,-406705.015807,,True
+store_cluster_excess,ratio DiD (net revenue),control=matched; pre=weeks 1-13,-387794.945004,,True
+store_cluster_excess,ratio DiD (net revenue),control=standard_non_cluster; pre=weeks 1-26,-409000.772669,,True
+store_cluster_excess,ratio DiD (net revenue),control=standard_non_cluster; pre=weeks 14-26,-408954.864924,,True
+store_cluster_excess,ratio DiD (net revenue),control=standard_non_cluster; pre=weeks 1-13,-409052.108055,,True
+store_cluster_excess,ratio DiD (net revenue),control=dublin_non_cluster; pre=weeks 1-26,-404846.410871,,True
+store_cluster_excess,ratio DiD (net revenue),control=dublin_non_cluster; pre=weeks 14-26,-377245.083136,,True
+store_cluster_excess,ratio DiD (net revenue),control=dublin_non_cluster; pre=weeks 1-13,-435210.121525,,True
+store_cluster_excess,ratio DiD (net revenue),control=all_non_cluster; pre=weeks 1-26,-415663.959634,,True
+store_cluster_excess,ratio DiD (net revenue),control=all_non_cluster; pre=weeks 14-26,-409174.917349,,True
+store_cluster_excess,ratio DiD (net revenue),control=all_non_cluster; pre=weeks 1-13,-422745.132547,,True
+store_cluster_excess,ratio DiD (net revenue),pre=weeks 1-28; post=weeks 29-52 (onset-based),-385018.994806,,True
+electronics_stockouts_primary,full-week lost sales change,"windows=[4, 8, 13]; min history=2; seasonality=on",-36733.410371,0.999725,True
+electronics_stockouts_upper,BR-05 upper bound change,"windows=[4, 8, 13]; min history=2; seasonality=on",-99184.718665,0.999725,True
+electronics_stockouts_primary,full-week lost sales change,"windows=[4, 8, 13]; min history=2; seasonality=off",-40763.746183,0.999725,True
+electronics_stockouts_upper,BR-05 upper bound change,"windows=[4, 8, 13]; min history=2; seasonality=off",-114342.270659,0.999725,True
+electronics_stockouts_primary,full-week lost sales change,"windows=[4, 8, 13]; min history=3; seasonality=on",-37235.346776,0.996976,True
+electronics_stockouts_upper,BR-05 upper bound change,"windows=[4, 8, 13]; min history=3; seasonality=on",-100410.753735,0.996976,True
+electronics_stockouts_primary,full-week lost sales change,"windows=[4, 8, 13]; min history=3; seasonality=off",-42266.099909,0.996976,True
+electronics_stockouts_upper,BR-05 upper bound change,"windows=[4, 8, 13]; min history=3; seasonality=off",-120691.539603,0.996976,True
+electronics_stockouts_primary,full-week lost sales change,"windows=[4, 8, 13]; min history=5; seasonality=on",-35303.741937,0.971138,True
+electronics_stockouts_upper,BR-05 upper bound change,"windows=[4, 8, 13]; min history=5; seasonality=on",-79595.327462,0.971138,True
+electronics_stockouts_primary,full-week lost sales change,"windows=[4, 8, 13]; min history=5; seasonality=off",-40702.99994,0.971138,True
+electronics_stockouts_upper,BR-05 upper bound change,"windows=[4, 8, 13]; min history=5; seasonality=off",-94090.623416,0.971138,True
+electronics_stockouts_primary,full-week lost sales change,"windows=[2, 4, 8]; min history=2; seasonality=on",-35704.801923,0.992029,True
+electronics_stockouts_upper,BR-05 upper bound change,"windows=[2, 4, 8]; min history=2; seasonality=on",-94028.594766,0.992029,True
+electronics_stockouts_primary,full-week lost sales change,"windows=[2, 4, 8]; min history=2; seasonality=off",-38849.789444,0.992029,True
+electronics_stockouts_upper,BR-05 upper bound change,"windows=[2, 4, 8]; min history=2; seasonality=off",-99500.104924,0.992029,True
+electronics_stockouts_primary,full-week lost sales change,"windows=[2, 4, 8]; min history=3; seasonality=on",-35149.035864,0.979109,True
+electronics_stockouts_upper,BR-05 upper bound change,"windows=[2, 4, 8]; min history=3; seasonality=on",-89685.24386,0.979109,True
+electronics_stockouts_primary,full-week lost sales change,"windows=[2, 4, 8]; min history=3; seasonality=off",-39149.102552,0.979109,True
+electronics_stockouts_upper,BR-05 upper bound change,"windows=[2, 4, 8]; min history=3; seasonality=off",-96277.935347,0.979109,True
+electronics_stockouts_primary,full-week lost sales change,"windows=[2, 4, 8]; min history=5; seasonality=on",-30465.372493,0.909291,True
+electronics_stockouts_upper,BR-05 upper bound change,"windows=[2, 4, 8]; min history=5; seasonality=on",-62576.353847,0.909291,True
+electronics_stockouts_primary,full-week lost sales change,"windows=[2, 4, 8]; min history=5; seasonality=off",-34773.323793,0.909291,True
+electronics_stockouts_upper,BR-05 upper bound change,"windows=[2, 4, 8]; min history=5; seasonality=off",-67647.109775,0.909291,True
+electronics_stockouts_primary,full-week lost sales change,"windows=[8, 13]; min history=2; seasonality=on",-37373.769019,0.999725,True
+electronics_stockouts_upper,BR-05 upper bound change,"windows=[8, 13]; min history=2; seasonality=on",-95766.917045,0.999725,True
+electronics_stockouts_primary,full-week lost sales change,"windows=[8, 13]; min history=2; seasonality=off",-44100.716867,0.999725,True
+electronics_stockouts_upper,BR-05 upper bound change,"windows=[8, 13]; min history=2; seasonality=off",-120327.653615,0.999725,True
+electronics_stockouts_primary,full-week lost sales change,"windows=[8, 13]; min history=3; seasonality=on",-37629.52895,0.996976,True
+electronics_stockouts_upper,BR-05 upper bound change,"windows=[8, 13]; min history=3; seasonality=on",-96342.585569,0.996976,True
+electronics_stockouts_primary,full-week lost sales change,"windows=[8, 13]; min history=3; seasonality=off",-44460.376486,0.996976,True
+electronics_stockouts_upper,BR-05 upper bound change,"windows=[8, 13]; min history=3; seasonality=off",-122752.866348,0.996976,True
+electronics_stockouts_primary,full-week lost sales change,"windows=[8, 13]; min history=5; seasonality=on",-35778.852008,0.971138,True
+electronics_stockouts_upper,BR-05 upper bound change,"windows=[8, 13]; min history=5; seasonality=on",-78499.991826,0.971138,True
+electronics_stockouts_primary,full-week lost sales change,"windows=[8, 13]; min history=5; seasonality=off",-41681.940515,0.971138,True
+electronics_stockouts_upper,BR-05 upper bound change,"windows=[8, 13]; min history=5; seasonality=off",-94854.40488,0.971138,True
+electronics_stockouts_primary,full-week lost sales change,windows=[4]; min history=2; seasonality=on,-28749.400669,0.903518,True
+electronics_stockouts_upper,BR-05 upper bound change,windows=[4]; min history=2; seasonality=on,-77030.764174,0.903518,True
+electronics_stockouts_primary,full-week lost sales change,windows=[4]; min history=2; seasonality=off,-30066.453905,0.903518,True
+electronics_stockouts_upper,BR-05 upper bound change,windows=[4]; min history=2; seasonality=off,-67703.519209,0.903518,True
+electronics_stockouts_primary,full-week lost sales change,windows=[4]; min history=3; seasonality=on,-23269.806915,0.804013,False
+electronics_stockouts_upper,BR-05 upper bound change,windows=[4]; min history=3; seasonality=on,-59846.530353,0.804013,False
+electronics_stockouts_primary,full-week lost sales change,windows=[4]; min history=3; seasonality=off,-24335.443905,0.804013,False
+electronics_stockouts_upper,BR-05 upper bound change,windows=[4]; min history=3; seasonality=off,-48846.722948,0.804013,False
+electronics_stockouts_primary,full-week lost sales change,windows=[4]; min history=5; seasonality=on,-7160.621062,0.52144,False
+electronics_stockouts_upper,BR-05 upper bound change,windows=[4]; min history=5; seasonality=on,-17452.041399,0.52144,False
+electronics_stockouts_primary,full-week lost sales change,windows=[4]; min history=5; seasonality=off,-7894.975571,0.52144,False
+electronics_stockouts_upper,BR-05 upper bound change,windows=[4]; min history=5; seasonality=off,-14168.265291,0.52144,False
+electronics_stockouts_primary,full-week lost sales change net of recovery,minus post-episode sales above expected (deferred demand),-23963.216711,1.0,True
+electronics_stockouts_upper,BR-05 upper bound change net of recovery,minus post-episode sales above expected (deferred demand),-64940.395343,1.0,True
+home_kitchen_promotion,M1 category DiD,controls=all_five; pre=weeks 1-26,-186146.420449,,True
+home_kitchen_promotion,M1 category DiD,controls=all_five; pre=weeks 14-26,-185401.779091,,True
+home_kitchen_promotion,M1 category DiD,controls=all_five; pre=weeks 1-13,-186891.272474,,True
+home_kitchen_promotion,M1 category DiD,controls=non_seasonal; pre=weeks 1-26,-173702.03868,,True
+home_kitchen_promotion,M1 category DiD,controls=non_seasonal; pre=weeks 14-26,-139174.63807,,True
+home_kitchen_promotion,M1 category DiD,controls=non_seasonal; pre=weeks 1-13,-208690.466254,,True
+home_kitchen_promotion,M1 category DiD,controls=health_beauty_only; pre=weeks 1-26,-199266.783147,,True
+home_kitchen_promotion,M1 category DiD,controls=health_beauty_only; pre=weeks 14-26,-184351.769006,,True
+home_kitchen_promotion,M1 category DiD,controls=health_beauty_only; pre=weeks 1-13,-214266.349285,,True
+home_kitchen_promotion,M4 discount-rate accounting,net volume response = 0 (units unchanged),-265003.364503,,True
+home_kitchen_promotion,M4 discount-rate accounting,net volume response = M1 units CI bound A,-380272.273058,,True
+home_kitchen_promotion,M4 discount-rate accounting,net volume response = M1 units CI bound B,-243387.050924,,True
+home_kitchen_promotion,M2 dose-response (lags 0-2),store FE,97505.293502,,True
+home_kitchen_promotion,M3 event-level net programme revenue,pre-promotion baseline weeks=2,82932.277028,,True
+home_kitchen_promotion,M3 event-level net programme revenue,pre-promotion baseline weeks=4,79059.330917,,True
+home_kitchen_promotion,M3 event-level net programme revenue,pre-promotion baseline weeks=6,78596.618535,,True
+electronics_faulty_returns,value change,all E&T 'Faulty' returns,-31588.73,,True
+electronics_faulty_returns,excess over prior-year rate,rates per product,-26813.921856,,True
+electronics_faulty_returns,excess over prior-year rate,rates per store,-26500.164164,,True
+electronics_faulty_returns,excess over prior-year rate,rates per supplier,-26225.686501,,True

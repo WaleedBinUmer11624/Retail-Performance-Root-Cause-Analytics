@@ -1,0 +1,22 @@
+{
+  "projected_sales_lines_total": 1371866.4961400772,
+  "projected_transactions_total": 904848.1144753702,
+  "projected_sales_revenue_2024": 20170847.96109769,
+  "projected_net_revenue_2024": 19566493.225847952,
+  "projected_aov": 43.97281446312109,
+  "projected_asp": 21.715319244998575,
+  "category_revenue_share_2024": {
+    "Electronics & Tech": 0.225,
+    "Garden & Outdoor": 0.075,
+    "Health & Beauty": 0.158,
+    "Home & Kitchen": 0.266,
+    "Seasonal & Gifts": 0.095,
+    "Stationery & Crafts": 0.063,
+    "Toys & Games": 0.119
+  },
+  "b2_affected_skus": 19,
+  "b2_affected_share_of_h2_2025_revenue": 0.12484999947244406,
+  "b4_affected_share_of_h2_2025_revenue": 0.038649207980532056,
+  "expected_h2_change_excl_stock_and_returns_pct": -4.069352445062179,
+  "expected_h2_change_no_scenario_pct": 1.8807807626691098
+}

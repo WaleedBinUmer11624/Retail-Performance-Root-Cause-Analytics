@@ -1,0 +1,82 @@
+table Promotion
+
+	column promotion_key
+		dataType: int64
+		summarizeBy: none
+		sourceColumn: promotion_key
+		isKey
+		isHidden
+
+	column promotion_id
+		dataType: string
+		sourceColumn: promotion_id
+
+	column promotion_name
+		dataType: string
+		sourceColumn: promotion_name
+
+	column promotion_type
+		dataType: string
+		sourceColumn: promotion_type
+
+	column promotion_category
+		dataType: string
+		sourceColumn: promotion_category
+
+	column start_date
+		dataType: dateTime
+		summarizeBy: none
+		sourceColumn: start_date
+
+	column end_date
+		dataType: dateTime
+		summarizeBy: none
+		sourceColumn: end_date
+
+	column duration_days
+		dataType: int64
+		summarizeBy: none
+		sourceColumn: duration_days
+
+	column min_discount_pct
+		dataType: double
+		summarizeBy: none
+		sourceColumn: min_discount_pct
+
+	column max_discount_pct
+		dataType: double
+		summarizeBy: none
+		sourceColumn: max_discount_pct
+
+	column member_type
+		dataType: string
+		sourceColumn: member_type
+
+	column is_unknown
+		dataType: int64
+		summarizeBy: none
+		sourceColumn: is_unknown
+
+	partition Promotion = m
+		mode: import
+		source =
+			let
+			    Source = Csv.Document(File.Contents(ModelFolder & "\promotion.csv"),
+			                          [Delimiter = ",", Encoding = 65001, QuoteStyle = QuoteStyle.Csv]),
+			    Promoted = Table.PromoteHeaders(Source, [PromoteAllScalars = true]),
+			    Typed = Table.TransformColumnTypes(Promoted, {
+			        {"promotion_key", Int64.Type},
+			        {"promotion_id", type text},
+			        {"promotion_name", type text},
+			        {"promotion_type", type text},
+			        {"promotion_category", type text},
+			        {"start_date", type date},
+			        {"end_date", type date},
+			        {"duration_days", Int64.Type},
+			        {"min_discount_pct", type number},
+			        {"max_discount_pct", type number},
+			        {"member_type", type text},
+			        {"is_unknown", Int64.Type}
+			    }, "en-US")
+			in
+			    Typed

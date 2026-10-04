@@ -1,0 +1,13 @@
+check_id,severity,check,description,tolerance,blocks_business_alerts
+C1,FAIL,Missing trading days,A trading day with no sales lines at run time,>= 1 missing trading day,True
+C2,RETRO,Late-arriving lines,Share of the week's final lines that had arrived by the run (retrospective),< 99% of final lines on time,False
+C3,FAIL,Row-count drop,Lines at run time below half the store's trailing 13-week median and below half the same week last year,< 50% of trailing median lines and of last year's week,True
+C4,WARN,Duplicate receipts removed,Re-sent receipt lines removed at load (Phase 3 FS-01),> 0.5% of lines,False
+C5,WARN,Invalid prices repaired,"Zero, negative or 100x unit prices corrected or imputed (FS-11, FS-12, FS-13)",> 0.5% of lines,False
+C6,WARN,Invalid or missing discounts repaired,"Missing discounts or broken promotion references (FS-15, FS-19)",> 0.5% of lines,False
+C7,WARN,Missing product references,Lines whose product is not in the product master (UNKNOWN member) above tolerance,> 0.5% of lines,False
+C8,FAIL/WARN,Stale or missing stock snapshots,"No snapshot rows for the store-week (FAIL) or gaps in store-SKU series (TC-05, WARN)",0 snapshot rows (FAIL); > 0 missing store-SKU weeks (WARN),True
+C9,WARN,Null or corrected fields,"Lines corrected or imputed at load (missing prices, dates or stores repaired) above tolerance",> 1.0% of lines,False
+C10,WARN,Quarantined lines,Implausible quantities quarantined (FS-09),> 0 lines,False
+C11,WARN,Returns without a received sale line,Unlinked returns above tolerance (broken sale reference),> 10% of returned units,False
+C12,HOLD,Prior-year returns history incomplete,"Returns-based comparisons (EW05, EW06) whose prior-year window touches the first weeks of history, when returns of pre-extract sales are missing",prior-year window within the first 5 weeks of history,True

@@ -1,0 +1,22 @@
+table forecast_selected_model
+
+	column field
+		dataType: string
+		sourceColumn: field
+
+	column value
+		dataType: string
+		sourceColumn: value
+
+	partition forecast_selected_model = m
+		mode: import
+		source =
+			let
+			    Source = Csv.Document(File.Contents(ForecastFolder & "\forecast_selected_model.csv"),
+			                          [Delimiter = ",", Encoding = 65001, QuoteStyle = QuoteStyle.Csv]),
+			    Promoted = Table.PromoteHeaders(Source, [PromoteAllScalars = true]),
+			    Typed = Table.TransformColumnTypes(Promoted, {
+			        {"field", type text}, {"value", type text}
+			    }, "en-US")
+			in
+			    Typed

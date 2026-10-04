@@ -1,0 +1,65 @@
+group,check,value,reference,difference,tolerance,status
+Period,26 current-year weeks selected,26 weeks,,,,PASS
+Period,weeks are retail weeks 27 to 52,27 to 52,,,,PASS
+Period,every compared week has 7 days in both years,182 vs 182 days,,,,PASS
+Period,prior-year week is the same retail week number,"week_key_py = prior year, same week",,,,PASS
+Period,compared weeks start on the same weekday,weekday [0] vs [0],,,,PASS
+Period,compared weeks are 364 days apart,[364] days,,,,PASS
+Headline vs Phase 4,H2 2024 net revenue vs Phase 4,10188727.55,10188727.55,0.0,0.01,PASS
+Headline vs Phase 4,H2 2025 net revenue vs Phase 4,9457457.05,9457457.05,0.0,0.01,PASS
+Headline vs Phase 4,H2 YoY % vs Phase 4,-7.177250509559463,-7.177250509559463,0.0,0.0001,PASS
+Headline vs Phase 4,H2 2024 net revenue vs direct fact query,10188727.55,10188727.55,0.0,0.01,PASS
+Headline vs Phase 4,H2 2025 net revenue vs direct fact query,9457457.05,9457457.05,0.0,0.01,PASS
+Headline vs Phase 4,H2 2024 sales_revenue vs direct fact query,10557440.91,10557440.91,0.0,0.01,PASS
+Headline vs Phase 4,H2 2025 sales_revenue vs direct fact query,9840827.88,9840827.88,0.0,0.01,PASS
+Headline vs Phase 4,H2 2024 returns_value vs direct fact query,368713.36,368713.36,0.0,0.01,PASS
+Headline vs Phase 4,H2 2025 returns_value vs direct fact query,383370.83,383370.83,0.0,0.01,PASS
+Headline vs Phase 4,H2 2024 transactions vs direct fact query,229446.0,229446.0,0.0,0.0,PASS
+Headline vs Phase 4,H2 2025 transactions vs direct fact query,216027.0,216027.0,0.0,0.0,PASS
+Headline vs Phase 4,H2 2024 units_sold vs direct fact query,487993.0,487993.0,0.0,0.0,PASS
+Headline vs Phase 4,H2 2025 units_sold vs direct fact query,457916.0,457916.0,0.0,0.0,PASS
+Contribution,weekly changes add up to the H2 change,-731270.5000000002,-731270.5,2.3283064365386963e-10,0.01,PASS
+Contribution,store EUR changes add up to the estate change,-731270.4999999998,-731270.5,2.3283064365386963e-10,0.01,PASS
+Contribution,store contributions (pp) add up to the estate YoY %,-7.177250509559457,-7.1772505095594585,1.7763568394002505e-15,0.0001,PASS
+Contribution,store shares of change add up to 100%,1.0,1.0,0.0,1e-09,PASS
+Contribution,region EUR changes add up to the estate change,-731270.4999999995,-731270.5,4.656612873077393e-10,0.01,PASS
+Contribution,region contributions (pp) add up to the estate YoY %,-7.177250509559454,-7.1772505095594585,4.440892098500626e-15,0.0001,PASS
+Contribution,region shares of change add up to 100%,0.9999999999999993,1.0,6.661338147750939e-16,1e-09,PASS
+Contribution,format EUR changes add up to the estate change,-731270.5000000005,-731270.5,4.656612873077393e-10,0.01,PASS
+Contribution,format contributions (pp) add up to the estate YoY %,-7.177250509559463,-7.1772505095594585,4.440892098500626e-15,0.0001,PASS
+Contribution,format shares of change add up to 100%,1.0000000000000007,1.0,6.661338147750939e-16,1e-09,PASS
+Contribution,category EUR changes add up to the estate change,-731270.5000000002,-731270.5,2.3283064365386963e-10,0.01,PASS
+Contribution,category contributions (pp) add up to the estate YoY %,-7.17725050955946,-7.1772505095594585,1.7763568394002505e-15,0.0001,PASS
+Contribution,category shares of change add up to 100%,1.0000000000000002,1.0,2.220446049250313e-16,1e-09,PASS
+SQL vs Python,"store contribution (pp), max abs difference",1.5543122344752192e-15,0.0,1.5543122344752192e-15,1e-06,PASS
+SQL vs Python,"store share of change, max abs difference",2.1597307275911248e-16,0.0,2.1597307275911248e-16,1e-06,PASS
+SQL vs Python,store ranking identical (EUR contribution),0,0,0.0,0.0,PASS
+SQL vs Python,store ranking identical (YoY %),0,0,0.0,0.0,PASS
+SQL vs Python,"category contribution (pp), max abs difference",1.1102230246251565e-15,0.0,1.1102230246251565e-15,1e-06,PASS
+SQL vs Python,category ranking identical,0,0,0.0,0.0,PASS
+Bridge,Shapley residual (estate),5.820766091346741e-10,0.0,5.820766091346741e-10,0.01,PASS
+Bridge,transactions + UPT + ASP + residual + returns = net revenue change,-731270.4999999993,-731270.5,6.984919309616089e-10,0.01,PASS
+Bridge,waterfall ends at the current-period net revenue,9457457.050000003,9457457.05,1.862645149230957e-09,0.01,PASS
+Bridge,AOV change = UPT part + ASP part,-0.4590535837742905,-0.45905358377429195,1.4432899320127035e-15,1e-09,PASS
+Bridge,segment bridges reconcile (max abs difference),5.820766091346741e-10,0.0,5.820766091346741e-10,0.01,PASS
+SQL vs Python,segment transactions_effect (max abs difference),0.0,0.0,0.0,0.01,PASS
+SQL vs Python,segment upt_effect (max abs difference),0.0,0.0,0.0,0.01,PASS
+SQL vs Python,segment asp_effect (max abs difference),0.0,0.0,0.0,0.01,PASS
+SQL vs Python,segment returns_effect (max abs difference),0.0,0.0,0.0,0.01,PASS
+Bridge,category bridges reconcile (max abs difference),1.5643308870494366e-10,0.0,1.5643308870494366e-10,0.01,PASS
+SQL vs Python,category transactions_effect (max abs difference),0.0,0.0,0.0,0.01,PASS
+SQL vs Python,category upt_effect (max abs difference),0.0,0.0,0.0,0.01,PASS
+SQL vs Python,category asp_effect (max abs difference),0.0,0.0,0.0,0.01,PASS
+SQL vs Python,targets: missed_weeks identical for every store and year,0,0,0.0,0.0,PASS
+SQL vs Python,targets: longest_miss_streak identical for every store and year,0,0,0.0,0.0,PASS
+SQL vs Python,targets: last13_missed_weeks identical for every store and year,0,0,0.0,0.0,PASS
+Returns,store returns add up to the estate returns,383370.83,383370.83,0.0,0.01,PASS
+Returns,recorded-reason returns add up to the estate returns,383370.82999999996,383370.83,5.820766091346741e-11,0.01,PASS
+Returns,estate returns equal the headline returns,383370.83,383370.83,0.0,0.01,PASS
+Availability,store ranged cells add up to the estate,235637.0,235637.0,0.0,0.0,PASS
+Lost sales,estimated lost sales are never negative,0.0,0.0,0.0,0.0,PASS
+Lost sales,stock-out weeks with a baseline (coverage),0.9995211978758597,1.0,0.00047880212414030954,0.1,PASS
+Lost sales,back-test: actual / expected on in-stock weeks,0.993221225764122,1.0,0.006778774235878027,0.15,PASS
+Evidence,every finding has exactly one allowed evidence level,0,0,0.0,0.0,PASS
+Evidence,finding ids are unique,0,0,0.0,0.0,PASS
+Robustness,no infinite values (division by zero) in any result table,0,0,0.0,0.0,PASS

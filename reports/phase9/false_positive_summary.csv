@@ -1,0 +1,13 @@
+signal,entity_type,watch_alerts,watch_unconfirmed,watch_only_episodes,isolated_unconfirmed_watch_episodes,warning_plus_alerts,known_episode,unconfirmed_alerts,isolated_alerts,alerts_without_corroborating_evidence,unconfirmed_share,unconfirmed_warning_plus_per_week
+EW01,store,174,167,119,95,75,59,16,0,14,0.213333,0.313725
+EW02,estate,12,6,7,5,8,8,0,0,0,0.0,0.0
+EW02,format,44,35,28,18,9,8,1,0,0,0.111111,0.019608
+EW02,region,66,55,44,31,10,7,3,0,3,0.3,0.058824
+EW03,category,24,23,20,20,20,17,3,0,3,0.15,0.058824
+EW03,supplier,84,83,74,74,31,18,13,0,10,0.419355,0.254902
+EW04,product,20,0,6,0,71,71,0,0,0,0.0,0.0
+EW05,category,8,7,5,5,19,16,3,0,0,0.157895,0.058824
+EW05,store,11,4,3,3,59,58,1,0,0,0.016949,0.019608
+EW06,category,84,70,31,8,36,33,3,0,1,0.083333,0.058824
+EW07,category,25,16,11,6,15,13,2,0,2,0.133333,0.039216
+EW08,store,0,0,0,0,3,3,0,0,0,0.0,0.0

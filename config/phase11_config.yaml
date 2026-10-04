@@ -1,0 +1,144 @@
+phase: 11
+
+analyst:
+  layer_name: AI-assisted analytical interface
+  evidence_is_authoritative: true          # the language model never computes a KPI
+
+# Objects the evidence layer may read. Anything outside this list cannot be referenced by a query
+# template, and the model never sees a connection string, a credential or a SQL string.
+database:
+  access_mode: read_only
+  server: localhost
+  schema_allowed_prefix: mart.
+  allowed_objects:
+    - mart.v_performance_store_week
+    - mart.v_performance_store_day
+    - mart.v_performance_category_week
+    - mart.v_kpi_estate_period
+    - mart.v_kpi_store_period
+    - mart.v_kpi_category_period
+    - mart.v_availability_store_week
+    - mart.v_availability_category_week
+    - mart.v_returns_analysis
+    - mart.v_promotion_performance
+    - mart.v_yoy_store_week
+  allowed_dimensions:
+    - dw.dim_retail_week
+    - dw.dim_store
+    - dw.dim_product
+  statement_policy:
+    allowed_verbs: [SELECT]
+    forbidden_keywords: [INSERT, UPDATE, DELETE, MERGE, DROP, ALTER, CREATE, TRUNCATE, EXEC, EXECUTE,
+                         GRANT, REVOKE, BULK, OPENROWSET, OPENQUERY, sp_executesql, xp_cmdshell]
+    single_statement_only: true
+    parameterised_only: true
+
+# The Phase 6-10 artifacts whose meaning was established by those phases. Their logic is read, never
+# recomputed, so Phase 11 cannot drift from the methodology it is meant to explain.
+evidence_artifacts:
+  phase5:
+    revenue_bridge: reports/phase5/revenue_bridge.csv
+  phase6:
+    attribution: reports/phase6/driver_attribution.csv
+    # The dashboard's own extract, so the AI layer and every dashboard page cite the same
+    # evidence-strength and impact figures. reports/phase6/root_cause_evidence_matrix.csv
+    # carries the same point estimates with different column names; see docs/known_issues.md.
+    evidence_matrix: powerbi/data/p6_evidence_matrix.csv
+    cluster_groups: reports/phase6/cluster_control_groups.csv
+    cluster_did: reports/phase6/cluster_did.csv
+    cluster_onset: reports/phase6/cluster_onset.csv
+    electronics_kpis: reports/phase6/electronics_kpis.csv
+    electronics_stockouts: reports/phase6/electronics_sku_stockouts.csv
+    electronics_episodes: reports/phase6/electronics_stockout_episodes.csv
+    electronics_supplier_comparison: reports/phase6/electronics_supplier_comparison.csv
+    electronics_supplier_test: reports/phase6/electronics_supplier_test.csv
+    faulty_returns_by_store: reports/phase6/faulty_returns_by_store.csv
+    faulty_returns_by_product: reports/phase6/faulty_returns_by_product.csv
+    faulty_returns_by_supplier: reports/phase6/faulty_returns_by_supplier.csv
+    faulty_returns_reasons: reports/phase6/faulty_returns_reasons.csv
+    store_lost_sales: reports/phase6/electronics_lost_sales_by_store.csv
+    store_onset: reports/phase6/cluster_onset_by_store.csv
+    promotion_counterfactuals: reports/phase6/hk_promotion_counterfactuals.csv
+    promotion_weekly: reports/phase6/hk_promotion_weekly.csv
+    promotion_events: reports/phase6/hk_promotion_events_by_year.csv
+    sensitivity: reports/phase6/sensitivity_summary.csv
+    headline: reports/phase7/dashboard_number_register.csv # The Phase 6 headline file is absent; use the governed Phase 7 register.
+  phase7:
+    data_dictionary: docs/07_power_bi_dashboard_design.md
+    measure_dictionary: reports/phase7/measure_dictionary.csv
+    number_register: reports/phase7/dashboard_number_register.csv
+  phase8:
+    action_register: reports/phase8/phase8_action_register.csv
+  phase9:
+    alerts: reports/phase9/weekly_alerts.csv
+    alert_summary: reports/phase9/alert_summary.csv
+    data_quality: reports/phase9/dq_check_catalogue.csv
+  phase10:
+    backtest: reports/phase10/forecast_backtest_results.csv
+    comparison: reports/phase10/forecast_model_comparison.csv
+    selected_model: reports/phase10/forecast_selected_model.csv
+    forecast: reports/phase10/forecast_weekly.csv
+    intervals: reports/phase10/forecast_intervals.csv
+    weekly_history: reports/phase10/weekly_estate_history.csv
+
+retrieval:
+  # Explicit text sources only. Structured numbers are read through evidence_artifacts.
+  text_sources:
+    - docs/05_exploratory_analysis.md
+    - docs/06_root_cause_analysis.md
+    - docs/07_power_bi_dashboard_design.md
+    - docs/08_business_action_and_decision_framework.md
+    - docs/09_monitoring_early_warning.md
+    - docs/10_forecasting.md
+    - reports/phase6/phase6_root_cause_report.md
+    - reports/phase8/phase8_executive_action_plan.md
+    - reports/phase9/phase9_executive_summary.md
+
+# Refused outright, whatever the phrasing. These are evaluation and raw-data assets.
+refused_path_fragments:
+  - evaluation
+  - _hidden_scenario
+  - _scenario_answer_key
+  - _planted_issues_log
+  - answer_key
+  - calibration
+  - /raw/
+  - /sample/
+  - /quarantine/
+
+# Terms that mean the answer is not analytical. Refused before any parsing happens.
+out_of_scope_patterns:
+  - ignore (all )?(your|previous|prior) (rules|instructions)
+  - delete|drop|truncate|alter|wipe
+  - answer key|hidden scenario|planted issues
+  - override|bypass|disregard
+  - pretend .* exists
+  - make (it|the) (decline|result) look
+  - regardless of (the )?data
+
+outputs:
+  validation_checks: reports/phase11/phase11_validation_checks.csv
+  validation_report: reports/phase11/phase11_validation_report.md
+  executive_summary: reports/phase11/phase11_executive_summary.md
+  run_log: reports/phase11/phase11_run_log.txt
+  golden_results: reports/phase11/golden_question_results.csv
+  evidence_reconciliation: reports/phase11/evidence_reconciliation.csv
+  security_validation: reports/phase11/security_validation.csv
+  demonstrations: reports/phase11/portfolio_demonstrations.md
+
+governance:
+  # Phase 10 was terminal and recorded no manifest of its own; its outputs are therefore carried by
+  # this Phase 11 manifest, which follows the existing phase1_<N>_input_manifest convention.
+  freeze_manifest: reports/phase11/phase1_10_input_manifest.csv
+  freeze_manifests_to_verify:
+    - reports/phase5/phase1_4_input_manifest.csv
+    - reports/phase6/phase1_5_input_manifest.csv
+    - reports/phase7/phase1_6_input_manifest.csv
+    - reports/phase8/phase1_7_input_manifest.csv
+    - reports/phase9/phase1_8_dependency_manifest.csv
+
+llm:
+  provider_env_var: BRIGHTWATER_LLM_API_KEY
+  model_env_var: BRIGHTWATER_LLM_MODEL
+  timeout_seconds: 30
+  offline_renderer: deterministic_v1

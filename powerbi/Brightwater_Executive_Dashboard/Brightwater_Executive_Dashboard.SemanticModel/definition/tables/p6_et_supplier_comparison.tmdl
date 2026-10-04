@@ -1,0 +1,144 @@
+table p6_et_supplier_comparison
+
+	column supplier_name
+		dataType: string
+		sourceColumn: supplier_name
+
+	column skus_py
+		dataType: int64
+		summarizeBy: none
+		sourceColumn: skus_py
+
+	column skus_cy
+		dataType: int64
+		summarizeBy: none
+		sourceColumn: skus_cy
+
+	column ranged_cells_py
+		dataType: int64
+		summarizeBy: none
+		sourceColumn: ranged_cells_py
+
+	column ranged_cells_cy
+		dataType: int64
+		summarizeBy: none
+		sourceColumn: ranged_cells_cy
+
+	column out_cells_py
+		dataType: int64
+		summarizeBy: none
+		sourceColumn: out_cells_py
+
+	column out_cells_cy
+		dataType: int64
+		summarizeBy: none
+		sourceColumn: out_cells_cy
+
+	column full_week_out_cells_py
+		dataType: int64
+		summarizeBy: none
+		sourceColumn: full_week_out_cells_py
+
+	column full_week_out_cells_cy
+		dataType: int64
+		summarizeBy: none
+		sourceColumn: full_week_out_cells_cy
+
+	column sales_revenue_py
+		dataType: double
+		summarizeBy: none
+		sourceColumn: sales_revenue_py
+
+	column sales_revenue_cy
+		dataType: double
+		summarizeBy: none
+		sourceColumn: sales_revenue_cy
+
+	column est_lost_sales_eur_py
+		dataType: double
+		summarizeBy: none
+		sourceColumn: est_lost_sales_eur_py
+
+	column est_lost_sales_eur_cy
+		dataType: double
+		summarizeBy: none
+		sourceColumn: est_lost_sales_eur_cy
+
+	column est_lost_sales_upper_eur_py
+		dataType: double
+		summarizeBy: none
+		sourceColumn: est_lost_sales_upper_eur_py
+
+	column est_lost_sales_upper_eur_cy
+		dataType: double
+		summarizeBy: none
+		sourceColumn: est_lost_sales_upper_eur_cy
+
+	column availability_py
+		dataType: double
+		summarizeBy: none
+		sourceColumn: availability_py
+
+	column availability_cy
+		dataType: double
+		summarizeBy: none
+		sourceColumn: availability_cy
+
+	column availability_change_pp
+		dataType: double
+		summarizeBy: none
+		sourceColumn: availability_change_pp
+
+	column lost_primary_change
+		dataType: double
+		summarizeBy: none
+		sourceColumn: lost_primary_change
+
+	column lost_upper_change
+		dataType: double
+		summarizeBy: none
+		sourceColumn: lost_upper_change
+
+	column sales_change
+		dataType: double
+		summarizeBy: none
+		sourceColumn: sales_change
+
+	column share_of_lost_primary_change
+		dataType: double
+		summarizeBy: none
+		sourceColumn: share_of_lost_primary_change
+
+	partition p6_et_supplier_comparison = m
+		mode: import
+		source =
+			let
+			    Source = Csv.Document(File.Contents(AnalyticsFolder & "\p6_et_supplier_comparison.csv"),
+			                          [Delimiter = ",", Encoding = 65001, QuoteStyle = QuoteStyle.Csv]),
+			    Promoted = Table.PromoteHeaders(Source, [PromoteAllScalars = true]),
+			    Typed = Table.TransformColumnTypes(Promoted, {
+			        {"supplier_name", type text},
+			        {"skus_py", Int64.Type},
+			        {"skus_cy", Int64.Type},
+			        {"ranged_cells_py", Int64.Type},
+			        {"ranged_cells_cy", Int64.Type},
+			        {"out_cells_py", Int64.Type},
+			        {"out_cells_cy", Int64.Type},
+			        {"full_week_out_cells_py", Int64.Type},
+			        {"full_week_out_cells_cy", Int64.Type},
+			        {"sales_revenue_py", type number},
+			        {"sales_revenue_cy", type number},
+			        {"est_lost_sales_eur_py", type number},
+			        {"est_lost_sales_eur_cy", type number},
+			        {"est_lost_sales_upper_eur_py", type number},
+			        {"est_lost_sales_upper_eur_cy", type number},
+			        {"availability_py", type number},
+			        {"availability_cy", type number},
+			        {"availability_change_pp", type number},
+			        {"lost_primary_change", type number},
+			        {"lost_upper_change", type number},
+			        {"sales_change", type number},
+			        {"share_of_lost_primary_change", type number}
+			    }, "en-US")
+			in
+			    Typed

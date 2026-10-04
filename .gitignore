@@ -1,0 +1,54 @@
+# Python
+__pycache__/
+*.py[cod]
+.venv/
+.pytest_cache/
+
+# Generated data (reproducible from config + seed). Nothing under data/ is tracked;
+# the generator creates these folders itself.
+data/raw/*
+data/processed/*
+data/sample/*
+data/powerbi/*
+
+# Secrets: the committed .env.example stays, a real .env never does
+.env
+.env.*
+!.env.example
+
+# Logs
+logs/*
+!logs/.gitkeep
+
+# Power BI artefacts. The PBIP under powerbi/Brightwater_Executive_Dashboard/ is the
+# report and is committed; the 33 MB Phase 7 .pbix embeds a full data model and is not.
+powerbi/*.pbix
+powerbi/*.pbix.bak
+powerbi/.pbi/
+**/.pbi/cache.abf
+**/.pbi/localSettings.json
+**/.pbi/editorSettings.json
+
+# Archives and local backups
+*.zip
+
+# Evaluation and answer-key material. The analysis never reads these files.
+evaluation/
+**/_hidden_scenario*
+**/_scenario_answer_key*
+**/_planted_issues_log*
+# Phase 2 full-validation outputs (answer-key figures). phase2_calibration_report.json stays
+# tracked: the Phase 2 tests and validate_generated read it after a fresh full generation.
+reports/phase2_full_validation.csv
+reports/phase2_full_validation_kpis.csv
+reports/phase2_full_validation_report.json
+reports/phase2_full_validation_report.md
+
+# OS / editors
+.DS_Store
+Thumbs.db
+.vscode/
+.idea/
+
+# Agent and assistant local state
+.kilo/

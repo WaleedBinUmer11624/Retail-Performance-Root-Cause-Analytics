@@ -1,0 +1,81 @@
+cell,returned_units_py,returned_units_cy,returns_value_py,returns_value_cy,units_sold_py,units_sold_cy,rate_per_100_py,rate_per_100_cy,expected_units_cy_at_py_rate,excess_units,excess_value_eur,p_increase,value_change,store_id,supplier_name
+S13 | Voltix Distribution Ltd,16.0,78.0,1166.92,9597.89,1083.0,1268.0,1.477378,6.15142,18.733149,59.266851,5474.061813,0.0,8430.97,S13,Voltix Distribution Ltd
+S07 | Voltix Distribution Ltd,6.0,50.0,337.91,5561.66,666.0,751.0,0.900901,6.65779,6.765766,43.234234,3993.241842,0.0,5223.75,S07,Voltix Distribution Ltd
+S14 | Voltix Distribution Ltd,6.0,38.0,626.54,5044.41,625.0,681.0,0.96,5.580029,6.5376,31.4624,2905.960389,2e-06,4417.87,S14,Voltix Distribution Ltd
+S15 | Voltix Distribution Ltd,10.0,39.0,855.06,4619.83,532.0,556.0,1.879699,7.014388,10.451128,28.548872,2636.858336,3.7e-05,3764.77,S15,Voltix Distribution Ltd
+S16 | Voltix Distribution Ltd,13.0,35.0,1072.99,3974.78,556.0,609.0,2.338129,5.747126,14.239209,20.760791,1917.52814,0.002836,2901.79,S16,Voltix Distribution Ltd
+S13 | Northbridge Tech Supplies,29.0,44.0,1526.76,3852.93,1591.0,1486.0,1.822753,2.960969,27.086109,16.913891,1562.217002,0.026578,2326.17,S13,Northbridge Tech Supplies
+S07 | Northbridge Tech Supplies,12.0,29.0,618.83,2398.57,1086.0,922.0,1.104972,3.145336,10.187845,18.812155,1737.54629,0.00115,1779.74,S07,Northbridge Tech Supplies
+S17 | Voltix Distribution Ltd,6.0,14.0,536.61,1806.68,279.0,333.0,2.150538,4.204204,7.16129,6.83871,631.643468,0.1191,1270.07,S17,Voltix Distribution Ltd
+S14 | Northbridge Tech Supplies,16.0,23.0,715.29,1890.53,864.0,819.0,1.851852,2.808303,15.166667,7.833333,723.509852,0.129586,1175.24,S14,Northbridge Tech Supplies
+S16 | Northbridge Tech Supplies,7.0,23.0,339.11,1474.03,869.0,729.0,0.805524,3.155007,5.872267,17.127733,1581.968119,0.00054,1134.92,S16,Northbridge Tech Supplies
+S15 | Northbridge Tech Supplies,7.0,17.0,264.28,1373.5,784.0,657.0,0.892857,2.587519,5.866071,11.133929,1028.362598,0.011129,1109.22,S15,Northbridge Tech Supplies
+S02 | Northbridge Tech Supplies,16.0,27.0,708.41,1752.11,1915.0,1767.0,0.835509,1.528014,14.763446,12.236554,1130.204302,0.036476,1043.7,S02,Northbridge Tech Supplies
+S13 | Emerald Electronics Wholesale,10.0,17.0,732.5,1699.32,607.0,488.0,1.647446,3.483607,8.039539,8.960461,827.614726,0.042157,966.82,S13,Emerald Electronics Wholesale
+S15 | Emerald Electronics Wholesale,1.0,9.0,69.99,1005.72,273.0,162.0,0.3663,5.555556,0.593407,8.406593,776.45785,0.000916,935.73,S15,Emerald Electronics Wholesale
+S09 | Voltix Distribution Ltd,3.0,13.0,157.45,1088.84,550.0,632.0,0.545455,2.056962,3.447273,9.552727,882.318166,0.021193,931.39,S09,Voltix Distribution Ltd
+S14 | Emerald Electronics Wholesale,1.0,10.0,33.16,802.36,311.0,256.0,0.321543,3.90625,0.823151,9.176849,847.600925,0.002283,769.2,S14,Emerald Electronics Wholesale
+S02 | Voltix Distribution Ltd,13.0,18.0,1198.09,1873.45,1305.0,1360.0,0.996169,1.323529,13.547893,4.452107,411.209806,0.273677,675.36,S02,Voltix Distribution Ltd
+S15 | Unknown supplier,0.0,3.0,0.0,642.96,38.0,37.0,0.0,8.108108,0.0,3.0,277.08888,0.120066,642.96,S15,Unknown supplier
+S13 | Unknown supplier,0.0,3.0,0.0,642.96,84.0,55.0,0.0,5.454545,0.0,3.0,277.08888,0.06195,642.96,S13,Unknown supplier
+S06 | Voltix Distribution Ltd,3.0,11.0,241.15,862.8,298.0,373.0,1.006711,2.949062,3.755034,7.244966,669.166545,0.068843,621.65,S06,Voltix Distribution Ltd
+S12 | Voltix Distribution Ltd,5.0,12.0,474.6,1001.9,606.0,683.0,0.825083,1.756955,5.635314,6.364686,587.861281,0.112019,527.3,S12,Voltix Distribution Ltd
+S16 | Unknown supplier,0.0,2.0,0.0,451.2,35.0,34.0,0.0,5.882353,0.0,2.0,184.72592,0.242806,451.2,S16,Unknown supplier
+S17 | Unknown supplier,0.0,2.0,0.0,417.36,16.0,13.0,0.0,15.384615,0.0,2.0,184.72592,0.200951,417.36,S17,Unknown supplier
+S01 | Northbridge Tech Supplies,14.0,14.0,580.19,862.37,1604.0,1370.0,0.872818,1.021898,11.957606,2.042394,188.641556,0.408199,282.18,S01,Northbridge Tech Supplies
+S20 | Voltix Distribution Ltd,2.0,7.0,281.85,533.92,309.0,361.0,0.647249,1.939058,2.33657,4.66343,430.728237,0.134259,252.07,S20,Voltix Distribution Ltd
+S14 | Unknown supplier,0.0,1.0,0.0,225.6,48.0,32.0,0.0,3.125,0.0,1.0,92.36296,0.4,225.6,S14,Unknown supplier
+S17 | Northbridge Tech Supplies,3.0,8.0,346.55,544.44,440.0,389.0,0.681818,2.056555,2.652273,5.347727,493.93192,0.078342,197.89,S17,Northbridge Tech Supplies
+S20 | Northbridge Tech Supplies,11.0,10.0,375.13,552.36,559.0,505.0,1.9678,1.980198,9.937388,0.062612,5.783012,0.57913,177.23,S20,Northbridge Tech Supplies
+S18 | Emerald Electronics Wholesale,4.0,4.0,328.01,494.44,272.0,186.0,1.470588,2.150538,2.735294,1.264706,116.811979,0.420145,166.43,S18,Emerald Electronics Wholesale
+S10 | Emerald Electronics Wholesale,1.0,2.0,27.72,147.63,184.0,139.0,0.543478,1.438849,0.755435,1.244565,114.951727,0.396187,119.91,S10,Emerald Electronics Wholesale
+S08 | Voltix Distribution Ltd,4.0,6.0,363.86,469.57,288.0,334.0,1.388889,1.796407,4.638889,1.361111,125.716251,0.47062,105.71,S08,Voltix Distribution Ltd
+S18 | Northbridge Tech Supplies,7.0,10.0,429.06,532.12,854.0,714.0,0.819672,1.40056,5.852459,4.147541,383.079162,0.195643,103.06,S18,Northbridge Tech Supplies
+S02 | Emerald Electronics Wholesale,5.0,5.0,260.28,319.67,680.0,497.0,0.735294,1.006036,3.654412,1.345588,124.282512,0.423597,59.39,S02,Emerald Electronics Wholesale
+S11 | Unknown supplier,0.0,1.0,0.0,51.54,20.0,22.0,0.0,4.545455,0.0,1.0,92.36296,0.52381,51.54,S11,Unknown supplier
+S01 | Unknown supplier,0.0,1.0,0.0,51.54,64.0,52.0,0.0,1.923077,0.0,1.0,92.36296,0.448276,51.54,S01,Unknown supplier
+S19 | Emerald Electronics Wholesale,3.0,2.0,130.71,176.49,136.0,87.0,2.205882,2.298851,1.919118,0.080882,7.470534,0.645785,45.78,S19,Emerald Electronics Wholesale
+S20 | Emerald Electronics Wholesale,0.0,1.0,0.0,43.98,125.0,128.0,0.0,0.78125,0.0,1.0,92.36296,0.505929,43.98,S20,Emerald Electronics Wholesale
+S04 | Northbridge Tech Supplies,11.0,7.0,308.32,343.53,844.0,623.0,1.303318,1.123596,8.119668,-1.119668,-103.415873,0.703618,35.21,S04,Northbridge Tech Supplies
+S19 | Unknown supplier,0.0,0.0,0.0,0.0,20.0,23.0,0.0,0.0,0.0,0.0,0.0,,0.0,S19,Unknown supplier
+S09 | Unknown supplier,0.0,0.0,0.0,0.0,35.0,37.0,0.0,0.0,0.0,0.0,0.0,,0.0,S09,Unknown supplier
+S10 | Unknown supplier,0.0,0.0,0.0,0.0,15.0,11.0,0.0,0.0,0.0,0.0,0.0,,0.0,S10,Unknown supplier
+S03 | Unknown supplier,0.0,0.0,0.0,0.0,55.0,27.0,0.0,0.0,0.0,0.0,0.0,,0.0,S03,Unknown supplier
+S06 | Unknown supplier,0.0,0.0,0.0,0.0,24.0,19.0,0.0,0.0,0.0,0.0,0.0,,0.0,S06,Unknown supplier
+S06 | Emerald Electronics Wholesale,1.0,1.0,43.57,37.38,172.0,99.0,0.581395,1.010101,0.575581,0.424419,39.200559,0.597173,-6.19,S06,Emerald Electronics Wholesale
+S11 | Emerald Electronics Wholesale,3.0,2.0,104.45,71.94,149.0,117.0,2.013423,1.709402,2.355705,-0.355705,-32.853939,0.728335,-32.51,S11,Emerald Electronics Wholesale
+S08 | Emerald Electronics Wholesale,3.0,2.0,96.44,55.86,158.0,109.0,1.898734,1.834862,2.06962,-0.06962,-6.430333,0.67713,-40.58,S08,Emerald Electronics Wholesale
+S09 | Emerald Electronics Wholesale,2.0,3.0,150.71,106.0,273.0,203.0,0.732601,1.477833,1.487179,1.512821,139.72858,0.364107,-44.71,S09,Emerald Electronics Wholesale
+S11 | Northbridge Tech Supplies,6.0,6.0,329.37,277.43,536.0,416.0,1.119403,1.442308,4.656716,1.343284,124.069648,0.43628,-51.94,S11,Northbridge Tech Supplies
+S03 | Voltix Distribution Ltd,4.0,7.0,472.81,416.02,637.0,466.0,0.627943,1.502146,2.926217,4.073783,376.266689,0.129548,-56.79,S03,Voltix Distribution Ltd
+S12 | Emerald Electronics Wholesale,6.0,3.0,243.12,184.62,288.0,233.0,2.083333,1.287554,4.854167,-1.854167,-171.256321,0.84653,-58.5,S12,Emerald Electronics Wholesale
+S12 | Northbridge Tech Supplies,10.0,13.0,625.1,527.83,936.0,846.0,1.068376,1.536643,9.038462,3.961538,365.899418,0.254422,-97.27,S12,Northbridge Tech Supplies
+S01 | Emerald Electronics Wholesale,5.0,6.0,345.51,224.78,516.0,423.0,0.968992,1.41844,4.098837,1.901163,175.597023,0.368112,-120.73,S01,Emerald Electronics Wholesale
+S05 | Emerald Electronics Wholesale,5.0,2.0,393.7,227.71,274.0,132.0,1.824818,1.515152,2.408759,-0.408759,-37.754203,0.72121,-165.99,S05,Emerald Electronics Wholesale
+S11 | Voltix Distribution Ltd,7.0,5.0,757.82,580.36,310.0,319.0,2.258065,1.567398,7.203226,-2.203226,-203.496457,0.819688,-177.46,S11,Voltix Distribution Ltd
+S09 | Northbridge Tech Supplies,11.0,10.0,540.63,325.36,846.0,723.0,1.300236,1.383126,9.400709,0.599291,55.35227,0.528418,-215.27,S09,Northbridge Tech Supplies
+S05 | Unknown supplier,1.0,0.0,223.41,0.0,39.0,20.0,2.564103,0.0,0.512821,-0.512821,-47.36562,1.0,-223.41,S05,Unknown supplier
+S08 | Unknown supplier,1.0,0.0,223.41,0.0,12.0,12.0,8.333333,0.0,1.0,-1.0,-92.36296,1.0,-223.41,S08,Unknown supplier
+S20 | Unknown supplier,1.0,0.0,223.41,0.0,29.0,21.0,3.448276,0.0,0.724138,-0.724138,-66.883523,1.0,-223.41,S20,Unknown supplier
+S07 | Unknown supplier,1.0,0.0,223.41,0.0,48.0,36.0,2.083333,0.0,0.75,-0.75,-69.27222,1.0,-223.41,S07,Unknown supplier
+S07 | Emerald Electronics Wholesale,5.0,2.0,458.16,230.72,334.0,247.0,1.497006,0.809717,3.697605,-1.697605,-156.795803,0.871842,-227.44,S07,Emerald Electronics Wholesale
+S06 | Northbridge Tech Supplies,7.0,5.0,391.68,138.6,472.0,403.0,1.483051,1.240695,5.976695,-0.976695,-90.210433,0.721159,-253.08,S06,Northbridge Tech Supplies
+S16 | Emerald Electronics Wholesale,13.0,4.0,686.25,432.81,262.0,174.0,4.961832,2.298851,8.633588,-4.633588,-427.971883,0.952842,-253.44,S16,Emerald Electronics Wholesale
+S18 | Unknown supplier,3.0,1.0,497.87,225.6,45.0,32.0,6.666667,3.125,2.133333,-1.133333,-104.678021,0.883349,-272.27,S18,Unknown supplier
+S04 | Emerald Electronics Wholesale,4.0,0.0,275.57,0.0,332.0,171.0,1.204819,0.0,2.060241,-2.060241,-190.289954,1.0,-275.57,S04,Emerald Electronics Wholesale
+S17 | Emerald Electronics Wholesale,6.0,1.0,350.83,62.35,131.0,94.0,4.580153,1.06383,4.305344,-3.305344,-305.29131,0.977321,-288.48,S17,Emerald Electronics Wholesale
+S10 | Northbridge Tech Supplies,9.0,6.0,636.75,337.27,496.0,468.0,1.814516,1.282051,8.491935,-2.491935,-230.162537,0.820951,-299.48,S10,Northbridge Tech Supplies
+S19 | Voltix Distribution Ltd,7.0,3.0,539.8,224.44,281.0,306.0,2.491103,0.980392,7.622776,-4.622776,-426.973256,0.958763,-315.36,S19,Voltix Distribution Ltd
+S12 | Unknown supplier,3.0,0.0,320.4,0.0,27.0,33.0,11.111111,0.0,3.666667,-3.666667,-338.664186,1.0,-320.4,S12,Unknown supplier
+S03 | Northbridge Tech Supplies,14.0,5.0,699.41,370.36,890.0,605.0,1.573034,0.826446,9.516854,-4.516854,-417.189999,0.935679,-329.05,S03,Northbridge Tech Supplies
+S19 | Northbridge Tech Supplies,13.0,4.0,611.91,197.12,506.0,461.0,2.56917,0.867679,11.843874,-7.843874,-724.483375,0.98936,-414.79,S19,Northbridge Tech Supplies
+S08 | Northbridge Tech Supplies,9.0,6.0,664.14,240.52,460.0,414.0,1.956522,1.449275,8.1,-2.1,-193.962216,0.795795,-423.62,S08,Northbridge Tech Supplies
+S03 | Emerald Electronics Wholesale,7.0,2.0,531.81,96.98,313.0,139.0,2.236422,1.438849,3.108626,-1.108626,-102.395997,0.817044,-434.83,S03,Emerald Electronics Wholesale
+S02 | Unknown supplier,2.0,0.0,446.82,0.0,92.0,68.0,2.173913,0.0,1.478261,-1.478261,-136.536549,1.0,-446.82,S02,Unknown supplier
+S04 | Unknown supplier,2.0,0.0,446.82,0.0,45.0,13.0,4.444444,0.0,0.577778,-0.577778,-53.365266,1.0,-446.82,S04,Unknown supplier
+S10 | Voltix Distribution Ltd,5.0,0.0,610.67,0.0,270.0,351.0,1.851852,0.0,6.5,-6.5,-600.359239,1.0,-610.67,S10,Voltix Distribution Ltd
+S18 | Voltix Distribution Ltd,11.0,6.0,1178.95,545.34,594.0,611.0,1.851852,0.981997,11.314815,-5.314815,-490.892028,0.935928,-633.61,S18,Voltix Distribution Ltd
+S05 | Voltix Distribution Ltd,9.0,5.0,929.98,294.43,526.0,430.0,1.711027,1.162791,7.357414,-2.357414,-217.737776,0.832418,-635.55,S05,Voltix Distribution Ltd
+S05 | Northbridge Tech Supplies,13.0,5.0,901.28,204.8,764.0,487.0,1.701571,1.026694,8.286649,-3.286649,-303.56465,0.889508,-696.48,S05,Northbridge Tech Supplies
+S01 | Voltix Distribution Ltd,20.0,10.0,2087.69,845.51,1098.0,1144.0,1.821494,0.874126,20.837887,-10.837887,-1001.019328,0.983742,-1242.18,S01,Voltix Distribution Ltd
+S04 | Voltix Distribution Ltd,17.0,2.0,1818.7,111.29,633.0,507.0,2.685624,0.394477,13.616114,-11.616114,-1072.898648,0.999773,-1707.41,S04,Voltix Distribution Ltd

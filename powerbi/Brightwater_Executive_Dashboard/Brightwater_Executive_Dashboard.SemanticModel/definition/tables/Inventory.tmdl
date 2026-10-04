@@ -1,0 +1,71 @@
+table Inventory
+
+	column snapshot_date_key
+		dataType: int64
+		summarizeBy: none
+		sourceColumn: snapshot_date_key
+		isHidden
+
+	column retail_week_key
+		dataType: int64
+		summarizeBy: none
+		sourceColumn: retail_week_key
+		isHidden
+
+	column store_key
+		dataType: int64
+		summarizeBy: none
+		sourceColumn: store_key
+		isHidden
+
+	column product_key
+		dataType: int64
+		summarizeBy: none
+		sourceColumn: product_key
+		isHidden
+
+	column opening_stock
+		dataType: int64
+		summarizeBy: none
+		sourceColumn: opening_stock
+
+	column received_qty
+		dataType: int64
+		summarizeBy: none
+		sourceColumn: received_qty
+
+	column closing_stock
+		dataType: int64
+		summarizeBy: none
+		sourceColumn: closing_stock
+
+	column is_in_stock
+		dataType: int64
+		summarizeBy: none
+		sourceColumn: is_in_stock
+
+	column is_full_week_stockout
+		dataType: int64
+		summarizeBy: none
+		sourceColumn: is_full_week_stockout
+
+	partition Inventory = m
+		mode: import
+		source =
+			let
+			    Source = Csv.Document(File.Contents(ModelFolder & "\inventory.csv"),
+			                          [Delimiter = ",", Encoding = 65001, QuoteStyle = QuoteStyle.Csv]),
+			    Promoted = Table.PromoteHeaders(Source, [PromoteAllScalars = true]),
+			    Typed = Table.TransformColumnTypes(Promoted, {
+			        {"snapshot_date_key", Int64.Type},
+			        {"retail_week_key", Int64.Type},
+			        {"store_key", Int64.Type},
+			        {"product_key", Int64.Type},
+			        {"opening_stock", Int64.Type},
+			        {"received_qty", Int64.Type},
+			        {"closing_stock", Int64.Type},
+			        {"is_in_stock", Int64.Type},
+			        {"is_full_week_stockout", Int64.Type}
+			    }, "en-US")
+			in
+			    Typed

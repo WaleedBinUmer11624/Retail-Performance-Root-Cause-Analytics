@@ -1,0 +1,117 @@
+table p6_evidence_matrix
+
+	column driver_id
+		dataType: string
+		sourceColumn: driver_id
+
+	column driver
+		dataType: string
+		sourceColumn: driver
+
+	column candidate_driver
+		dataType: string
+		sourceColumn: candidate_driver
+
+	column evidence_level
+		dataType: string
+		sourceColumn: evidence_level
+
+	column cause_status
+		dataType: string
+		sourceColumn: cause_status
+
+	column evidence_display
+		dataType: string
+		sourceColumn: evidence_display
+
+	column evidence_strength
+		dataType: int64
+		summarizeBy: none
+		sourceColumn: evidence_strength
+
+	column evidence_colour
+		dataType: string
+		sourceColumn: evidence_colour
+
+	column observed_effect
+		dataType: string
+		sourceColumn: observed_effect
+
+	column financial_impact_eur
+		dataType: double
+		summarizeBy: none
+		sourceColumn: financial_impact_eur
+
+	column impact_pp_of_py_revenue
+		dataType: double
+		summarizeBy: none
+		sourceColumn: impact_pp_of_py_revenue
+
+	column impact_range
+		dataType: string
+		sourceColumn: impact_range
+
+	column what_we_know
+		dataType: string
+		sourceColumn: what_we_know
+
+	column what_we_do_not_know
+		dataType: string
+		sourceColumn: what_we_do_not_know
+
+	column confidence
+		dataType: string
+		sourceColumn: confidence
+
+	column method
+		dataType: string
+		sourceColumn: method
+
+	column additional_data_required
+		dataType: string
+		sourceColumn: additional_data_required
+
+	column double_counting_risk
+		dataType: string
+		sourceColumn: double_counting_risk
+
+	column conclusion
+		dataType: string
+		sourceColumn: conclusion
+
+	column sort_order
+		dataType: int64
+		summarizeBy: none
+		sourceColumn: sort_order
+
+	partition p6_evidence_matrix = m
+		mode: import
+		source =
+			let
+			    Source = Csv.Document(File.Contents(AnalyticsFolder & "\p6_evidence_matrix.csv"),
+			                          [Delimiter = ",", Encoding = 65001, QuoteStyle = QuoteStyle.Csv]),
+			    Promoted = Table.PromoteHeaders(Source, [PromoteAllScalars = true]),
+			    Typed = Table.TransformColumnTypes(Promoted, {
+			        {"driver_id", type text},
+			        {"driver", type text},
+			        {"candidate_driver", type text},
+			        {"evidence_level", type text},
+			        {"cause_status", type text},
+			        {"evidence_display", type text},
+			        {"evidence_strength", Int64.Type},
+			        {"evidence_colour", type text},
+			        {"observed_effect", type text},
+			        {"financial_impact_eur", type number},
+			        {"impact_pp_of_py_revenue", type number},
+			        {"impact_range", type text},
+			        {"what_we_know", type text},
+			        {"what_we_do_not_know", type text},
+			        {"confidence", type text},
+			        {"method", type text},
+			        {"additional_data_required", type text},
+			        {"double_counting_risk", type text},
+			        {"conclusion", type text},
+			        {"sort_order", Int64.Type}
+			    }, "en-US")
+			in
+			    Typed

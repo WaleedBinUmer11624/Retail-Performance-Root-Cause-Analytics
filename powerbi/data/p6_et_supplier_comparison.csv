@@ -1,0 +1,5 @@
+supplier_name,skus_py,skus_cy,ranged_cells_py,ranged_cells_cy,out_cells_py,out_cells_cy,full_week_out_cells_py,full_week_out_cells_cy,sales_revenue_py,sales_revenue_cy,est_lost_sales_eur_py,est_lost_sales_eur_cy,est_lost_sales_upper_eur_py,est_lost_sales_upper_eur_cy,availability_py,availability_cy,availability_change_pp,lost_primary_change,lost_upper_change,sales_change,share_of_lost_primary_change
+Voltix Distribution Ltd,36,38,13458,14472,648,2503,0,674,1073694.72,1075132.53,0.0,30996.272461,226.271767,92376.751679,0.95185,0.827045,-12.480487,30996.272461,92150.479912,1437.81,0.832442
+Unknown supplier,2,2,960,962,43,253,0,112,129574.3,94649.86,0.0,6239.074314,66.609987,7614.127096,0.955208,0.737006,-21.82021,6239.074314,7547.517109,-34924.44,0.167558
+Northbridge Tech Supplies,32,32,14007,13535,611,638,0,0,866362.85,774644.9,0.0,0.0,0.0,470.473178,0.956379,0.952863,-0.351601,0.0,470.473178,-91717.95,0.0
+Emerald Electronics Wholesale,15,14,6031,4970,290,244,0,0,334502.43,217355.73,0.0,0.0,0.0,242.283536,0.951915,0.950905,-0.100967,0.0,242.283536,-117146.7,0.0

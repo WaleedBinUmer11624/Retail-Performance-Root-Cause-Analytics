@@ -1,0 +1,48 @@
+phase: 10
+forecast:
+  target: net_revenue
+  grain: estate_week
+  primary_horizon_weeks: 13
+  supported_horizons_weeks: [4, 8, 13, 26]
+  minimum_training_weeks: 52
+  seasonal_period_weeks: 52
+  rolling_origin_step_weeks: 4
+  moving_average_window_weeks: 4
+  trend_window_weeks: 26
+  interval_coverages: [0.8, 0.95]
+  weekly_input: reports/phase10/weekly_estate_history.csv
+  phase4_reconciliation_candidates:
+    - reports/phase4/reconciliation_results_duckdb.csv
+    - reports/phase4/reconciliation_results_sqlserver.csv
+  freeze_manifests:
+    - reports/phase5/phase1_4_input_manifest.csv
+    - reports/phase6/phase1_5_input_manifest.csv
+    - reports/phase7/phase1_6_input_manifest.csv
+    - reports/phase8/phase1_7_input_manifest.csv
+    - reports/phase9/phase1_8_dependency_manifest.csv
+  outputs:
+    backtest: reports/phase10/forecast_backtest_results.csv
+    model_comparison: reports/phase10/forecast_model_comparison.csv
+    selected_model: reports/phase10/forecast_selected_model.csv
+    forecast: reports/phase10/forecast_weekly.csv
+    intervals: reports/phase10/forecast_intervals.csv
+    validation_checks: reports/phase10/phase10_validation_checks.csv
+    provenance: reports/phase10/weekly_estate_history_provenance.csv
+
+# Read-only extraction of the contract-shaped weekly input. No database write is ever issued.
+source:
+  engine: mssql
+  read_only: true
+  governed_view: mart.v_performance_store_week
+  week_dimension: dw.dim_retail_week
+  retail_years: [2024, 2025]
+  exclude_incomplete_tail_weeks: true
+  tolerance_eur: 0.01
+
+# The challenger must beat the best baseline by more than the margin, on the selection metric,
+# averaged over every rolling origin. Ties break on the listed metrics, then on registry order.
+selection:
+  metric: wape
+  challenger_margin: 0.0
+  tie_breakers: [mase, rmse, mae]
+  require_all_origins: true

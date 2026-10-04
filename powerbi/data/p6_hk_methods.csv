@@ -1,0 +1,5 @@
+sort_order,method_code,method,effect_eur,ci_low,ci_high,interval_type,direction,detail
+1,M1,M1 category DiD (sales),-186146.420449,-248937.43698,-121581.1347,95% CI (store bootstrap),Promotions reduced revenue,"delta -7.07% sales, -1.73% units"
+2,M4,M4 discount-rate accounting (net volume response 0; range = volume response at the M1 units CI bounds),-265003.364503,-380272.273058,-243387.050924,range (volume response at M1 units CI),Promotions reduced revenue,discount rate 2.4% to 11.9% of gross sales
+3,M2,"M2 dose-response (promotion coverage lags 0-2, depth, store FE)",97505.293502,87311.804371,161233.668809,95% CI (store bootstrap),Promotions added revenue,within R2 0.38
+4,M3,M3 event-level net programme revenue (current minus prior programme),79059.330917,,,none,Promotions added revenue,"baseline contamination {2024: 0.2130201895344046, 2025: 0.6408227848101266}"

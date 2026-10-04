@@ -1,0 +1,5 @@
+control_group,stores,n_stores,primary
+matched,"S07, S09, S12, S16, S18",5,True
+standard_non_cluster,"S07, S09, S12, S14, S15, S16, S18",7,False
+dublin_non_cluster,"S01, S02",2,False
+all_non_cluster,"S01, S02, S06, S07, S08, S09, S10, S11, S12, S13, S14, S15, S16, S17, S18, S19, S20",17,False

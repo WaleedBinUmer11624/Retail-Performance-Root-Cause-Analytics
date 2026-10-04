@@ -1,0 +1,106 @@
+table p6_et_supplier_test
+
+	column supplier
+		dataType: string
+		sourceColumn: supplier
+
+	column metric
+		dataType: string
+		sourceColumn: metric
+
+	column supplier_skus
+		dataType: int64
+		summarizeBy: none
+		sourceColumn: supplier_skus
+
+	column other_skus
+		dataType: int64
+		summarizeBy: none
+		sourceColumn: other_skus
+
+	column supplier_mean
+		dataType: double
+		summarizeBy: none
+		sourceColumn: supplier_mean
+
+	column other_mean
+		dataType: double
+		summarizeBy: none
+		sourceColumn: other_mean
+
+	column difference
+		dataType: double
+		summarizeBy: none
+		sourceColumn: difference
+
+	column ci_low
+		dataType: double
+		summarizeBy: none
+		sourceColumn: ci_low
+
+	column ci_high
+		dataType: double
+		summarizeBy: none
+		sourceColumn: ci_high
+
+	column permutation_p_two_sided
+		dataType: double
+		summarizeBy: none
+		sourceColumn: permutation_p_two_sided
+
+	column leave_one_sku_out_min
+		dataType: double
+		summarizeBy: none
+		sourceColumn: leave_one_sku_out_min
+
+	column leave_one_sku_out_max
+		dataType: double
+		summarizeBy: none
+		sourceColumn: leave_one_sku_out_max
+
+	column supplier_median
+		dataType: double
+		summarizeBy: none
+		sourceColumn: supplier_median
+
+	column other_median
+		dataType: double
+		summarizeBy: none
+		sourceColumn: other_median
+
+	column supplier_skus_worse_than_other_median
+		dataType: int64
+		summarizeBy: none
+		sourceColumn: supplier_skus_worse_than_other_median
+
+	column variant
+		dataType: string
+		sourceColumn: variant
+
+	partition p6_et_supplier_test = m
+		mode: import
+		source =
+			let
+			    Source = Csv.Document(File.Contents(AnalyticsFolder & "\p6_et_supplier_test.csv"),
+			                          [Delimiter = ",", Encoding = 65001, QuoteStyle = QuoteStyle.Csv]),
+			    Promoted = Table.PromoteHeaders(Source, [PromoteAllScalars = true]),
+			    Typed = Table.TransformColumnTypes(Promoted, {
+			        {"supplier", type text},
+			        {"metric", type text},
+			        {"supplier_skus", Int64.Type},
+			        {"other_skus", Int64.Type},
+			        {"supplier_mean", type number},
+			        {"other_mean", type number},
+			        {"difference", type number},
+			        {"ci_low", type number},
+			        {"ci_high", type number},
+			        {"permutation_p_two_sided", type number},
+			        {"leave_one_sku_out_min", type number},
+			        {"leave_one_sku_out_max", type number},
+			        {"supplier_median", type number},
+			        {"other_median", type number},
+			        {"supplier_skus_worse_than_other_median", Int64.Type},
+			        {"variant", type text}
+			    }, "en-US")
+			in
+			    Typed

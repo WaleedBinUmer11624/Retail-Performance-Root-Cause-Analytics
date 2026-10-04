@@ -1,0 +1,281 @@
+# Phase 9: operational monitoring, early warning and anomaly detection (used by src/monitoring).
+#
+# Detects abnormal behaviour; it never establishes a cause. Every alert carries evidence level
+# "Observed change (monitoring alert)" and cause status "Not established".
+#
+# Thresholds are NOT typed guesses. Each signal lists CANDIDATE thresholds; the back-test (src/monitoring/backtest.py)
+# evaluates all of them and the operational one is chosen by the selection rule below, which uses a false-alarm
+# budget calibrated on store-weeks and entity-weeks OUTSIDE the known episodes. The known episodes are used only
+# to report detection timing afterwards, never to choose a threshold.
+
+inputs:
+  allowed_files:
+    - config/project_config.yaml
+    - config/sql_model_config.yaml
+    - config/analytics_config.yaml
+    - config/rca_config.yaml
+    - config/powerbi_config.yaml
+    - config/action_config.yaml
+    - config/monitoring_config.yaml
+    - reports/phase5/phase1_4_input_manifest.csv
+    - reports/phase6/phase1_5_input_manifest.csv
+    - reports/phase7/phase1_6_input_manifest.csv
+    - reports/phase8/phase1_7_input_manifest.csv
+    - reports/phase9/phase1_8_dependency_manifest.csv
+  monitoring_sql_dir: sql/monitoring
+  # Phase 8 files frozen for Phase 9 (added to the Phase 1-7 lists of the earlier configs). The Phase 8 validation
+  # report and run log record run times and are excluded, as for the earlier phases.
+  phase8_frozen:
+    - src/actions/*.py
+    - config/action_config.yaml
+    - docs/08_business_action_and_decision_framework.md
+    - tests/test_phase8_actions.py
+    - reports/phase8/*.csv
+    - reports/phase8/phase8_executive_action_plan.md
+    - reports/phase8/phase8_independent_review.md
+    - reports/phase8/figures/*.png
+  # Phase 3 audit outputs read by the data-quality monitor (EW08). They are frozen Phase 3 outputs, not
+  # evaluation assets; Phase 9 adds them to its dependency manifest.
+  phase3_dq:
+    - reports/phase3/dq_issue_log.csv
+    - reports/phase3/inventory_missing_weeks.csv
+    - reports/phase3/completeness_store_days.csv
+    - reports/phase3/dq_rule_results.csv
+  freeze_manifest: reports/phase9/phase1_8_dependency_manifest.csv
+
+outputs:
+  reports: reports/phase9
+  figures: reports/phase9/figures
+  data: reports/phase9/data
+
+# ----------------------------------------------------------------------------- calendar and replay
+calendar:
+  # A weekly run happens at 06:00 on the Monday after the retail week closes (mon.week_calendar.run_time).
+  # At run t the monitor sees each week's data as it stood at that moment: lines extracted later are invisible.
+  first_monitored_year: 2024
+  yoy_years: [2025]              # same-week prior-year comparisons exist only for 2025
+
+baseline:
+  trailing_weeks: 13             # rolling baseline window (a retail quarter), weeks strictly before the run week
+  min_valid_weeks: 8             # fewer valid past weeks: no alert ("insufficient baseline")
+  rolling_window_weeks: 4        # trailing window for pulsed or low-count signals (promotions, margin, returns)
+  exclude_dq_fail_weeks: true    # weeks that failed the DQ gate never enter a baseline
+  guard_z_adverse: -2.0          # a week at z <= -2 (adverse side) does not enter later baselines, so a sustained
+                                 # deterioration is not absorbed into "normal" within a few weeks
+  guard_z_other: 3.0             # outliers on the favourable side are also kept out
+  hold_release_weeks: 4          # after an adverse anomaly the baseline is frozen until 4 consecutive weeks are back
+  hold_release_z: -1.0           # above z = -1 (review finding M3: stops a sustained step drifting into "normal")
+  trailing_guard_pp: 1.0         # EW03: a week below its trailing mean by 1pp or more (the smallest candidate
+                                 # threshold) is kept out of later trailing means, the same freeze idea (finding M2)
+
+# The false-alarm budget used to choose thresholds: the share of NON-episode entity-weeks that may raise a
+# WARNING. 2% of store-weeks is about one store-level warning per store per year; a management team can read
+# that. Chosen before looking at detection results.
+selection:
+  warning_budget: 0.02
+  rule: "Among a signal's candidates, keep those whose unconfirmed WARNING rate on non-episode entity-weeks is within the budget. Take the simplest method family (ranked by interpretability: threshold with persistence, robust z with persistence, CUSUM) that has a compliant candidate; within it choose the smallest threshold (it can detect the smallest sustained shift), then the shortest persistence. WARNING rules need persistence of at least 2 weeks. Detection delay, coverage and exposure on the known episodes are never read; the known episodes DO shape the selection through the mask that keeps their weeks out of the noise count (see selection_mask_sensitivity.csv)."
+
+# ----------------------------------------------------------------------------- severity (transparent rules)
+severity:
+  levels: [NORMAL, WATCH, WARNING, CRITICAL]
+  critical_persistence_weeks: 4          # a WARNING that has lasted 4 consecutive weeks (about a month)
+  critical_breadth_entities: 3           # or 3+ entities of the same signal at WARNING in the same week (systemic), counted for an entity already at WARNING for 2+ weeks
+  critical_exposure_weeks_of_revenue: 1.0  # or cumulative exposure >= one normal week of the entity's net revenue
+  record_min_history: 200                # a "record" (most extreme so far) WARNING needs 200 earlier entity-weeks of the signal
+  dq_fail_cap: WATCH                     # a failed DQ gate caps severity at WATCH and holds escalation
+  text:
+    NORMAL: "No rule breached."
+    WATCH: "Entry threshold breached this week, but not yet persistent; or the data failed the DQ gate."
+    WARNING: "The selected persistent rule has fired: a sustained deviation from the baseline."
+    CRITICAL: "A WARNING whose threshold is also breached this week and that has lasted 4+ weeks, or affects 3+ entities at once, or whose cumulative exposure reaches one normal week of the entity's net revenue, or (EW01) is confirmed by the change-point test."
+
+# ----------------------------------------------------------------------------- data-quality gate (EW08)
+# Tolerances are operational DQ tolerances (how much damage the data may carry before a KPI is not trusted),
+# not performance thresholds. FAIL blocks escalation of business alerts for the entity-week; WARN is shown as a caveat.
+dq:
+  # Signals built on 4-week windows compared with the same weeks last year (EW05, EW06, EW07) are held only when the
+  # failed store-weeks in either window are MATERIAL: the lines they are missing exceed this share of the window's
+  # expected lines. Below it the ratio is still usable, so the alert is issued with dq_status WARN and a note.
+  window_materiality_share: 0.05
+  # Returns of sales made BEFORE the extract start are not in the data, yet they arrive in the first weeks of 2024
+  # (the longest sale-to-return lag is 30 days, Phase 6 faulty_returns_lag.csv). Returns-based comparisons whose
+  # prior-year window touches the first 5 retail weeks of history are therefore held (check C12, review finding M1).
+  returns_history_warmup_weeks: 5
+  estate_inventory_warn_share: 0.01   # estate stock caveat only when > 1% of snapshot cells are missing
+  fail:
+    missing_trading_days: 1            # any trading day without sales lines at run time
+    ontime_line_share_below: 0.99      # less than 99% of the week's final lines had arrived by the run
+    row_count_below_share_of_median: 0.5   # lines at run time below half the trailing median AND below half the
+                                           # same week last year (so the January drop after Christmas is not a DQ failure)
+    inventory_snapshot_rows_zero: true # no stock snapshot at all for the store-week
+  # WARN tolerances are shares of the store-week's lines: isolated repaired lines are normal at this data volume
+  # (Phase 3 repaired about 0.4% of sales lines), so a caveat is raised only when repairs are concentrated.
+  warn:
+    corrected_line_share_above: 0.01   # lines corrected or imputed at load (dq_status corrected / imputed) > 1%
+    unknown_product_share_above: 0.005 # lines whose product is not in the product master > 0.5%
+    duplicates_removed_share_above: 0.005   # re-sent receipt lines removed at load (FS-01) > 0.5% of lines
+    invalid_price_share_above: 0.005   # FS-11/12/13 price repairs > 0.5% of lines
+    invalid_discount_share_above: 0.005    # FS-15/19 discount or promotion-reference repairs > 0.5% of lines
+    missing_inventory_snapshots_above: 0   # TC-05 gaps in a store's stock series (any gap: stock alerts depend on it)
+    quarantined_lines_above: 0         # FS-09 implausible quantities quarantined
+    unlinked_return_share_above: 0.10  # returns whose sale line was not received
+  py_week_check: true                  # a same-week prior-year comparison whose PY week failed DQ is not trusted
+
+# ----------------------------------------------------------------------------- known episodes (validation only)
+# Taken from frozen Phase 5/6 findings (NOT from any evaluation file). Used only to report detection timing and
+# to exclude episode weeks from the false-alarm calibration. In-sample: the same data identified them.
+episodes:
+  - {id: EP1, signal: EW01, entity_type: store, entities: [S03, S04, S05], start_week: {S03: 202529, S04: 202528, S05: 202530}, end_week: 202552,
+     source: "reports/phase6/cluster_onset_by_store.csv (per-store change points 16 Jul, 9 Jul, 21 Jul 2025)"}
+  # The cluster also moves the Dublin region, the Standard format and the estate total (EW02): alerts there are
+  # labelled as influenced by EP1, not as new unexplained alerts.
+  - {id: EP1, signal: EW02, entity_type: region, entities: [Dublin], start_week: 202529, end_week: 202552,
+     source: "EP1 stores are in the Dublin region"}
+  - {id: EP1, signal: EW02, entity_type: format, entities: [Standard], start_week: 202529, end_week: 202552,
+     source: "EP1 stores are Standard format"}
+  - {id: EP1, signal: EW02, entity_type: estate, entities: [Estate], start_week: 202529, end_week: 202552,
+     source: "EP1 is 54% of the H2 decline (Phase 6 attribution)"}
+  - {id: EP2, signal: EW03, entity_type: category, entities: [Electronics & Tech], start_week: 202532, end_week: 202550,
+     source: "reports/phase6/electronics_weekly_timeline.csv (weeks with full-week lost sales > 0)"}
+  - {id: EP2, signal: EW03, entity_type: supplier, entities: [Voltix Distribution Ltd], start_week: 202532, end_week: 202550,
+     source: "reports/phase6/electronics_weekly_timeline.csv"}
+  - {id: EP2, signal: EW04, entity_type: product, entities: [ELECTRONICS_SKUS_WITH_PHASE6_STOCKOUTS], start_week: 202532, end_week: 202550,
+     source: "reports/phase6/electronics_sku_stockouts.csv (SKUs with full-week stock-outs in H2 2025)"}
+  - {id: EP3, signal: EW05, entity_type: store, entities: [S13, S14, S07, S15, S16], start_week: 202536, end_week: 202552,
+     source: "reports/phase6/faulty_returns_concentration.csv (top stores); sale cohorts from Sep 2025 (retail week 36)"}
+  - {id: EP3, signal: EW05, entity_type: category, entities: [Electronics & Tech], start_week: 202536, end_week: 202552,
+     source: "reports/phase6/faulty_returns_by_cohort.csv"}
+  - {id: EP4, signal: EW07, entity_type: category, entities: [Home & Kitchen], start_week: 202527, end_week: 202552,
+     source: "reports/phase6/hk_promotion_weekly.csv (H2 2025 promotion programme)"}
+  - {id: EP5, signal: EW06, entity_type: category, entities: [Home & Kitchen, Electronics & Tech], start_week: 202527, end_week: 202552,
+     source: "reports/phase5/category_contribution.csv (gross margin % down in H2 2025)"}
+  # DQ episodes (Phase 3): a performance alert here is explained by data, not trading.
+  - {id: DQ1, signal: EW08, entity_type: store, entities: [S13], start_week: 202442, end_week: 202442,
+     source: "reports/phase3/completeness_store_days.csv (2 store-days never received)"}
+  - {id: DQ2, signal: EW08, entity_type: store, entities: [S16], start_week: 202551, end_week: 202552,
+     source: "reports/phase3/completeness_store_days.csv (late file received 9 Jan 2026)"}
+
+# ----------------------------------------------------------------------------- signals (Phase 8 EW01-EW08)
+# phase8: the Phase 8 requirement text (reports/phase8/phase8_early_warning_requirements.csv) is copied at run
+# time and shown next to the Phase 9 implementation; a test checks every EW id is implemented.
+signals:
+  EW01:
+    name: Store transaction deterioration
+    grain: store x retail week
+    grain_reason: "Stores are where a local shock (like S03-S05) shows first. Store x category would add noise without a new question; region and format roll-ups are context."
+    metric: "Peer gap: log(store transactions / same week last year) minus log(all other stores' transactions / same week last year)"
+    baseline: "Median of the store's own peer gap over the previous 13 weeks (DQ-failed weeks excluded)"
+    evidence_level: Observed change (monitoring alert)
+    alert_class: INVESTIGATIVE
+    owner: Retail Operations (area manager)
+    data_required: "Footfall, store operating logs, local events and competitor activity (Phase 8 DR01-DR11)"
+    wording: "Store transactions are unusually low against the rest of the estate. Cause not established from available internal data."
+    candidates:
+      threshold_pct: [5, 10, 15, 20]       # peer-gap deviation below -X% (log scale)
+      persistence: [1, 2, 3]
+      robust_z: [2.5, 3.0, 3.5, 4.0]
+      cusum_h: [3, 4, 5, 6]
+      cusum_k: 0.5
+      changepoint_min_segment: 3
+      changepoint_bic_delta: [6, 10]
+  EW02:
+    name: Estate transaction deterioration
+    grain: estate, region, store format x retail week
+    grain_reason: "Management-level view of broad softness; regions and formats show whether a store alert is local or part of a wider move."
+    metric: "log(transactions / same week last year)"
+    baseline: "Median of the entity's own YoY over the previous 13 weeks"
+    evidence_level: Observed change (monitoring alert)
+    alert_class: INVESTIGATIVE
+    owner: Head of Retail
+    data_required: "Market and footfall data; region-level store reports"
+    wording: "Transactions are below their recent year-on-year trend. Cause not established from available internal data."
+    candidates:
+      threshold_pct: [3, 5, 10]
+      persistence: [1, 2, 3]
+  EW03:
+    name: Availability deterioration
+    grain: category and supplier x retail week
+    grain_reason: "Availability is a stock-system ratio over thousands of store-SKU cells; category and supplier are where buying and replenishment act."
+    metric: "Availability (in-stock cells / ranged cells) minus both the same week last year and the trailing 8-week mean, in percentage points (the smaller gap)"
+    baseline: "Same retail week last year AND trailing 8 weeks (both must be breached)"
+    evidence_level: Observed change (monitoring alert)
+    alert_class: INVESTIGATIVE
+    owner: Supply Chain (replenishment)
+    data_required: "Purchase orders, ASNs, DC stock, ordering parameters (Phase 8 DR12-DR21)"
+    wording: "Availability is below both last year and its recent level. Supplier or ordering responsibility is not established."
+    trailing_mean_weeks: 8
+    candidates:
+      threshold_pp: [1, 2, 3, 5]
+      persistence: [1, 2, 4]
+  EW04:
+    name: Top-seller full-week stock-outs
+    grain: product (top-selling SKUs) x retail week
+    grain_reason: "Lost sales concentrate in a few high sellers (Phase 6); watching every SKU would drown them in noise. Top sellers are re-ranked every week from the trailing 13 weeks, so new launches enter."
+    metric: "Number of stores where the SKU had a full-week stock-out (no stock all week, nothing received)"
+    baseline: "Prior-year level is zero for almost every SKU, so the rule is an absolute count with persistence"
+    evidence_level: Observed change (monitoring alert); the no-stock-no-sales mechanism is root-cause evidence (Phase 6 D03)
+    alert_class: ACTIONABLE (replenishment check)
+    owner: Supply Chain (replenishment)
+    data_required: "Daily stock positions, purchase orders and ASNs for the SKU (Phase 8 DR12, DR15, DR16)"
+    wording: "A top-selling SKU has had no stock all week in several stores. Why stock ran out is not established."
+    top_seller_share: 0.10
+    ranking_weeks: 13
+    exposure_weeks: 8
+    candidates:
+      min_stores: [1, 2, 3]
+      persistence: [1, 2, 3]
+  EW05:
+    name: Faulty-return deterioration
+    grain: Electronics & Tech at estate and store level, trailing 4 weeks, evaluated weekly
+    grain_reason: "'Faulty' returns are a few units per store-week; a single week cannot be tested. A 4-week window against the same 4 weeks last year gives counts a binomial test can judge."
+    metric: "'Faulty' returned units per 100 units sold (return-date basis, so no future returns are used), trailing 4 weeks"
+    baseline: "Same 4 retail weeks last year; conditional binomial test of this year's share of the two years' Faulty units"
+    evidence_level: Observed change (monitoring alert)
+    alert_class: INVESTIGATIVE
+    owner: Quality / Buying (Electronics & Tech)
+    data_required: "QA inspection, batch or serial numbers, supplier RMA and warranty data (Phase 8 DR22-DR28)"
+    wording: "Faulty-return activity exceeds expected range and requires investigation."
+    category: Electronics & Tech
+    candidates:
+      alpha: [0.05, 0.01, 0.001]
+      min_excess_units: [3, 5]
+      persistence: [1, 2]
+  EW06:
+    name: Gross-margin deterioration
+    grain: category x retail week, trailing 4 weeks
+    grain_reason: "Margin swings with promotion pulses week to week; a 4-week window smooths the pulse without hiding a sustained step."
+    metric: "Gross margin % (trailing 4 weeks) minus the same 4 weeks last year, in percentage points; gross margin EUR change shown alongside"
+    baseline: "Same 4 retail weeks last year"
+    evidence_level: Observed change (monitoring alert)
+    alert_class: INVESTIGATIVE
+    owner: Finance / Category manager
+    data_required: "Promotion plan and supplier funding, cost price changes (Phase 8 DR29-DR31)"
+    wording: "Gross margin % is below last year for the same weeks. The driver (price, mix, promotions, cost) is not established."
+    candidates:
+      threshold_pp: [1, 2, 3, 5]
+      persistence: [1, 2, 4]
+  EW07:
+    name: Unusual promotion behaviour
+    grain: category x retail week, trailing 4 weeks
+    grain_reason: "Promotions run in pulses of about 3 weeks; a same-week comparison with last year compares pulse weeks with non-pulse weeks. A trailing 4-week window compares like with like."
+    metric: "Discount rate (discount / gross sales, trailing 4 weeks) minus the same 4 weeks last year, in percentage points; promotion share and promoted lines shown alongside"
+    baseline: "Same 4 retail weeks last year (no approved promotion plan exists in the data; Phase 8 DR29)"
+    evidence_level: Observed change (monitoring alert)
+    alert_class: INVESTIGATIVE
+    owner: Commercial / Trading
+    data_required: "Promotion calendar with objectives and planned depth (Phase 8 DR29, DR30)"
+    wording: "Promotion depth is well above last year for the same weeks. Its effect on sales and margin is not established."
+    candidates:
+      threshold_pp: [1, 2, 3, 5]
+      persistence: [1, 2, 3]
+  EW08:
+    name: Data completeness and quality
+    grain: store x retail week (plus estate roll-up)
+    grain_reason: "Data arrives per store and day; a store-week gate can hold exactly the alerts whose data is damaged."
+    metric: "DQ checks C1-C11 (see dq section)"
+    baseline: "Fixed tolerances; row counts against the store's trailing 13-week median"
+    evidence_level: FACT (data check)
+    alert_class: ACTIONABLE (data feed check)
+    owner: Data/BI
+    data_required: "Load logs and extract batch schedule"
+    wording: "Data for this store-week failed the DQ gate; business alerts are held until the data is complete."

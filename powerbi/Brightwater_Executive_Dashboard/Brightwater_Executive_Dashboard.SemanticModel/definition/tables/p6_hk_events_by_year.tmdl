@@ -1,0 +1,97 @@
+table p6_hk_events_by_year
+
+	column retail_year
+		dataType: int64
+		summarizeBy: none
+		sourceColumn: retail_year
+
+	column events
+		dataType: int64
+		summarizeBy: none
+		sourceColumn: events
+
+	column promo_period_revenue
+		dataType: double
+		summarizeBy: none
+		sourceColumn: promo_period_revenue
+
+	column baseline_revenue
+		dataType: double
+		summarizeBy: none
+		sourceColumn: baseline_revenue
+
+	column incremental_revenue
+		dataType: double
+		summarizeBy: none
+		sourceColumn: incremental_revenue
+
+	column post_dip_revenue
+		dataType: double
+		summarizeBy: none
+		sourceColumn: post_dip_revenue
+
+	column discount_cost
+		dataType: double
+		summarizeBy: none
+		sourceColumn: discount_cost
+
+	column incremental_promo_margin
+		dataType: double
+		summarizeBy: none
+		sourceColumn: incremental_promo_margin
+
+	column uplift_pct
+		dataType: double
+		summarizeBy: none
+		sourceColumn: uplift_pct
+
+	column nonpromo_ratio_no_promo_weeks
+		dataType: double
+		summarizeBy: none
+		sourceColumn: nonpromo_ratio_no_promo_weeks
+
+	column nonpromo_ratio_promo_weeks
+		dataType: double
+		summarizeBy: none
+		sourceColumn: nonpromo_ratio_promo_weeks
+
+	column cannibalised_revenue
+		dataType: double
+		summarizeBy: none
+		sourceColumn: cannibalised_revenue
+
+	column store_weeks_with_promo_share
+		dataType: double
+		summarizeBy: none
+		sourceColumn: store_weeks_with_promo_share
+
+	column net_programme_revenue
+		dataType: double
+		summarizeBy: none
+		sourceColumn: net_programme_revenue
+
+	partition p6_hk_events_by_year = m
+		mode: import
+		source =
+			let
+			    Source = Csv.Document(File.Contents(AnalyticsFolder & "\p6_hk_events_by_year.csv"),
+			                          [Delimiter = ",", Encoding = 65001, QuoteStyle = QuoteStyle.Csv]),
+			    Promoted = Table.PromoteHeaders(Source, [PromoteAllScalars = true]),
+			    Typed = Table.TransformColumnTypes(Promoted, {
+			        {"retail_year", Int64.Type},
+			        {"events", Int64.Type},
+			        {"promo_period_revenue", type number},
+			        {"baseline_revenue", type number},
+			        {"incremental_revenue", type number},
+			        {"post_dip_revenue", type number},
+			        {"discount_cost", type number},
+			        {"incremental_promo_margin", type number},
+			        {"uplift_pct", type number},
+			        {"nonpromo_ratio_no_promo_weeks", type number},
+			        {"nonpromo_ratio_promo_weeks", type number},
+			        {"cannibalised_revenue", type number},
+			        {"store_weeks_with_promo_share", type number},
+			        {"net_programme_revenue", type number}
+			    }, "en-US")
+			in
+			    Typed

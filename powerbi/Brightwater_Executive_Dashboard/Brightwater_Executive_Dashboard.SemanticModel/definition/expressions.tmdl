@@ -1,0 +1,7 @@
+expression ModelFolder = "E:/Retail_Performance_Root_Cause_Analytics/data/powerbi" meta [IsParameterQuery=true, Type="Text", IsParameterQueryRequired=true]
+
+expression AnalyticsFolder = "E:/Retail_Performance_Root_Cause_Analytics/powerbi/data" meta [IsParameterQuery=true, Type="Text", IsParameterQueryRequired=true]
+
+expression ForecastFolder = "E:/Retail_Performance_Root_Cause_Analytics/powerbi/forecast_data" meta [IsParameterQuery=true, Type="Text", IsParameterQueryRequired=true]
+
+expression DqFolder = "E:/Retail_Performance_Root_Cause_Analytics/powerbi/dq_data" meta [IsParameterQuery=true, Type="Text", IsParameterQueryRequired=true]

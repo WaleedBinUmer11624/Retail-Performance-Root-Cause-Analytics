@@ -1,0 +1,7 @@
+baseline,rule,weeks_tested,store_weeks_tested,unconfirmed_rate,unconfirmed_alerts,episode_entities_detected,median_detection_delay_weeks,episode_weeks_active_share,stability_sd_of_deviation,interpretability
+"B1 same retail week last year (store YoY, log)","at least 15% below the baseline, 2 consecutive weeks",44,878,0.023602,19,3,1.0,0.820362,0.154108,High; seasonality handled; an estate-wide move hits every store at once
+B2 trailing 4-week mean of the level,"at least 15% below the baseline, 2 consecutive weeks",44,878,0.021118,17,3,0.0,0.111208,0.195334,"High (easy to explain) but blind to seasonality (Christmas, January)"
+B2 trailing 8-week mean of the level,"at least 15% below the baseline, 2 consecutive weeks",44,878,0.018634,15,3,0.0,0.13843,0.225507,"High (easy to explain) but blind to seasonality (Christmas, January)"
+B3 trailing 8-week median of the level,"at least 15% below the baseline, 2 consecutive weeks",44,878,0.03354,27,3,0.0,0.152319,0.241639,"High, robust to one bad week, but blind to seasonality"
+"B4 peer gap vs trailing 13-week median (robust, guarded, frozen while anomalous)","at least 15% below the baseline, 2 consecutive weeks",44,878,0.013665,11,3,4.0,0.603502,0.131157,"High once explained ('this store against the rest, against its own normal'); seasonality and estate moves removed"
+B5 peer gap vs trailing 13-week mean (unguarded),"at least 15% below the baseline, 2 consecutive weeks",44,878,0.009938,8,3,4.0,0.097874,0.128409,Medium; the mean is pulled down by the anomaly itself

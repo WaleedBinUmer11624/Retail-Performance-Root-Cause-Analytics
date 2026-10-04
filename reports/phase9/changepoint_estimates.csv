@@ -1,0 +1,4 @@
+store,first_fired_week,estimated_step_week,step_in_peer_gap_log,step_in_peer_gap_pct,test_statistic,weeks_flagged,in_known_episode,reading
+S03,2025-W31,2025-W29,-0.383368,-0.318438,14.568056,20,True,Sustained step down in the store's transactions against the rest of the estate. Cause not established from available internal data.
+S04,2025-W33,2025-W29,-0.240708,-0.213929,7.197169,17,True,Sustained step down in the store's transactions against the rest of the estate. Cause not established from available internal data.
+S05,2025-W33,2025-W25,-0.180685,-0.165302,6.415109,20,True,Sustained step down in the store's transactions against the rest of the estate. Cause not established from available internal data.

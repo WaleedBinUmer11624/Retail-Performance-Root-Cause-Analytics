@@ -1,0 +1,3 @@
+retail_year,events,promo_period_revenue,baseline_revenue,incremental_revenue,post_dip_revenue,discount_cost,incremental_promo_margin,uplift_pct,nonpromo_ratio_no_promo_weeks,nonpromo_ratio_promo_weeks,cannibalised_revenue,store_weeks_with_promo_share,net_programme_revenue
+2024,2427,380200.53,231150.371939,149050.158061,23214.47901,69591.33,26974.152552,89.60533,0.962816,1.128232,0.0,0.309615,125835.679051
+2025,8848,670709.37,355405.389137,315303.980863,110408.970894,324230.0,-33508.439254,176.234376,0.969623,1.205334,0.0,0.315385,204895.009968

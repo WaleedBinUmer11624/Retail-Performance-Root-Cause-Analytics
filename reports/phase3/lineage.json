@@ -1,0 +1,154 @@
+{
+  "run_at": "2026-09-28T01:12:59",
+  "runtime_seconds": 117.4,
+  "data_dir": "/home/claude/Retail_Performance_Root_Cause_Analytics/data/raw",
+  "inputs": {
+    "dim_store": {
+      "file": "dim_store.csv",
+      "rows": 20,
+      "sha256": "4f7348635499a52e66b5f775a5a138cebf376ec2c91bdc458ae7c52d57078653"
+    },
+    "dim_product": {
+      "file": "dim_product.csv",
+      "rows": 610,
+      "sha256": "61d7fd401880f57792fd3e49fa426b0db5b507a0bf38cabfbf69e0d5aead269b"
+    },
+    "dim_date": {
+      "file": "dim_date.csv",
+      "rows": 731,
+      "sha256": "873f4c7cca9c88204a6c138ee06622d2bc2efa816e3c7dfe450fec324699514f"
+    },
+    "fact_sales": {
+      "file": "fact_sales.csv",
+      "rows": 1339245,
+      "sha256": "e50b5fabc7b98e347bbf24869351deae8a03f1a44df33a097350509adc321ecd"
+    },
+    "fact_sales_late_batch": {
+      "file": "fact_sales_late_batch.csv",
+      "rows": 2270,
+      "sha256": "815977cf1af10cdef79c1f6dad3252563d96db206c9737e1103a51baadab2148"
+    },
+    "fact_inventory": {
+      "file": "fact_inventory.csv",
+      "rows": 939437,
+      "sha256": "a8632abb3123e6916a0f0a458e9ab7c21ac12e77258668baa15e9eab66f9e388"
+    },
+    "fact_returns": {
+      "file": "fact_returns.csv",
+      "rows": 34733,
+      "sha256": "a544035975b4183ad882f590c48eccb2a22c90dd76626d2914a668560dd93757"
+    },
+    "fact_promotions": {
+      "file": "fact_promotions.csv",
+      "rows": 49434,
+      "sha256": "b0fa8413ac57e213899df22efc350ac98a21635d721e8556ad82121e5e8db4c9"
+    },
+    "fact_targets": {
+      "file": "fact_targets.csv",
+      "rows": 2079,
+      "sha256": "74877e0a6b7d5181c1d8fe03f2e5bef6e41861f6a62b74aae2760488486301cd"
+    }
+  },
+  "raw_unchanged": true,
+  "outputs": {
+    "dim_store": {
+      "path": "data/processed/curated/dim_store.csv",
+      "rows": 20,
+      "sha256": "5b2aacd7d1b3d12890964edf61c6f56fc8952c6d4f3ea8f107857c900b77a1cf"
+    },
+    "dim_product": {
+      "path": "data/processed/curated/dim_product.csv",
+      "rows": 601,
+      "sha256": "be934d7735c669e30a5947a5a7d4f54615f156965f1e7c0c2029ab645c17551f"
+    },
+    "dim_date": {
+      "path": "data/processed/curated/dim_date.csv",
+      "rows": 731,
+      "sha256": "9ea2455ab6daf1b9d0e4c8ad34d3edc273872f3bd0ebd6c8c661a87fd24576b4"
+    },
+    "fact_sales": {
+      "path": "data/processed/curated/fact_sales.csv",
+      "rows": 1339510,
+      "sha256": "3b3e2f4382881ef2765f869583d06d58a3b4d6363a3d39baa9af049f7ce767bb"
+    },
+    "fact_inventory": {
+      "path": "data/processed/curated/fact_inventory.csv",
+      "rows": 939249,
+      "sha256": "9b78c9096d5f7eb9ca3a6859b8965b9238fcee2dabe51c0b320faf8df7455edb"
+    },
+    "fact_returns": {
+      "path": "data/processed/curated/fact_returns.csv",
+      "rows": 34562,
+      "sha256": "efc8b4f1dcf8750df1330ea136b8e56c50ce61c5013764f54d80e52d2893b02f"
+    },
+    "fact_promotions": {
+      "path": "data/processed/curated/fact_promotions.csv",
+      "rows": 49430,
+      "sha256": "20dd3e783dec853569fa5744b480c4835fc5e6e8792bc762bd1583326697ab7f"
+    },
+    "fact_targets": {
+      "path": "data/processed/curated/fact_targets.csv",
+      "rows": 2077,
+      "sha256": "3d37b1b814e797e710b5dc1ebb986c6f3bc86ff3433200902420970f48a70050"
+    }
+  },
+  "quarantine_rows": {
+    "dim_product": 10,
+    "fact_promotions": 4,
+    "fact_targets": 2,
+    "fact_sales": 2005,
+    "fact_returns": 171,
+    "fact_inventory": 188
+  },
+  "rules_evaluated": 85,
+  "rules_failed": 46,
+  "dq_check_pass_rate_pct": 39.47,
+  "issue_log_rows": 38138,
+  "validation": {
+    "PASS": 51,
+    "WARN": 2
+  },
+  "pos_stock_reconciliation": {
+    "before": {
+      "cells": 492937,
+      "matching": 485348,
+      "mismatched": 7589,
+      "match_rate": 0.9846045234989461,
+      "pos_units": 1764246.0,
+      "stock_units": 1760055.0
+    },
+    "after": {
+      "cells": 492005,
+      "matching": 489395,
+      "mismatched": 2610,
+      "match_rate": 0.9946951758620339,
+      "pos_units": 1760587.0,
+      "stock_units": 1760055.0,
+      "explained": {
+        "sales line with UNKNOWN product in that store-week (FS-05/FS-06)": 2157,
+        "missing stock snapshot (TC-05)": 251,
+        "missing POS store-day (TC-02)": 157,
+        "quarantined sales line (FS-09)": 40,
+        "unexplained": 3,
+        "flagged stock row (FI-04..FI-07)": 2
+      }
+    }
+  },
+  "max_plausible_line_quantity": 20,
+  "config_sha256": "e02f8492f09b948f5586aa558713a3c6581a853afe11ce5df46e35a9e52e6362",
+  "code_sha256": {
+    "__init__.py": "7e4462e6a1ac98e771d61ff2433d6e43e2ca55082a36a610996ee963b1f70730",
+    "catalogue.py": "168a86809ee50cb72f4db1af1294e969eb5c7a9d1897c9e45453f5d46126fa21",
+    "completeness.py": "b5bb102cf8b8d689aa42108afc3742912d03226553e36c413acd440b8fd9d9f5",
+    "core.py": "fb487e8cf1d65cbc9aeba714bf173b3388566450316e659a8400561a03afed88",
+    "dimensions.py": "58e1f14fb334f6d9b2ee7ee4ae7029521a99343d9fd41906837d91ac29843039",
+    "kpis.py": "22289f5619d370336a39a3ab72803aa2db32937e3bfc3a1fdb4f733f643090ce",
+    "profiling.py": "5cd5aa1257788a2c7c6820225f4496f690939aa48c1d5239fc1e6d9a8b9e86f5",
+    "promotions_targets.py": "5cebab29650cb9f148e562b19fa9f316e123b8e297c04cab71be6319d16d7f72",
+    "report.py": "1ac4b25e1ac4285a29c7ca8baed68241ef64f6a7cf82e221aded23a03081484f",
+    "returns_inventory.py": "a588135b0e807fd2ea6d5f3b3452225bca4867bd1591558877e78c5bf10f4d82",
+    "run_dq.py": "da83f84cd07422b61b306a7ce198072fa63b88d5bd10519174a36a6526f02e55",
+    "sales.py": "d6bb66b89e85a0f9e49fc5dd45c5ff307426fdd0d45e522c5cd0650dcb73d3d9",
+    "validate_curated.py": "40d2b390965ea179377742dbc68114c317afe04b5759e604b3a1678ede590257"
+  }
+}

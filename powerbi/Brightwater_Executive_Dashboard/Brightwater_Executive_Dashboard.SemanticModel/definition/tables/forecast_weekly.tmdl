@@ -1,0 +1,51 @@
+table forecast_weekly
+
+	column horizon_step
+		dataType: int64
+		summarizeBy: none
+		sourceColumn: horizon_step
+
+	column retail_year
+		dataType: int64
+		summarizeBy: none
+		sourceColumn: retail_year
+
+	column retail_week
+		dataType: int64
+		summarizeBy: none
+		sourceColumn: retail_week
+
+	column week_start_date
+		dataType: dateTime
+		summarizeBy: none
+		sourceColumn: week_start_date
+		isKey
+
+	column date_key
+		dataType: int64
+		summarizeBy: none
+		sourceColumn: date_key
+		isHidden
+
+	column model
+		dataType: string
+		sourceColumn: model
+
+	column point_forecast
+		dataType: double
+		summarizeBy: none
+		sourceColumn: point_forecast
+
+	partition forecast_weekly = m
+		mode: import
+		source =
+			let
+			    Source = Csv.Document(File.Contents(ForecastFolder & "\forecast_weekly.csv"),
+			                          [Delimiter = ",", Encoding = 65001, QuoteStyle = QuoteStyle.Csv]),
+			    Promoted = Table.PromoteHeaders(Source, [PromoteAllScalars = true]),
+			    Typed = Table.TransformColumnTypes(Promoted, {
+			        {"horizon_step", Int64.Type}, {"retail_year", Int64.Type}, {"retail_week", Int64.Type}, {"week_start_date", type date}, {"model", type text}, {"point_forecast", type number}
+			    }, "en-US"),
+			    WithDateKey = Table.AddColumn(Typed, "date_key", each Date.Year([week_start_date]) * 10000 + Date.Month([week_start_date]) * 100 + Date.Day([week_start_date]), Int64.Type)
+			in
+			    WithDateKey

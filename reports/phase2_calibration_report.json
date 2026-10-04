@@ -1,0 +1,91 @@
+{
+  "h2_2024_net_revenue_underlying": 10195137.57,
+  "h2_2024_net_revenue_reported": 10187629.25,
+  "h2_2025_net_revenue_underlying": 9456406.03,
+  "h2_2025_net_revenue_reported": 9390263.0,
+  "yoy_pct_underlying": -7.25,
+  "yoy_pct_reported": -7.83,
+  "dq_artefact_pp": -0.58,
+  "dq_artefact_eur": -58634.71,
+  "late_batch_revenue_h2_2025": 66143.03,
+  "missing_batch_revenue_h2_2024": 7508.32,
+  "drivers": {
+    "Suburban traffic decline": {
+      "eur": -407782.47,
+      "pp": -4.0
+    },
+    "Supplier stock-outs (affected SKUs)": {
+      "eur": -247591.05,
+      "pp": -2.43
+    },
+    "Home & Kitchen promotion change": {
+      "eur": -200349.3,
+      "pp": -1.97
+    },
+    "Faulty batch returns": {
+      "eur": -39068.97,
+      "pp": -0.38
+    },
+    "Natural variation, price, mix and other (residual)": {
+      "eur": 156060.25,
+      "pp": 1.53
+    }
+  },
+  "target_band_reported_yoy_pct": [
+    -8.5,
+    -7.5
+  ],
+  "projected_full_row_counts": {
+    "dim_store.csv": 20,
+    "dim_product.csv": 610,
+    "dim_date.csv": 731,
+    "fact_sales.csv": 1339245,
+    "fact_sales_late_batch.csv": 2270,
+    "fact_inventory.csv": 939437,
+    "fact_returns.csv": 34733,
+    "fact_promotions.csv": 49434,
+    "fact_targets.csv": 2079,
+    "_planted_issues_log.csv": 33223,
+    "_scenario_answer_key.csv": 12
+  },
+  "clean_sales_lines": 1339788,
+  "runtime_seconds": 17.9,
+  "in_target_band": true,
+  "drivers_sum_pp": -7.25,
+  "seed_sensitivity": {
+    "alternative_seeds": [
+      {
+        "seed": 11,
+        "reported_yoy_pct": -8.71,
+        "underlying_yoy_pct": -8.14,
+        "residual_pp": 0.26
+      },
+      {
+        "seed": 2027,
+        "reported_yoy_pct": -9.99,
+        "underlying_yoy_pct": -9.37,
+        "residual_pp": -0.07
+      },
+      {
+        "seed": 424242,
+        "reported_yoy_pct": -9.05,
+        "underlying_yoy_pct": -8.49,
+        "residual_pp": -0.73
+      },
+      {
+        "seed": 777,
+        "reported_yoy_pct": -9.11,
+        "underlying_yoy_pct": -8.6,
+        "residual_pp": -1.14
+      },
+      {
+        "seed": 31337,
+        "reported_yoy_pct": -6.08,
+        "underlying_yoy_pct": -5.61,
+        "residual_pp": 1.79
+      }
+    ],
+    "reported_yoy_mean_all_seeds": -8.46,
+    "reported_yoy_sd_all_seeds": 1.36
+  }
+}

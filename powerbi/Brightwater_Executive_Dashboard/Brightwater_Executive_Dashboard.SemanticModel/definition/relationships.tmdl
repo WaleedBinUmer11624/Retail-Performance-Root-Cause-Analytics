@@ -1,0 +1,119 @@
+relationship Sales_date_key_to_Date_date_key
+	fromColumn: Sales.date_key
+	toColumn: Date.date_key
+	fromCardinality: many
+	toCardinality: one
+	crossFilteringBehavior: oneDirection
+	isActive: true
+
+relationship Sales_store_key_to_Store_store_key
+	fromColumn: Sales.store_key
+	toColumn: Store.store_key
+	fromCardinality: many
+	toCardinality: one
+	crossFilteringBehavior: oneDirection
+	isActive: true
+
+relationship Sales_product_key_to_Product_product_key
+	fromColumn: Sales.product_key
+	toColumn: Product.product_key
+	fromCardinality: many
+	toCardinality: one
+	crossFilteringBehavior: oneDirection
+	isActive: true
+
+relationship Sales_promotion_key_to_Promotion_promotion_key
+	fromColumn: Sales.promotion_key
+	toColumn: Promotion.promotion_key
+	fromCardinality: many
+	toCardinality: one
+	crossFilteringBehavior: oneDirection
+	isActive: true
+
+relationship Returns_return_date_key_to_Date_date_key
+	fromColumn: Returns.return_date_key
+	toColumn: Date.date_key
+	fromCardinality: many
+	toCardinality: one
+	crossFilteringBehavior: oneDirection
+	isActive: true
+
+relationship Returns_original_sale_date_key_to_Date_date_key
+	fromColumn: Returns.original_sale_date_key
+	toColumn: Date.date_key
+	fromCardinality: many
+	toCardinality: one
+	crossFilteringBehavior: oneDirection
+	isActive: false
+
+relationship Returns_store_key_to_Store_store_key
+	fromColumn: Returns.store_key
+	toColumn: Store.store_key
+	fromCardinality: many
+	toCardinality: one
+	crossFilteringBehavior: oneDirection
+	isActive: true
+
+relationship Returns_product_key_to_Product_product_key
+	fromColumn: Returns.product_key
+	toColumn: Product.product_key
+	fromCardinality: many
+	toCardinality: one
+	crossFilteringBehavior: oneDirection
+	isActive: true
+
+relationship Inventory_snapshot_date_key_to_Date_date_key
+	fromColumn: Inventory.snapshot_date_key
+	toColumn: Date.date_key
+	fromCardinality: many
+	toCardinality: one
+	crossFilteringBehavior: oneDirection
+	isActive: true
+
+relationship Inventory_store_key_to_Store_store_key
+	fromColumn: Inventory.store_key
+	toColumn: Store.store_key
+	fromCardinality: many
+	toCardinality: one
+	crossFilteringBehavior: oneDirection
+	isActive: true
+
+relationship Inventory_product_key_to_Product_product_key
+	fromColumn: Inventory.product_key
+	toColumn: Product.product_key
+	fromCardinality: many
+	toCardinality: one
+	crossFilteringBehavior: oneDirection
+	isActive: true
+
+relationship Targets_store_key_to_Store_store_key
+	fromColumn: Targets.store_key
+	toColumn: Store.store_key
+	fromCardinality: many
+	toCardinality: one
+	crossFilteringBehavior: oneDirection
+	isActive: true
+
+relationship forecast_weekly_to_Date
+	fromColumn: forecast_weekly.date_key
+	toColumn: Date.date_key
+	fromCardinality: many
+	toCardinality: one
+	crossFilteringBehavior: oneDirection
+	isActive: true
+
+relationship forecast_intervals_to_forecast_weekly
+	fromColumn: forecast_intervals.week_start_date
+	toColumn: forecast_weekly.week_start_date
+	fromCardinality: many
+	toCardinality: one
+	crossFilteringBehavior: oneDirection
+	isActive: true
+
+relationship forecast_weekly_to_forecast_model_comparison
+	fromColumn: forecast_weekly.model
+	toColumn: forecast_model_comparison.model
+	fromCardinality: many
+	toCardinality: one
+	crossFilteringBehavior: oneDirection
+	isActive: true

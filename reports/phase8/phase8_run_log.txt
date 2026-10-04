@@ -1,0 +1,5 @@
+[    1.5s] freeze verified: 289 Phase 1-7 files unchanged (Phase 7 and Phase 6 manifests re-verified)
+[   17.2s] headline recomputed from the Phase 4 model through the pbi views: 2024 10,188,727.55, 2025 9,457,457.05
+[   17.3s] framework built: 25 actions, 20 KPIs, 36 data requirements, 8 early-warning signals
+[   17.6s] validation: 114/114 checks pass
+[   17.7s] PASSED; outputs in /home/claude/Retail_Performance_Root_Cause_Analytics/reports/phase8

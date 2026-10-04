@@ -1,0 +1,8 @@
+step,value_eur,kind,running_total_eur,contribution_pp,share_of_change,method_note
+H2 2024 Net Revenue,10188727.55,total,10188727.55,,,Measured
+Transactions effect,-614362.750857,effect,9574364.799143,-6.029828,0.840131,Shapley share of the Sales Revenue change
+UPT effect,-34172.98434,effect,9540191.814803,-0.3354,0.046731,Shapley share of the Sales Revenue change
+ASP effect,-68077.294803,effect,9472114.52,-0.668163,0.093095,Shapley share of the Sales Revenue change
+Interaction / residual,-0.0,effect,9472114.52,-0.0,0.0,Zero by construction (floating-point only)
+Returns effect,-14657.47,effect,9457457.05,-0.14386,0.020044,Minus the change in Returns Value
+H2 2025 Net Revenue,9457457.05,total,9457457.05,,,Measured

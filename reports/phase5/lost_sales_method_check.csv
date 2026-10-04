@@ -1,0 +1,8 @@
+type,type_code,retail_year,cells,actual_units,expected_units,actual_to_expected,net_shortfall_eur,est_lost_sales_eur,est_lost_sales_upper_eur,upper_per_cell_eur,wape_store_category_week
+"no stock all week (opening 0, nothing received)",full_week,2024.0,3,0.0,0.615399,0.0,19.358428,19.358428,19.358428,6.452809,
+"no stock all week (opening 0, nothing received)",full_week,2025.0,791,0.0,433.724326,0.0,37280.462701,37280.462701,37280.462701,47.1308,
+"started empty, restocked during week",restocked,2024.0,615,2241.0,644.305921,3.478161,-42372.288652,0.0,66.000507,0.107318,
+"started empty, restocked during week",restocked,2025.0,1281,3561.0,2028.452295,1.755526,-25463.198098,0.0,50720.698549,39.594612,
+sold out during the week (opening stock > 0),sold_out,2024.0,10042,43571.0,12978.037054,3.357287,-817432.661461,0.0,4376.084321,0.435778,
+sold out during the week (opening stock > 0),sold_out,2025.0,10231,42168.0,12187.478486,3.459945,-819809.062014,0.0,14110.45469,1.379186,
+"BACK-TEST: in-stock, non-promoted H2 weeks (true sales known)",,,403953,690772.0,695486.546281,0.993221,,,,,0.125242

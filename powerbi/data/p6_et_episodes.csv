@@ -1,0 +1,9 @@
+supplier_name,retail_year,episodes,mean_weeks_out,median_weeks_out,max_weeks_out,share_4plus_weeks,full_weeks_out
+Emerald Electronics Wholesale,2024,269,1.078067,1.0,3,0.0,0
+Emerald Electronics Wholesale,2025,228,1.070175,1.0,2,0.0,0
+Northbridge Tech Supplies,2024,576,1.059028,1.0,3,0.0,0
+Northbridge Tech Supplies,2025,608,1.046053,1.0,2,0.0,0
+Unknown supplier,2024,41,1.04878,1.0,2,0.0,0
+Unknown supplier,2025,94,2.691489,2.0,10,0.234043,112
+Voltix Distribution Ltd,2024,609,1.064039,1.0,3,0.0,0
+Voltix Distribution Ltd,2025,1181,2.118544,1.0,13,0.157494,674

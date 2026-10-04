@@ -1,0 +1,78 @@
+table p6_driver_attribution
+
+	column sort_order
+		dataType: int64
+		summarizeBy: none
+		sourceColumn: sort_order
+
+	column driver_id
+		dataType: string
+		sourceColumn: driver_id
+
+	column component
+		dataType: string
+		sourceColumn: component
+		sortByColumn: sort_order
+
+	column waterfall_label
+		dataType: string
+		sourceColumn: waterfall_label
+
+	column driver
+		dataType: string
+		sourceColumn: driver
+
+	column amount_eur
+		dataType: double
+		summarizeBy: none
+		sourceColumn: amount_eur
+
+	column share_of_change
+		dataType: double
+		summarizeBy: none
+		sourceColumn: share_of_change
+
+	column overlap_removed_eur
+		dataType: double
+		summarizeBy: none
+		sourceColumn: overlap_removed_eur
+
+	column evidence_level
+		dataType: string
+		sourceColumn: evidence_level
+
+	column evidence_display
+		dataType: string
+		sourceColumn: evidence_display
+
+	column figure_type
+		dataType: string
+		sourceColumn: figure_type
+
+	column basis
+		dataType: string
+		sourceColumn: basis
+
+	partition p6_driver_attribution = m
+		mode: import
+		source =
+			let
+			    Source = Csv.Document(File.Contents(AnalyticsFolder & "\p6_driver_attribution.csv"),
+			                          [Delimiter = ",", Encoding = 65001, QuoteStyle = QuoteStyle.Csv]),
+			    Promoted = Table.PromoteHeaders(Source, [PromoteAllScalars = true]),
+			    Typed = Table.TransformColumnTypes(Promoted, {
+			        {"sort_order", Int64.Type},
+			        {"driver_id", type text},
+			        {"component", type text},
+			        {"waterfall_label", type text},
+			        {"driver", type text},
+			        {"amount_eur", type number},
+			        {"share_of_change", type number},
+			        {"overlap_removed_eur", type number},
+			        {"evidence_level", type text},
+			        {"evidence_display", type text},
+			        {"figure_type", type text},
+			        {"basis", type text}
+			    }, "en-US")
+			in
+			    Typed

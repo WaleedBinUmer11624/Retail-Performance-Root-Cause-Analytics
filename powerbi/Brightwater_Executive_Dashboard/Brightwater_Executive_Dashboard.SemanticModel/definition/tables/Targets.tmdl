@@ -1,0 +1,33 @@
+table Targets
+
+	column retail_week_key
+		dataType: int64
+		summarizeBy: none
+		sourceColumn: retail_week_key
+		isHidden
+
+	column store_key
+		dataType: int64
+		summarizeBy: none
+		sourceColumn: store_key
+		isHidden
+
+	column target_net_revenue
+		dataType: decimal
+		summarizeBy: none
+		sourceColumn: target_net_revenue
+
+	partition Targets = m
+		mode: import
+		source =
+			let
+			    Source = Csv.Document(File.Contents(ModelFolder & "\targets.csv"),
+			                          [Delimiter = ",", Encoding = 65001, QuoteStyle = QuoteStyle.Csv]),
+			    Promoted = Table.PromoteHeaders(Source, [PromoteAllScalars = true]),
+			    Typed = Table.TransformColumnTypes(Promoted, {
+			        {"retail_week_key", Int64.Type},
+			        {"store_key", Int64.Type},
+			        {"target_net_revenue", Currency.Type}
+			    }, "en-US")
+			in
+			    Typed

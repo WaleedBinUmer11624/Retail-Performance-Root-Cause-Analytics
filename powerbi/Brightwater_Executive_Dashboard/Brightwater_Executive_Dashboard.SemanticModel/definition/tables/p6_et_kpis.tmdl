@@ -1,0 +1,42 @@
+table p6_et_kpis
+
+	column metric
+		dataType: string
+		sourceColumn: metric
+
+	column prior
+		dataType: double
+		summarizeBy: none
+		sourceColumn: prior
+
+	column current
+		dataType: double
+		summarizeBy: none
+		sourceColumn: current
+
+	column change
+		dataType: double
+		summarizeBy: none
+		sourceColumn: change
+
+	column change_pct
+		dataType: double
+		summarizeBy: none
+		sourceColumn: change_pct
+
+	partition p6_et_kpis = m
+		mode: import
+		source =
+			let
+			    Source = Csv.Document(File.Contents(AnalyticsFolder & "\p6_et_kpis.csv"),
+			                          [Delimiter = ",", Encoding = 65001, QuoteStyle = QuoteStyle.Csv]),
+			    Promoted = Table.PromoteHeaders(Source, [PromoteAllScalars = true]),
+			    Typed = Table.TransformColumnTypes(Promoted, {
+			        {"metric", type text},
+			        {"prior", type number},
+			        {"current", type number},
+			        {"change", type number},
+			        {"change_pct", type number}
+			    }, "en-US")
+			in
+			    Typed

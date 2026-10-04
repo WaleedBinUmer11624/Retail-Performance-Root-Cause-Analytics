@@ -1,0 +1,13 @@
+signal,entity_type,rule,within_budget,entity_weeks_evaluated,watch,warning,critical,dq_held,alert_episodes,entities_alerted,warning_plus_known_episode,warning_plus_unconfirmed,exposure_warning_plus_eur,exposure_note,non_episode_entity_weeks,operational_unconfirmed_warning_plus,operational_unconfirmed_rate
+EW01,store,"peer_gap_threshold: 10, 3 week(s)",True,880,174,18,57,0,138,20,59,16,353014.22,Signal-specific proxy; never add across signals (they overlap).,805,16,0.019876
+EW02,estate,"yoy_vs_trend_threshold: 3, 2 week(s)",True,44,14,7,1,2,12,1,8,0,414579.67,Signal-specific proxy; never add across signals (they overlap).,20,0,0.0
+EW02,format,"yoy_vs_trend_threshold: 5, 3 week(s)",True,132,46,6,3,2,31,3,8,1,191789.46,Signal-specific proxy; never add across signals (they overlap).,107,1,0.009346
+EW02,region,"yoy_vs_trend_threshold: 10, 3 week(s)",True,220,67,8,2,1,50,5,7,3,209294.42,Signal-specific proxy; never add across signals (they overlap).,193,3,0.015544
+EW03,category,"availability_gap_pp: 1, 2 week(s)",True,364,24,6,14,0,24,7,17,3,124197.83,Signal-specific proxy; never add across signals (they overlap).,345,3,0.008696
+EW03,supplier,"availability_gap_pp: 1, 2 week(s)",True,780,84,14,17,0,84,14,18,13,136689.83,Signal-specific proxy; never add across signals (they overlap).,761,13,0.017083
+EW04,product,"stores_out_count: 1, 2 week(s)",True,5460,20,14,57,0,20,9,71,0,44589.61,Signal-specific proxy; never add across signals (they overlap).,5306,0,0.0
+EW05,category,"binomial_excess: p<0.05, excess>=3, 2 week(s)",True,343,18,6,13,10,12,5,16,3,24141.87,Signal-specific proxy; never add across signals (they overlap).,291,3,0.010309
+EW05,store,"binomial_excess: p<0.05, excess>=3, 2 week(s)",True,980,22,8,51,11,15,11,58,1,22136.52,Signal-specific proxy; never add across signals (they overlap).,795,1,0.001258
+EW06,category,"margin_gap_pp: 1, 4 week(s)",True,343,99,11,25,15,41,7,33,3,162688.15,Signal-specific proxy; never add across signals (they overlap).,256,3,0.011719
+EW07,category,"discount_gap_pp: 5, 3 week(s)",True,343,25,9,6,0,16,6,13,2,169233.97,Signal-specific proxy; never add across signals (they overlap).,317,2,0.006309
+EW08,store,"dq_gate_fail: gate FAIL, 1 week(s)",True,2080,0,3,0,0,2,2,3,0,0.0,Signal-specific proxy; never add across signals (they overlap).,2077,0,0.0

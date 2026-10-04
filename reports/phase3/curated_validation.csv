@@ -1,0 +1,54 @@
+group,check,status,value
+row conservation,dim_store: raw rows = curated + quarantined,PASS,20 = 20 + 0
+row conservation,dim_product: raw rows = curated + quarantined,PASS,610 = 600 + 10
+row conservation,dim_date: raw rows = curated + quarantined,PASS,731 = 731 + 0
+row conservation,fact_sales: raw rows = curated + quarantined,PASS,"1,341,515 = 1,339,510 + 2,005"
+row conservation,fact_inventory: raw rows = curated + quarantined,PASS,"939,437 = 939,249 + 188"
+row conservation,fact_returns: raw rows = curated + quarantined,PASS,"34,733 = 34,562 + 171"
+row conservation,fact_promotions: raw rows = curated + quarantined,PASS,"49,434 = 49,430 + 4"
+row conservation,fact_targets: raw rows = curated + quarantined,PASS,"2,079 = 2,077 + 2"
+keys,dim_store: primary key unique,PASS,20 rows
+keys,dim_product: primary key unique,PASS,601 rows
+keys,dim_date: primary key unique,PASS,731 rows
+keys,fact_sales: primary key unique,PASS,"1,339,510 rows"
+keys,fact_inventory: primary key unique,PASS,"939,249 rows"
+keys,fact_returns: primary key unique,PASS,"34,562 rows"
+keys,fact_promotions: primary key unique,PASS,"49,430 rows"
+keys,fact_targets: primary key unique,PASS,"2,077 rows"
+referential integrity,fact_sales: store_id and product_id in dimensions,PASS,
+referential integrity,fact_returns: store_id and product_id in dimensions,PASS,
+referential integrity,fact_inventory: store_id and product_id in dimensions,PASS,
+referential integrity,fact_promotions: store_id and product_id in dimensions,PASS,
+referential integrity,fact_targets: store_id in dim_store,PASS,
+referential integrity,fact_sales: promotion_id in fact_promotions or UNKNOWN,PASS,
+referential integrity,fact_sales: lines on the UNKNOWN product member,PASS,"1,293 lines, EUR 38,664.54"
+sales,"dates present, in period and equal to the transaction ID date",PASS,
+sales,store equals the transaction ID store,PASS,
+sales,quantity between 1 and the plausible maximum,PASS,
+sales,unit_price and unit_cost positive,PASS,
+sales,no missing money fields,PASS,
+sales,revenue = quantity x unit_price - discount,PASS,
+sales,margin = revenue - cost,PASS,
+sales,cost = quantity x unit_cost,PASS,
+sales,discount between 0 and maximum share of gross,PASS,0 lines
+sales,category canonical,PASS,
+sales,every line carries a dq_status,PASS,"clean 1,308,464; standardised 23,025; corrected 5,617; flagged 2,270; imputed 134"
+returns,quantity and refund positive,PASS,
+returns,return dates in period,PASS,
+returns,no return dated before its sale,PASS,
+returns,no return quantity above quantity sold,PASS,
+returns,returns referencing a sale line that was never received,WARN,"144 returns, EUR 5,027.48 (kept, flagged FR-04)"
+inventory,no missing stock quantities,PASS,
+inventory,no negative closing stock,PASS,
+inventory,stock identity holds,WARN,14 rows flagged FI-06
+inventory,only integer quantities,PASS,
+promotions,end_date on or after start_date,PASS,
+targets,targets positive and no extreme outliers,PASS,
+dimensions,product categories canonical,PASS,
+dimensions,store regions canonical,PASS,
+dimensions,no untrimmed text in dimensions,PASS,
+KPI identities,Sales Revenue = Gross Sales - Discount Value,PASS,"38,211,623.68 vs 38,211,623.68"
+KPI identities,Sales Revenue = Transactions x UPT x ASP,PASS,
+reconciliation,POS units vs stock-system units: match rate improved by cleaning,PASS,98.4605% -> 99.4695%
+framework,every catalogue rule was evaluated,PASS,all
+lineage,raw input files unchanged by the run,PASS,SHA-256 before = after

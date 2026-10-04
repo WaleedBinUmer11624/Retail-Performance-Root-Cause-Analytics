@@ -1,0 +1,14 @@
+step,batches,skipped_for_engine,seconds
+sql/schema/01_create_database_and_schemas.sql,0,4.0,0.01
+sql/staging/02_create_staging_tables.sql,9,0.0,0.58
+@load_staging,8,,22.14
+@load_expected,45,,0.27
+sql/schema/03_create_dimension_tables.sql,6,0.0,0.09
+sql/schema/04_create_fact_tables.sql,6,0.0,0.05
+sql/schema/05_create_keys_and_constraints.sql,0,6.0,0.0
+sql/schema/06_create_indexes.sql,0,2.0,0.0
+sql/transformations/07_load_dimensions.sql,6,0.0,0.89
+sql/transformations/08_load_facts.sql,6,2.0,5.92
+sql/validation/09_reconciliation.sql,3,1.0,0.6
+sql/analysis/10_analytical_views.sql,18,0.0,0.63
+sql/validation/11_kpi_validation.sql,3,1.0,3.13

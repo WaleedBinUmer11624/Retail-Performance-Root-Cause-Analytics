@@ -1,0 +1,5 @@
+supplier_name,returned_units_py,returned_units_cy,returns_value_py,returns_value_cy,units_sold_py,units_sold_cy,rate_per_100_py,rate_per_100_cy,expected_units_cy_at_py_rate,excess_units,excess_value_eur,p_increase,value_change
+Voltix Distribution Ltd,167,359,15709.45,39453.12,11446.0,12075.0,1.459025,2.973085,176.177267,182.822733,16886.048739,0.0,23743.67
+Northbridge Tech Supplies,225,272,11612.2,18195.78,17316.0,14804.0,1.299376,1.837341,192.359667,79.640333,7355.816849,6.9e-05,6583.58
+Emerald Electronics Wholesale,85,78,5262.49,6420.76,5790.0,4084.0,1.468048,1.909892,59.955095,18.044905,1666.680838,0.055068,1158.27
+Unknown supplier,14,14,2605.55,2708.76,791.0,597.0,1.769912,2.345059,10.566372,3.433628,317.140075,0.287358,103.21

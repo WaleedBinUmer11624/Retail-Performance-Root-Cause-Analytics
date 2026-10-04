@@ -1,0 +1,52 @@
+"""Descriptive name parts for product names (not business assumptions)."""
+
+SUBCATEGORY_NOUNS = {
+    "Cookware": ["Frying Pan", "Saucepan Set", "Casserole Dish", "Wok", "Stock Pot", "Griddle Pan", "Roasting Tin"],
+    "Kitchen Utensils": ["Spatula", "Whisk", "Peeler", "Tongs", "Measuring Cups", "Grater", "Ladle", "Knife Block"],
+    "Small Appliances": ["Kettle", "Toaster", "Blender", "Air Fryer", "Hand Mixer", "Coffee Machine", "Sandwich Maker"],
+    "Tableware": ["Dinner Set", "Mug Set", "Pasta Bowls", "Wine Glasses", "Cutlery Set", "Serving Platter"],
+    "Storage": ["Food Containers", "Storage Jars", "Lunch Box", "Bread Bin", "Spice Rack", "Vacuum Bags"],
+    "Home Fragrance": ["Scented Candle", "Reed Diffuser", "Wax Melts", "Room Spray", "Candle Trio"],
+    "Bedding & Textiles": ["Duvet Cover", "Throw", "Cushion", "Tea Towels", "Bath Towel", "Fitted Sheet"],
+    "Audio": ["Wireless Earbuds", "Bluetooth Speaker", "Headphones", "Soundbar", "Smart Speaker", "Radio"],
+    "Phone Accessories": ["Phone Case", "Screen Protector", "Car Mount", "Wireless Charger", "Power Bank"],
+    "Computer Accessories": ["Wireless Mouse", "Keyboard", "USB Hub", "Laptop Stand", "Webcam", "Memory Card"],
+    "Smart Home": ["Smart Plug", "Smart Bulb", "Video Doorbell", "Security Camera", "Smart Thermostat"],
+    "Gaming Accessories": ["Controller", "Gaming Headset", "Charging Dock", "Gaming Mouse", "Controller Grip"],
+    "Cables & Power": ["USB-C Cable", "Lightning Cable", "Wall Charger", "Extension Lead", "HDMI Cable", "Batteries"],
+    "Skincare": ["Moisturiser", "Face Serum", "Cleanser", "Sunscreen SPF50", "Face Mask", "Eye Cream"],
+    "Haircare": ["Shampoo", "Conditioner", "Hair Mask", "Styling Gel", "Dry Shampoo", "Hair Oil"],
+    "Oral Care": ["Toothpaste", "Mouthwash", "Floss", "Toothbrush Heads", "Whitening Strips"],
+    "Fragrance": ["Eau de Toilette", "Body Mist", "Eau de Parfum", "Aftershave", "Gift Fragrance"],
+    "Personal Care Appliances": ["Hair Dryer", "Straightener", "Electric Toothbrush", "Beard Trimmer", "Curling Wand"],
+    "Wellness": ["Vitamin C", "Multivitamin", "Hand Sanitiser", "Lip Balm", "Bath Salts", "Muscle Rub"],
+    "Board Games": ["Family Board Game", "Strategy Game", "Card Game", "Trivia Game", "Party Game"],
+    "Building Sets": ["Building Set", "Construction Kit", "Brick Bucket", "Vehicle Build Set"],
+    "Dolls & Figures": ["Fashion Doll", "Action Figure", "Plush Toy", "Figure Playset", "Doll House"],
+    "Outdoor Toys": ["Football", "Water Pistol", "Kite", "Skipping Rope", "Garden Games Set"],
+    "Puzzles": ["1000pc Jigsaw", "500pc Jigsaw", "Kids Puzzle", "3D Puzzle", "Brain Teaser"],
+    "Craft Kits": ["Slime Kit", "Bead Kit", "Painting Kit", "Jewellery Kit", "Clay Set"],
+    "Garden Tools": ["Trowel", "Pruning Shears", "Garden Fork", "Hose Reel", "Watering Can", "Rake"],
+    "Plant Care": ["Compost 40L", "Plant Feed", "Seed Pack", "Plant Pot", "Grow Bag", "Weed Killer"],
+    "Outdoor Furniture": ["Bistro Set", "Sun Lounger", "Garden Bench", "Parasol", "Outdoor Cushion"],
+    "BBQ": ["Charcoal BBQ", "BBQ Tools", "Charcoal 5kg", "BBQ Cover", "Grill Brush"],
+    "Outdoor Lighting": ["Solar Lights", "Festoon Lights", "Lantern", "Spotlight", "Fairy Lights"],
+    "Writing": ["Ballpoint Pens", "Gel Pens", "Highlighters", "Fineliners", "Pencil Set"],
+    "Paper & Notebooks": ["A4 Notebook", "Spiral Pad", "Journal", "Sticky Notes", "Printer Paper"],
+    "School Supplies": ["Pencil Case", "Geometry Set", "School Bag", "Lunch Bag", "Calculator", "Copybooks"],
+    "Art Supplies": ["Watercolour Set", "Sketch Pad", "Acrylic Paints", "Brush Set", "Colouring Pencils"],
+    "Gift Wrap & Cards": ["Gift Wrap Roll", "Birthday Card", "Gift Bag", "Ribbon", "Card Multipack"],
+    "Christmas Decorations": ["Bauble Set", "Tree Lights", "Wreath", "Tinsel", "Tree Topper", "Advent Calendar"],
+    "Gift Sets": ["Pamper Gift Set", "Candle Gift Set", "Tool Gift Set", "Mug Gift Set", "Sock Gift Set"],
+    "Confectionery Gifts": ["Chocolate Selection", "Fudge Box", "Sweet Hamper", "Truffle Box"],
+    "Party & Occasions": ["Balloon Pack", "Party Napkins", "Halloween Costume", "Easter Egg Hunt Kit", "Banner"],
+}
+
+VARIANTS = ["Classic", "Premium", "Essentials", "Deluxe", "Compact", "Large", "Mini", "Pro", "Everyday", "Signature"]
+
+MANAGER_NAMES = [
+    "Aoife Byrne", "Ciaran Walsh", "Niamh Kelly", "Sean O'Brien", "Roisin Murphy", "Declan Ryan",
+    "Siobhan Doyle", "Padraig Nolan", "Orla McCarthy", "Eoin Brennan", "Grainne Lynch", "Cormac Farrell",
+    "Aisling Quinn", "Darragh Kavanagh", "Sinead Hayes", "Fionn Gallagher", "Clodagh Burke",
+    "Tadhg O'Connor", "Maeve Dunne", "Ronan Kennedy",
+]

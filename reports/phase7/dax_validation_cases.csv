@@ -1,0 +1,55 @@
+label,dax,expected,tolerance
+Net Revenue (H2 2025),"CALCULATE ( [Net Revenue], 'Date'[retail_year] = 2025, 'Date'[retail_half] = ""H2"" )",9457457.05,0.01
+Net Revenue PY (H2 2025),"CALCULATE ( [Net Revenue PY], 'Date'[retail_year] = 2025, 'Date'[retail_half] = ""H2"" )",10188727.55,0.01
+Net Revenue YoY (H2 2025),"CALCULATE ( [Net Revenue YoY], 'Date'[retail_year] = 2025, 'Date'[retail_half] = ""H2"" )",-731270.5,0.01
+Net Revenue YoY % (H2 2025),"CALCULATE ( [Net Revenue YoY %], 'Date'[retail_year] = 2025, 'Date'[retail_half] = ""H2"" )",-0.071773,0.0
+Sales Revenue (H2 2025),"CALCULATE ( [Sales Revenue], 'Date'[retail_year] = 2025, 'Date'[retail_half] = ""H2"" )",9840827.88,0.01
+Returns Value (H2 2025),"CALCULATE ( [Returns Value], 'Date'[retail_year] = 2025, 'Date'[retail_half] = ""H2"" )",383370.83,0.01
+Gross Margin (H2 2025),"CALCULATE ( [Gross Margin], 'Date'[retail_year] = 2025, 'Date'[retail_half] = ""H2"" )",3525708.45,0.01
+Gross Margin % (H2 2025),"CALCULATE ( [Gross Margin %], 'Date'[retail_year] = 2025, 'Date'[retail_half] = ""H2"" )",0.372797,0.0
+Gross Margin PY (H2 2025),"CALCULATE ( [Gross Margin PY], 'Date'[retail_year] = 2025, 'Date'[retail_half] = ""H2"" )",3962593.91,0.01
+Transactions (H2 2025),"CALCULATE ( [Transactions], 'Date'[retail_year] = 2025, 'Date'[retail_half] = ""H2"" )",216027.0,0.0
+Transactions PY (H2 2025),"CALCULATE ( [Transactions PY], 'Date'[retail_year] = 2025, 'Date'[retail_half] = ""H2"" )",229446.0,0.0
+Units (H2 2025),"CALCULATE ( [Units], 'Date'[retail_year] = 2025, 'Date'[retail_half] = ""H2"" )",457916.0,0.0
+UPT (H2 2025),"CALCULATE ( [UPT], 'Date'[retail_year] = 2025, 'Date'[retail_half] = ""H2"" )",2.119717,0.0
+ASP (H2 2025),"CALCULATE ( [ASP], 'Date'[retail_year] = 2025, 'Date'[retail_half] = ""H2"" )",21.490465,0.0
+Average Transaction Value (H2 2025),"CALCULATE ( [Average Transaction Value], 'Date'[retail_year] = 2025, 'Date'[retail_half] = ""H2"" )",45.553694,0.0
+Return Rate (H2 2025),"CALCULATE ( [Return Rate], 'Date'[retail_year] = 2025, 'Date'[retail_half] = ""H2"" )",0.038957,0.0
+Promotion Share (H2 2025),"CALCULATE ( [Promotion Share], 'Date'[retail_year] = 2025, 'Date'[retail_half] = ""H2"" )",0.169029,0.0
+Discount Rate (H2 2025),"CALCULATE ( [Discount Rate], 'Date'[retail_year] = 2025, 'Date'[retail_half] = ""H2"" )",0.052681,0.0
+Availability (H2 2025),"CALCULATE ( [Availability], 'Date'[retail_year] = 2025, 'Date'[retail_half] = ""H2"" )",0.947742,0.0
+Availability PY (H2 2025),"CALCULATE ( [Availability PY], 'Date'[retail_year] = 2025, 'Date'[retail_half] = ""H2"" )",0.954248,0.0
+Target Achievement % (H2 2025),"CALCULATE ( [Target Achievement %], 'Date'[retail_year] = 2025, 'Date'[retail_half] = ""H2"" )",0.866382,0.0
+"Net Revenue (H2 2024, direct filter)","CALCULATE ( [Net Revenue], 'Date'[retail_year] = 2024, 'Date'[retail_half] = ""H2"" )",10188727.55,0.01
+S03 Net Revenue YoY,"CALCULATE ( [Net Revenue YoY], 'Date'[retail_year] = 2025, 'Date'[retail_half] = ""H2"", Store[store_id] = ""S03"" )",-171317.05,0.01
+S03 Transactions YoY %,"CALCULATE ( [Transactions YoY %], 'Date'[retail_year] = 2025, 'Date'[retail_half] = ""H2"", Store[store_id] = ""S03"" )",-0.295801,0.0
+S04 Net Revenue YoY,"CALCULATE ( [Net Revenue YoY], 'Date'[retail_year] = 2025, 'Date'[retail_half] = ""H2"", Store[store_id] = ""S04"" )",-153952.52,0.01
+S04 Transactions YoY %,"CALCULATE ( [Transactions YoY %], 'Date'[retail_year] = 2025, 'Date'[retail_half] = ""H2"", Store[store_id] = ""S04"" )",-0.265762,0.0
+S05 Net Revenue YoY,"CALCULATE ( [Net Revenue YoY], 'Date'[retail_year] = 2025, 'Date'[retail_half] = ""H2"", Store[store_id] = ""S05"" )",-124702.41,0.01
+S05 Transactions YoY %,"CALCULATE ( [Transactions YoY %], 'Date'[retail_year] = 2025, 'Date'[retail_half] = ""H2"", Store[store_id] = ""S05"" )",-0.269268,0.0
+Investigated cluster Transactions YoY %,"CALCULATE ( [Transactions YoY %], 'Date'[retail_year] = 2025, 'Date'[retail_half] = ""H2"", Store[store_group] = ""Investigated cluster"" )",-0.277572,0.0
+Matched control Transactions YoY %,"CALCULATE ( [Transactions YoY %], 'Date'[retail_year] = 2025, 'Date'[retail_half] = ""H2"", Store[store_group] = ""Matched control"" )",-0.011148,0.0
+Electronics & Tech Net Revenue YoY,"CALCULATE ( [Net Revenue YoY], 'Date'[retail_year] = 2025, 'Date'[retail_half] = ""H2"", Product[category] = ""Electronics & Tech"" )",-268518.33,0.01
+Electronics & Tech Availability,"CALCULATE ( [Availability], 'Date'[retail_year] = 2025, 'Date'[retail_half] = ""H2"", Product[category] = ""Electronics & Tech"" )",0.892808,0.0
+Electronics & Tech Availability PY,"CALCULATE ( [Availability PY], 'Date'[retail_year] = 2025, 'Date'[retail_half] = ""H2"", Product[category] = ""Electronics & Tech"" )",0.953796,0.0
+Voltix Distribution Ltd Full-Week Stock-Outs,"CALCULATE ( [Full-Week Stock-Outs], 'Date'[retail_year] = 2025, 'Date'[retail_half] = ""H2"", Product[supplier_name] = ""Voltix Distribution Ltd"" )",674.0,0.0
+Voltix Distribution Ltd Full-Week Stock-Outs PY,"CALCULATE ( [Full-Week Stock-Outs PY], 'Date'[retail_year] = 2025, 'Date'[retail_half] = ""H2"", Product[supplier_name] = ""Voltix Distribution Ltd"" )",0.0,0.0
+Electronics & Tech 'Faulty' Returns Value YoY,"CALCULATE ( [Returns Value YoY], 'Date'[retail_year] = 2025, 'Date'[retail_half] = ""H2"", Product[category] = ""Electronics & Tech"", Returns[return_reason] = ""Faulty"" )",31588.73,0.01
+Home & Kitchen Discount Rate,"CALCULATE ( [Discount Rate], 'Date'[retail_year] = 2025, 'Date'[retail_half] = ""H2"", Product[category] = ""Home & Kitchen"" )",0.119046,0.0
+Home & Kitchen Discount Rate PY,"CALCULATE ( [Discount Rate PY], 'Date'[retail_year] = 2025, 'Date'[retail_half] = ""H2"", Product[category] = ""Home & Kitchen"" )",0.023628,0.0
+Week 30 Net Revenue PY,"CALCULATE ( [Net Revenue PY], 'Date'[retail_year] = 2025, 'Date'[retail_week] = 30 )",297402.62,0.01
+"Sep 2025 sale cohort: returns by sale date (Faulty, E&T)","CALCULATE ( [Returns Value (by Sale Date)], 'Date'[year_month] = 202509, Product[category] = ""Electronics & Tech"", Returns[return_reason] = ""Faulty"" )",10940.57,0.01
+Guard: Net Revenue blank under a Promotion filter (1 = blank),"IF ( ISBLANK ( CALCULATE ( [Net Revenue], Promotion[member_type] = ""Promotion"" ) ), 1, 0 )",1.0,0.0
+Guard: Target Achievement blank under a category filter (1 = blank),"IF ( ISBLANK ( CALCULATE ( [Target Achievement %], 'Date'[retail_year] = 2025, 'Date'[retail_half] = ""H2"", Product[category] = ""Electronics & Tech"" ) ), 1, 0 )",1.0,0.0
+P6: High-Seller Share of Lost Sales,[High-Seller Share of Lost Sales (P6)],0.61047,1e-06
+P6: Top SKU Share of Lost Sales,[Top SKU Share of Lost Sales (P6)],0.247959,1e-06
+P6: Top 3 SKU Share of Lost Sales,[Top 3 SKU Share of Lost Sales (P6)],0.497652,1e-06
+P6: Lost Sales Gross,[Lost Sales Gross (P6)],37235.346776,1e-06
+P6: Lost Sales Net of Deferred Demand,[Lost Sales Net of Deferred Demand (P6)],23963.216711,1e-06
+P6: Lost Sales Range Low,[Lost Sales Range Low (P6)],23963.216711,1e-06
+P6: Lost Sales Range High,[Lost Sales Range High (P6)],44460.376486,1e-06
+P6: Cluster Excess,[Cluster Excess (P6)],-397778.209303,1e-06
+P6: Voltix Distribution Ltd episodes H2 2025,"CALCULATE ( [Stock-Out Episodes (P6)], p6_et_episodes[supplier_name] = ""Voltix Distribution Ltd"", p6_et_episodes[retail_year] = 2025 )",1181.0,1e-06
+P6: Promotion events H2 2025,"CALCULATE ( [Promotion Events (P6)], p6_hk_events_by_year[retail_year] = 2025 )",8848.0,1e-06
+P6: HK Method Effect total is blank (1 = blank),"IF ( ISBLANK ( [HK Method Effect Guarded] ), 1, 0 )",1.0,1e-06
+P6: Driver Impact total is blank (1 = blank),"IF ( ISBLANK ( [Driver Impact (single driver)] ), 1, 0 )",1.0,1e-06

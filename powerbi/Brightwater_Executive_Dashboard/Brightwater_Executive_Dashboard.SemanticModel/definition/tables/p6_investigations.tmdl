@@ -1,0 +1,70 @@
+table p6_investigations
+
+	column priority
+		dataType: int64
+		summarizeBy: none
+		sourceColumn: priority
+
+	column topic
+		dataType: string
+		sourceColumn: topic
+
+	column driver_id
+		dataType: string
+		sourceColumn: driver_id
+
+	column evidence_level
+		dataType: string
+		sourceColumn: evidence_level
+
+	column known
+		dataType: string
+		sourceColumn: known
+
+	column unknown
+		dataType: string
+		sourceColumn: unknown
+
+	column why_it_matters
+		dataType: string
+		sourceColumn: why_it_matters
+
+	column slice_of_decline_eur
+		dataType: double
+		summarizeBy: none
+		sourceColumn: slice_of_decline_eur
+
+	column data_required
+		dataType: string
+		sourceColumn: data_required
+
+	column proposed_owner
+		dataType: string
+		sourceColumn: proposed_owner
+
+	column owner_note
+		dataType: string
+		sourceColumn: owner_note
+
+	partition p6_investigations = m
+		mode: import
+		source =
+			let
+			    Source = Csv.Document(File.Contents(AnalyticsFolder & "\p6_investigations.csv"),
+			                          [Delimiter = ",", Encoding = 65001, QuoteStyle = QuoteStyle.Csv]),
+			    Promoted = Table.PromoteHeaders(Source, [PromoteAllScalars = true]),
+			    Typed = Table.TransformColumnTypes(Promoted, {
+			        {"priority", Int64.Type},
+			        {"topic", type text},
+			        {"driver_id", type text},
+			        {"evidence_level", type text},
+			        {"known", type text},
+			        {"unknown", type text},
+			        {"why_it_matters", type text},
+			        {"slice_of_decline_eur", type number},
+			        {"data_required", type text},
+			        {"proposed_owner", type text},
+			        {"owner_note", type text}
+			    }, "en-US")
+			in
+			    Typed

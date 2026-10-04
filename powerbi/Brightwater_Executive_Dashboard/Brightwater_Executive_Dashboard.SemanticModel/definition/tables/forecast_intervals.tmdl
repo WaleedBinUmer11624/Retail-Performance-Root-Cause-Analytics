@@ -1,0 +1,38 @@
+table forecast_intervals
+
+	column week_start_date
+		dataType: dateTime
+		summarizeBy: none
+		sourceColumn: week_start_date
+
+	column model
+		dataType: string
+		sourceColumn: model
+
+	column coverage
+		dataType: double
+		summarizeBy: none
+		sourceColumn: coverage
+
+	column lower
+		dataType: double
+		summarizeBy: none
+		sourceColumn: lower
+
+	column upper
+		dataType: double
+		summarizeBy: none
+		sourceColumn: upper
+
+	partition forecast_intervals = m
+		mode: import
+		source =
+			let
+			    Source = Csv.Document(File.Contents(ForecastFolder & "\forecast_intervals.csv"),
+			                          [Delimiter = ",", Encoding = 65001, QuoteStyle = QuoteStyle.Csv]),
+			    Promoted = Table.PromoteHeaders(Source, [PromoteAllScalars = true]),
+			    Typed = Table.TransformColumnTypes(Promoted, {
+			        {"week_start_date", type date}, {"model", type text}, {"coverage", type number}, {"lower", type number}, {"upper", type number}
+			    }, "en-US")
+			in
+			    Typed

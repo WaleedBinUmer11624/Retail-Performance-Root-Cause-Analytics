@@ -1,0 +1,43 @@
+table p6_faulty_by_cohort
+
+	column sale_year_month
+		dataType: int64
+		summarizeBy: none
+		sourceColumn: sale_year_month
+
+	column returned_units
+		dataType: int64
+		summarizeBy: none
+		sourceColumn: returned_units
+
+	column value
+		dataType: double
+		summarizeBy: none
+		sourceColumn: value
+
+	column units_sold
+		dataType: double
+		summarizeBy: none
+		sourceColumn: units_sold
+
+	column rate_per_100
+		dataType: double
+		summarizeBy: none
+		sourceColumn: rate_per_100
+
+	partition p6_faulty_by_cohort = m
+		mode: import
+		source =
+			let
+			    Source = Csv.Document(File.Contents(AnalyticsFolder & "\p6_faulty_by_cohort.csv"),
+			                          [Delimiter = ",", Encoding = 65001, QuoteStyle = QuoteStyle.Csv]),
+			    Promoted = Table.PromoteHeaders(Source, [PromoteAllScalars = true]),
+			    Typed = Table.TransformColumnTypes(Promoted, {
+			        {"sale_year_month", Int64.Type},
+			        {"returned_units", Int64.Type},
+			        {"value", type number},
+			        {"units_sold", type number},
+			        {"rate_per_100", type number}
+			    }, "en-US")
+			in
+			    Typed

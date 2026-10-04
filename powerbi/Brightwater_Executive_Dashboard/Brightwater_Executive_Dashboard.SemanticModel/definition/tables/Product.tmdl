@@ -1,0 +1,78 @@
+table Product
+
+	column product_key
+		dataType: int64
+		summarizeBy: none
+		sourceColumn: product_key
+		isKey
+		isHidden
+
+	column product_id
+		dataType: string
+		sourceColumn: product_id
+
+	column product_name
+		dataType: string
+		sourceColumn: product_name
+
+	column product_label
+		dataType: string
+		sourceColumn: product_label
+
+	column category
+		dataType: string
+		sourceColumn: category
+
+	column subcategory
+		dataType: string
+		sourceColumn: subcategory
+
+	column brand
+		dataType: string
+		sourceColumn: brand
+
+	column supplier_id
+		dataType: string
+		sourceColumn: supplier_id
+
+	column supplier_name
+		dataType: string
+		sourceColumn: supplier_name
+
+	column list_price
+		dataType: decimal
+		summarizeBy: none
+		sourceColumn: list_price
+
+	column product_status
+		dataType: string
+		sourceColumn: product_status
+
+	column is_unknown
+		dataType: int64
+		summarizeBy: none
+		sourceColumn: is_unknown
+
+	partition Product = m
+		mode: import
+		source =
+			let
+			    Source = Csv.Document(File.Contents(ModelFolder & "\product.csv"),
+			                          [Delimiter = ",", Encoding = 65001, QuoteStyle = QuoteStyle.Csv]),
+			    Promoted = Table.PromoteHeaders(Source, [PromoteAllScalars = true]),
+			    Typed = Table.TransformColumnTypes(Promoted, {
+			        {"product_key", Int64.Type},
+			        {"product_id", type text},
+			        {"product_name", type text},
+			        {"product_label", type text},
+			        {"category", type text},
+			        {"subcategory", type text},
+			        {"brand", type text},
+			        {"supplier_id", type text},
+			        {"supplier_name", type text},
+			        {"list_price", Currency.Type},
+			        {"product_status", type text},
+			        {"is_unknown", Int64.Type}
+			    }, "en-US")
+			in
+			    Typed

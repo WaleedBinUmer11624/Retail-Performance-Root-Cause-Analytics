@@ -1,0 +1,3 @@
+driver,method,variant,estimate_eur
+electronics_stockouts_primary,full-week lost sales change net of recovery,minus post-episode sales above expected (deferred demand),-23963.216711
+electronics_stockouts_upper,BR-05 upper bound change net of recovery,minus post-episode sales above expected (deferred demand),-64940.395343

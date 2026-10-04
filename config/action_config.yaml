@@ -1,0 +1,826 @@
+# Phase 8: business action plan, decision support and impact framework (used by src/actions).
+#
+# Phase 8 adds no analysis. Every number in its outputs is read from a frozen Phase 5, 6 or 7 file through
+# src/actions/facts.py and written into the text through {placeholders}; this file holds no euro amount,
+# percentage or count of its own (a test checks that). Evidence levels are copied from the Phase 6 evidence
+# matrix and never set here. Owners, ratings, thresholds and timings are PROPOSALS for management.
+
+inputs:
+  allowed_files:
+    - config/project_config.yaml
+    - config/sql_model_config.yaml
+    - config/analytics_config.yaml
+    - config/rca_config.yaml
+    - config/powerbi_config.yaml
+    - config/action_config.yaml
+    - reports/phase5/phase1_4_input_manifest.csv
+    - reports/phase6/phase1_5_input_manifest.csv
+    - reports/phase7/phase1_6_input_manifest.csv
+    - reports/phase8/phase1_7_input_manifest.csv
+  # Phase 7 files frozen for Phase 8 (added to the Phase 1-6 lists of the earlier configs). The Phase 7
+  # validation report and run log record run times and are excluded, as for the earlier phases.
+  phase7_frozen:
+    - src/powerbi/*.py
+    - sql/powerbi/*.sql
+    - config/powerbi_config.yaml
+    - docs/07_power_bi_dashboard_design.md
+    - tests/test_phase7_powerbi.py
+    - reports/phase7/*.csv
+    - reports/phase7/mockups/*.png
+    - powerbi/*.json
+    - powerbi/dax/*
+    - powerbi/power_query/*.pq
+    - powerbi/data/*.csv
+  freeze_manifest: reports/phase8/phase1_7_input_manifest.csv
+  phase7_checks: reports/phase7/phase7_validation_checks.csv
+  phase7_register: reports/phase7/dashboard_number_register.csv
+
+outputs:
+  reports: reports/phase8
+  figures: reports/phase8/figures
+
+# ----------------------------------------------------------------------------- decision rules
+# Ratings use three transparent levels. Two are computed from the frozen results; the others are judgements
+# (PROPOSED) with a written reason. None is a score: they are not added or multiplied.
+ratings:
+  financial_relevance:        # |attribution amount| / |H2 net revenue change|
+    High: 0.20                # at least 20% of the decline
+    Medium: 0.05              # 5% up to 20%
+    # below 5%: Low; a partition or overlapping slice is not re-counted (see issue notes)
+  evidence_strength:          # strength of CAUSAL evidence, Phase 7 scale (config/powerbi_config.yaml)
+    High: 3                   # Root-cause evidence
+    Medium: 2                 # Statistical association
+    # 0 or 1 (Hypothesis, Observed change, Unresolved): Low
+  definitions:
+    business_urgency: "High: harm continues while we wait or evidence may be lost; Medium: harm continues but slowly; Low: no ongoing harm identified."
+    implementation_effort: "Effort of the immediate safe actions only. Low: existing people and data; Medium: new data request or process change; High: system change or external spend."
+    reversibility: "Of the immediate safe actions. High: can be stopped next week at no cost; Medium: some sunk cost; Low: hard to undo."
+    data_requirement: "Data needed before a stronger decision. Low: the project already has it; Medium: internal data not yet in the model; High: external or new data."
+    risk_of_acting_now: "Risk of acting on the current evidence as if the cause were known. High: likely to spend money on the wrong cause or damage a relationship; Medium: some waste; Low: little downside."
+    time_to_validate: "Planning assumption, not a measured duration. Short: within 30 days; Medium: 31 to 60 days; Long: more than 60 days."
+
+# How the decision category follows from the ratings (applied in src/actions/framework.py and tested):
+#   1. no identified driver (not attributed)                                        -> NO ACTION YET
+#   2. evidence High AND immediate actions reversible (High) AND risk of acting Low  -> ACT NOW
+#   3. financial relevance High or Medium, OR urgency High, OR risk of acting High    -> INVESTIGATE FIRST
+#   4. otherwise                                                                     -> MONITOR
+# A large number alone never gives ACT NOW: rule 2 needs High causal evidence.
+decision_rule_text:
+  - "No identified driver (the amount is not attributed): NO ACTION YET beyond analysis."
+  - "High causal evidence, reversible immediate actions and low risk of acting: ACT NOW."
+  - "Financial relevance High or Medium, or urgency High, or high risk of acting on the wrong cause: INVESTIGATE FIRST."
+  - "Otherwise: MONITOR."
+# Issue category = what management decides about the problem. Each action inside an issue has its own category.
+action_rule_text: >-
+  An action can be ACT NOW, even inside an INVESTIGATE FIRST issue, only if it is reversible, low effort and low
+  risk, and it is one of three things: an operational control resting on root-cause evidence (only I2 qualifies),
+  evidence capture that would otherwise be lost, or a governance control that changes no commercial lever.
+
+# ----------------------------------------------------------------------------- issues (one per management question)
+# drivers: Phase 6 driver ids; evidence levels, cause status and figure type are looked up, never typed here.
+# relevance: attribution = share of the decline from the Phase 6 attribution for `attribution_driver`;
+#            slice = part of another issue's amount (not re-counted); partition = not quantified.
+issues:
+  - id: I1
+    title: Store-cluster transaction loss (S03, S04, S05)
+    drivers: [D01, D02]
+    relevance: attribution
+    attribution_driver: D01
+    observed_evidence: >-
+      Transactions per store in S03, S04 and S05 fell {cl_tx_yoy|abspct1} against {mc_tx_yoy|abspct1} in the matched
+      control stores ({mc_stores|text}); a single step change on {cl_onset|date} (S03 {cl_onset_s03|dmon},
+      S04 {cl_onset_s04|dmon}, S05 {cl_onset_s05|dmon}). Their transactions were still {cl_gap_last_pct|abspct0}
+      below the control-store path in retail week {cl_gap_last_week|int}, the last week of the data.
+    financial_note: >-
+      Estimated excess decline {d01_eur|eur} ({d01_share|pct0} of the change), range {cl_high|eur} to
+      {cl_low|eur} across control groups and windows. ESTIMATE of an observed change, measured against the
+      control stores; not a measured loss and not a cause.
+    what_we_know: >-
+      The loss is in the number of receipts, across all categories, weekdays and hours. Basket value
+      ({cl_atv|eur2} vs {mc_atv|eur2} in the controls), prices, promotion share, availability and return rate
+      moved like the control stores. No internal lever in the data explains it. Caveats carried from Phase 6:
+      no matched control store is in Dublin (the cluster's region), and the three stores were picked in Phase 5
+      because they fell most, so the placebo test overstates significance; using the two other Dublin stores as
+      controls gives a similar size ({cl_dublin_excess|eur}).
+    what_we_do_not_know: >-
+      Why customers made fewer purchases: fewer visitors, lower conversion, a change in the stores (hours,
+      closures, works, staffing) that is not recorded in the model, or something outside the stores. Whether
+      it has recovered since the end of the data.
+    business_risk: >-
+      The largest single component of the decline and it had not recovered by the end of the data. Acting on
+      a guessed cause (price cuts, local marketing) could spend money without effect, while the real cause
+      continues.
+    immediate_safe_action: >-
+      Confirm the receipt counts are complete for the three stores; collect the operational and local data
+      listed; run structured area-manager visits; track the gap to the control stores weekly. No price,
+      promotion or marketing response aimed at these stores until a cause is identified.
+    investigation_required: >-
+      A staged investigation (see the investigation sequence): data completeness first, then store operations,
+      footfall and conversion, then the local environment, then customer behaviour.
+    data_ids: [DR01, DR02, DR03, DR04, DR05, DR06, DR07, DR08, DR09, DR10, DR11]
+    owner: Retail Operations
+    supporting: Commercial; Store managers S03 to S05; Data/BI; Finance
+    kpi: Transactions per store YoY, cluster vs matched controls (weekly gap); footfall and conversion once available
+    trigger: >-
+      Escalate to the Head of Retail if the weekly gap to the control stores widens further, or if another
+      store shows a step change of the same kind (early-warning signal EW01).
+    review_frequency: Weekly during the investigation; monthly after a decision
+    decision_after_investigation: >-
+      If a store-side cause is found (hours, closure, works, staffing): fix it and track the gap back toward the
+      controls. If a temporary external cause (road works, local disruption): monitor to its end date. If a
+      lasting external cause (for example a new competitor): decide a commercial response and test it against
+      control stores before rolling it out. If nothing is found: keep it reported as UNRESOLVED and keep
+      monitoring; do not assign a cause.
+    ratings:
+      business_urgency: [High, "The gap had not closed by the last week of the data, so the loss is likely ongoing."]
+      implementation_effort: [Medium, "Data requests and store visits use existing people; proxy data or temporary counters (A04) may need spend."]
+      reversibility: [High, "Data collection and visits commit nothing."]
+      data_requirement: [High, "Footfall, competitor and local-event data are not in the model."]
+      risk_of_acting_now: [High, "The cause is unknown; a price or marketing response could target the wrong problem."]
+      time_to_validate: [Medium, "Operational logs are quick; footfall and external data may take weeks to obtain."]
+
+  - id: I2
+    title: Electronics & Tech full-week stock-outs
+    cause_note: "D03: Established only for lost sales during full-week stock-outs; why stock ran out: not established (I3)"
+    drivers: [D03]
+    relevance: attribution
+    attribution_driver: D03
+    observed_evidence: >-
+      Electronics & Tech availability fell from {et_avail_py|pct1} to {et_avail_cy|pct1}; full-week stock-outs
+      (store-SKU-weeks with no stock all week) rose from {et_full_py|int} to {et_full_cy|int}, of which
+      {vx_full_cy|int} on Voltix Distribution Ltd SKUs (prior year {vx_full_py|int}). Zero units were sold in
+      every full-week stock-out.
+    financial_note: >-
+      Estimated lost sales {ls_gross|abseur} gross ({d03_share|pct0} of the change); {ls_net|abseur} net of the
+      demand that came back after restock ({ls_deferred|abseur}); sensitivity range {ls_low|abseur} to
+      {ls_high|abseur}. ESTIMATE. {ls_top10|pct0} of the lost sales sits in the top {high_seller_share|pct0} of SKUs by prior-year sales (the Phase 6
+      definition); the
+      three largest SKUs ({top3_skus|text}) hold {ls_top3|pct0}.
+    what_we_know: >-
+      The mechanism is visible: no stock, no sales. It is concentrated in a small number of high-selling SKUs.
+      Some demand returned after restock, so part of the gross loss was deferred rather than lost.
+    what_we_do_not_know: >-
+      Why stock ran out (see I3). How much was lost in partial-week stock-outs (only weekly snapshots are
+      available). How much demand moved to other SKUs.
+    business_risk: >-
+      Small in the decline, but it is the one mechanism the evidence establishes, and it affects the
+      highest-selling SKUs, which customers notice.
+    immediate_safe_action: >-
+      A weekly zero-stock exception list for the fastest-selling Electronics SKUs on current sales (including new
+      launches), starting with the three SKUs with the largest lost-sales estimates ({top3_skus|text}), routed to
+      replenishment; a review of reorder points and safety stock for the most affected SKUs against
+      current sales rates. These are internal replenishment controls and do not assume the supplier is at fault.
+    investigation_required: >-
+      Request daily stock positions so partial-week stock-outs can be measured; the cause of the stock
+      shortfall is investigated under I3.
+    data_ids: [DR12, DR13, DR14]
+    owner: Supply Chain (replenishment)
+    supporting: Store Operations; Electronics & Tech buying; Data/BI
+    kpi: Electronics & Tech availability; full-week stock-outs; zero-stock weeks on the top-selling SKUs
+    trigger: >-
+      Escalate if a top-selling SKU has a full-week stock-out in two consecutive weeks, or if category
+      availability stays below its prior-year level for four weeks (early-warning signals EW03 and EW04).
+    review_frequency: Weekly
+    decision_after_investigation: >-
+      Keep the exception list if availability on the listed SKUs improves; keep, reverse or make permanent the
+      temporary parameter changes only after I3 shows whether ordering or supply limited stock.
+    ratings:
+      business_urgency: [Medium, "Stock-outs continue while unmanaged, but the estimated amount is small."]
+      implementation_effort: [Low, "Uses the weekly stock data already in the model."]
+      reversibility: [High, "An exception list and a parameter review can be stopped at no cost."]
+      data_requirement: [Low, "The controls use existing data; only the partial-week measure needs daily stock."]
+      risk_of_acting_now: [Low, "Checking stock on best sellers has little downside whatever the cause."]
+      time_to_validate: [Short, "Availability on the listed SKUs can be read within weeks."]
+
+  - id: I3
+    title: Voltix Distribution Ltd stock-out concentration (supply vs ordering)
+    drivers: [D04]
+    relevance: slice
+    slice_of: I2
+    observed_evidence: >-
+      Voltix stock-out episodes rose from {vx_ep_py|int} to {vx_ep_cy|int} and their mean length from
+      {vx_len_py|dec1} to {vx_len_cy|dec1} weeks. The SKU stock-out rate rose {vx_rate_diff|pp1u} more than for
+      other suppliers' SKUs. Opening stock of its SKUs fell while weekly receipts per SKU did not.
+    financial_note: >-
+      {ls_voltix|abseur} ({ls_voltix_share|pct0}) of the {ls_gross|abseur} lost-sales estimate sits on Voltix
+      SKUs. Part of I2: not an additional amount.
+    what_we_know: >-
+      The concentration is statistically robust (it survives leaving out any single SKU).
+    what_we_do_not_know: >-
+      Whether Voltix delivered less or later than ordered, or Brightwater ordered or replenished less. The data
+      has receipts, not orders.
+    business_risk: >-
+      Blaming or re-sourcing a supplier without order and delivery evidence could damage a relationship and
+      would not fix an internal ordering problem.
+    immediate_safe_action: >-
+      Collect purchase orders, confirmations, ASNs and receipts for Voltix SKUs; share the stock pattern with
+      Voltix as joint fact-finding, not as a performance claim. No penalty, delisting or re-sourcing decision
+      until the order and delivery data are reviewed.
+    investigation_required: >-
+      Compare what was ordered, confirmed, shipped and received, and when, for H2 2024 and H2 2025; compare
+      order quantities with Brightwater's own ordering parameters and forecasts; check DC availability and
+      store allocation rules for these SKUs.
+    data_ids: [DR15, DR16, DR17, DR18, DR19, DR20, DR21]
+    owner: Supply Chain (supplier management)
+    supporting: Electronics & Tech buying (supplier relationship); Commercial (supplier sanction decisions); Finance; Voltix account manager
+    kpi: Supplier fill rate and OTIF (not available yet); Voltix SKU availability
+    trigger: >-
+      Escalate to the Commercial Director if order data shows short or late supply; to the Supply Chain
+      Manager if it shows Brightwater under-ordered.
+    review_frequency: Fortnightly until the order data is reviewed
+    decision_after_investigation: >-
+      Supplier-side cause: raise it through the supplier review with the evidence (fill rate, OTIF, lead time).
+      Ordering-side cause: correct parameters or forecasts. Both or neither: document it and keep monitoring.
+    ratings:
+      business_urgency: [Medium, "Stock-outs continue, but I2's controls reduce the harm while this is investigated."]
+      implementation_effort: [Low, "The data request is internal; the supplier conversation is routine."]
+      reversibility: [High, "Collecting data and a fact-finding meeting commit nothing."]
+      data_requirement: [High, "Purchase order, ASN and delivery data are not in the model."]
+      risk_of_acting_now: [High, "Treating an association as supplier failure could damage the relationship and miss an internal cause."]
+      time_to_validate: [Medium, "Depends on how quickly order and delivery history can be extracted."]
+
+  - id: I4
+    title: Electronics & Tech 'Faulty' returns
+    drivers: [D05, D06]
+    relevance: attribution
+    attribution_driver: D05
+    observed_evidence: >-
+      Refunds recorded with the reason 'Faulty' rose by {fy_change|abseur} ({fy_yoy|spct0}). The top five
+      stores ({fy_stores|text}) hold {fy_top5_stores|pct0} of the gross increase; the rise starts mainly with
+      items sold from September 2025 ({fy_k202509|dec1} 'Faulty' returns per 100 units sold for September 2025
+      sales against {fy_k202409|dec1} a year earlier). Other return reasons did not rise materially (the largest
+      change, 'Damaged', was {fy_damaged|seur}).
+    financial_note: >-
+      {d05_eur|eur} ({d05_share|pct0} of the change): a FACT (recorded refunds), range {d05_eur|eur} to
+      {fy_range_low|eur} depending on the rate basis. The share is small; the question is quality and process,
+      not size.
+    what_we_know: >-
+      The increase is in the recorded till reason, concentrated in five stores and in recent sale months, and
+      spread across products (the top five products hold only {fy_top5_products|pct0}) and across all four
+      suppliers.
+    what_we_do_not_know: >-
+      Whether the products are defective. A till reason is not an inspection result. The pattern fits a batch
+      problem, a supplier problem, a change in how those stores record returns, a store process, customer
+      behaviour or another cause; the data cannot choose between them.
+    business_risk: >-
+      If products are defective, faulty stock may still be on sale and customers affected; supplier claim
+      windows may apply (check the contracts). If it is a recording practice, the returns data is misleading
+      for every later analysis.
+    immediate_safe_action: >-
+      Keep 'Faulty' Electronics returns in the five stores, and a comparison sample from three other stores, for
+      inspection instead of disposing of or returning them unexamined, and record batch, lot or serial numbers; audit how the five stores apply the 'Faulty'
+      reason; request supplier RMA and warranty data.
+    investigation_required: >-
+      QA inspection of returned units; batch and serial analysis; supplier RMA and warranty comparison; a
+      returns-handling audit against comparison stores; see the classification framework.
+    data_ids: [DR22, DR23, DR24, DR25, DR26, DR27, DR28]
+    owner: Quality / Buying (Electronics & Tech)
+    supporting: Store Operations (returns process); Customer Service; Supplier quality contacts; Data/BI
+    kpi: "'Faulty' returned units per 100 sold, by store and by sale month; QA confirmed-defect rate (not available yet)"
+    trigger: >-
+      Escalate to the Quality lead at once if inspection confirms a defect in a batch still on sale; escalate if
+      the 'Faulty' rate rises in stores outside the five (early-warning signal EW05).
+    review_frequency: Fortnightly until inspection results are in; monthly after
+    decision_after_investigation: >-
+      Confirmed defect in a batch or supplier: a quality decision (withdraw the batch, supplier claim) owned by
+      Quality. Recording practice: clarify the reason codes and retrain, and restate the KPI. Neither: keep
+      monitoring and report the cause as unresolved.
+    ratings:
+      business_urgency: [High, "Possible customer impact and evidence (returned units) that may be disposed of if not kept."]
+      implementation_effort: [Low, "Holding returns and an audit use existing staff."]
+      reversibility: [High, "Holding units for inspection and an audit can be stopped at once."]
+      data_requirement: [High, "QA, batch and RMA data are not in the model."]
+      risk_of_acting_now: [Medium, "Pulling products or claiming against suppliers without inspection could be wrong."]
+      time_to_validate: [Medium, "Inspection of held units is quick; RMA and warranty data depend on suppliers."]
+
+  - id: I5
+    title: Home & Kitchen promotions
+    drivers: [D07]
+    relevance: attribution
+    attribution_driver: D07
+    observed_evidence: >-
+      The Home & Kitchen discount rate rose from {hk_disc_py|pct1} to {hk_disc_cy|pct1} of gross sales and
+      promotion events from {hk_ev_py|int} to {hk_ev_cy|int}; promotion share of sales from {hk_promo_py|pct1}
+      to {hk_promo_cy|pct1}. Category net revenue fell {hk_change|abseur}, units {hk_units_yoy|abspct1}, and average
+      selling price from {hk_asp_py|eur2} to {hk_asp_cy|eur2}.
+    financial_note: >-
+      Attribution uses M1: {d07_eur|eur} ({d07_share|pct0} of the change). The four Phase 6 methods disagree:
+      M1 {m1|seur}, M4 {m4|seur}, M2 {m2|seur}, M3 {m3|seur}. They are shown separately and never added. Point
+      estimates run from {m4|eur} (M4) to {m2|seur} (M2), and {m4_ci_low|eur} to {m2_ci_high|seur} including their
+      intervals: even the sign is uncertain.
+    what_we_know: >-
+      Promotions became deeper and more frequent while the category fell against other categories in the same
+      stores and weeks, mostly through price rather than volume.
+    what_we_do_not_know: >-
+      Whether the promotions caused the decline or added revenue: incrementality, pull-forward, cannibalisation
+      and the right baseline are all unresolved, because back-to-back promotions
+      ({m3_contam|pct0} of current-year events) contaminate the baselines.
+    business_risk: >-
+      Cutting promotions on the strength of M1 or M4 could remove revenue if M2 and M3 are right; continuing
+      unchanged could keep eroding margin if M1 and M4 are right.
+    immediate_safe_action: >-
+      Every new Home & Kitchen promotion deeper than the prior-year depth needs a written objective and a
+      planned post-event review on margin as well as sales; no blanket cut and no blanket increase.
+    investigation_required: >-
+      A promotion review of the H2 2025 calendar (objectives, planned vs actual depth, funding), then a
+      controlled test of promotion depth; see the test design.
+    data_ids: [DR29, DR30, DR31, DR32, DR33]
+    owner: Commercial / Trading (Home & Kitchen)
+    supporting: Marketing; Finance; Data/BI
+    kpi: Home & Kitchen discount rate, promotion share, gross margin %; promotion incrementality once a test exists
+    trigger: >-
+      Escalate if the discount rate or promotion share rises above the approved plan, or if category gross
+      margin % falls a further step (early-warning signal EW07).
+    review_frequency: Monthly; weekly while a test runs
+    decision_after_investigation: >-
+      At the post-test gate (after the test and its post-period, planned around day 150 to 180): keep the depth
+      the test shows adds net margin; move towards the prior-year depth only where the test shows it loses
+      margin. An inconclusive test is not a reason to cut: keep the current depth under the governance control
+      and extend or repeat the test. Until then, do not claim an effect either way.
+    ratings:
+      business_urgency: [Medium, "Margin is exposed each week, but the direction of the effect is unknown."]
+      implementation_effort: [Medium, "A controlled test needs planning across Commercial, Marketing and stores."]
+      reversibility: [High, "A written objective and a review step can be dropped at any time."]
+      data_requirement: [Medium, "Promotion objectives and plans exist internally; elasticities need a test."]
+      risk_of_acting_now: [High, "The methods disagree in sign; a blanket change could go the wrong way."]
+      time_to_validate: [Long, "A controlled test needs a full promotion cycle plus a post-period; its result arrives after day 90."]
+
+  - id: I6
+    title: Electronics & Tech range and continuing-SKU sales
+    drivers: [D08]
+    relevance: partition
+    observed_evidence: >-
+      Outside the cluster, new Electronics SKUs added {d08_new|abseur}, delisted SKUs lost {d08_delisted|abseur} and
+      continuing SKUs sold {d08_continuing|abseur} less, mostly through lower sales per ranged week.
+    financial_note: >-
+      A partition of the category change (FACT), not an estimate of a cause; not added to the attribution. Most
+      of the unattributed residual sits here (see I7).
+    what_we_know: >-
+      The range change itself added revenue; the decline sits in continuing SKUs.
+    what_we_do_not_know: >-
+      Whether shoppers switched to the new models, partial-week stock-outs cut sales, or substitution during
+      stock-outs explains it.
+    business_risk: >-
+      Low on its own; misreading it could lead to delisting SKUs whose sales simply moved to newer models.
+    immediate_safe_action: >-
+      None beyond monitoring continuing, new and delisted SKU sales monthly.
+    investigation_required: >-
+      Link range plan and delisting dates to SKU sales; use customer purchase history (if loyalty data exists)
+      to see switching between models.
+    data_ids: [DR12, DR34, DR35]
+    owner: Category Management (Electronics & Tech)
+    supporting: Buying; Data/BI
+    kpi: Continuing-SKU sales per ranged store-week; new and delisted SKU sales
+    trigger: >-
+      Review if continuing-SKU sales per ranged week fall further while new-SKU sales do not rise.
+    review_frequency: Monthly
+    decision_after_investigation: >-
+      If switching explains it: no action (a normal range cycle). If partial-week stock-outs explain it: fold
+      into I2. If neither: keep in the residual investigation.
+    ratings:
+      business_urgency: [Low, "No harm identified beyond the normal range cycle."]
+      implementation_effort: [Low, "Uses existing SKU data."]
+      reversibility: [High, "Monitoring only."]
+      data_requirement: [Medium, "Range plans are internal; customer-level history may not exist."]
+      risk_of_acting_now: [Medium, "Delisting on this evidence could remove SKUs whose sales merely moved."]
+      time_to_validate: [Medium, "Needs range plans and, ideally, customer-level data."]
+
+  - id: I7
+    title: Residual decline not attributed
+    drivers: [D09]
+    relevance: attribution
+    attribution_driver: D09
+    observed_evidence: >-
+      {d09_eur|eur} ({d09_share|pct0} of the change) is not attributed to any driver. By where it sits: other
+      stores' Electronics change not explained by stock-outs or 'Faulty' returns {res_et_other|eur}; other
+      stores' Home & Kitchen change beyond M1 {res_hk_other|seur}; other stores' other categories
+      {res_other_cat|seur}; the cluster's change at the control-store rate {res_cluster_rate|eur}.
+    financial_note: >-
+      UNEXPLAINED / NOT ATTRIBUTED. The remainder of the attribution, so it also absorbs the uncertainty of
+      every estimate above. Not assigned to any driver.
+    what_we_know: >-
+      Outside the cluster, categories other than Electronics and Home & Kitchen were flat, so it is not
+      estate-wide softness. Most of it is Electronics continuing-SKU sales outside the cluster.
+    what_we_do_not_know: >-
+      What drives it. Forcing it into an existing explanation would overstate that explanation.
+    business_risk: >-
+      Low on its own; the risk is analytical: hiding it would make the explanation look more complete than it is.
+    immediate_safe_action: >-
+      No operational action. Decompose it further by store, category, product, week, price, mix, returns and
+      availability, and check the data behind it.
+    investigation_required: >-
+      See the residual investigation framework.
+    data_ids: [DR12, DR35, DR36]
+    owner: Data/BI Lead
+    supporting: Finance; Category Management
+    kpi: Unattributed share of the change at each future period review
+    trigger: >-
+      Re-examine if the unattributed share grows in the next period's attribution.
+    review_frequency: At each period review
+    decision_after_investigation: >-
+      Attribute a part only where a new driver meets the Phase 6 evidence standard; keep the rest labelled
+      NOT ATTRIBUTED.
+    ratings:
+      business_urgency: [Low, "No operational harm identified."]
+      implementation_effort: [Low, "Analysis on existing data."]
+      reversibility: [High, "Analysis only."]
+      data_requirement: [Medium, "Daily stock and customer-level data would help."]
+      risk_of_acting_now: [Medium, "Assigning it to a driver without evidence would double-count or mislead."]
+      time_to_validate: [Medium, "Depends on the daily stock and customer data."]
+
+# ----------------------------------------------------------------------------- additional data required
+# available_in_project: No = not in the model; Partial = a proxy exists (named).
+data_requirements:
+  - {id: DR01, item: POS transaction completeness check, detail: "Till-level receipt counts for S03 to S05 against card-terminal settlement counts and store banking, Jan 2025 onward", question: "Is the receipt loss real, or partly a data-capture gap?", issues: [I1], source: "POS, payment provider, store banking", owner: Data/BI, available_in_project: No, needed_by: "0-30"}
+  - {id: DR02, item: Store operating logs, detail: "Opening hours actually worked, closures, refits, works inside or outside the stores, incidents", question: "Did the stores change?", issues: [I1], source: "Store operations / facilities", owner: Retail Operations, available_in_project: Partial, available_note: "Store master has planned weekly trading hours only", needed_by: "0-30"}
+  - {id: DR03, item: Staffing coverage, detail: "Rostered vs worked hours, vacancies, tills open by hour", question: "Did service capacity fall from mid-July?", issues: [I1], source: "Workforce management", owner: Retail Operations, available_in_project: No, needed_by: "0-30"}
+  - {id: DR04, item: Footfall, detail: "Daily door counts for S03 to S05 and the matched control stores", question: "Fewer visitors, or fewer buyers among visitors?", issues: [I1], source: "Footfall counters (if installed)", owner: Retail Operations, available_in_project: No, needed_by: "0-30"}
+  - {id: DR05, item: Conversion rate, detail: "Transactions / footfall by day, derived once DR04 exists", question: "Did conversion change?", issues: [I1], source: "Derived from DR04 and POS", owner: Data/BI, available_in_project: No, needed_by: "31-60"}
+  - {id: DR06, item: Queue and waiting-time indicators, detail: "Queue length or wait-time sensors, self-checkout availability", question: "Did service problems deter purchases?", issues: [I1], source: "Store systems (if any)", owner: Retail Operations, available_in_project: No, needed_by: "31-60"}
+  - {id: DR07, item: Competitor activity, detail: "Openings, closures, relocations and promotions near the three stores since June 2025", question: "Did a competitor change the local market?", issues: [I1], source: "Market intelligence, field visits", owner: Commercial, available_in_project: No, needed_by: "0-30"}
+  - {id: DR08, item: Local environment, detail: "Road and access works, parking changes, public transport changes, local events", question: "Did access to the stores change?", issues: [I1], source: "Local authority notices, area managers", owner: Retail Operations, available_in_project: No, needed_by: "0-30"}
+  - {id: DR09, item: Customer feedback, detail: "Complaints and NPS or survey scores by store", question: "Did customer experience change?", issues: [I1], source: "Customer service, survey provider", owner: Customer Service, available_in_project: No, needed_by: "31-60"}
+  - {id: DR10, item: Loyalty and customer frequency, detail: "Visits per identified customer by home store, and where those customers now shop", question: "Did regular customers leave or move to other stores?", issues: [I1], source: "Loyalty / CRM (if any)", owner: Commercial, available_in_project: No, needed_by: "31-60"}
+  - {id: DR11, item: Online and channel data, detail: "Online orders and click-and-collect by catchment postcode", question: "Did customers move online?", issues: [I1], source: "E-commerce platform (if any)", owner: Commercial, available_in_project: No, needed_by: "31-60"}
+  - {id: DR12, item: Daily stock positions, detail: "Daily on-hand stock per store-SKU for Electronics & Tech", question: "How much was lost in partial-week stock-outs?", issues: [I2, I6, I7], source: "Inventory system", owner: Supply Chain, available_in_project: Partial, available_note: "Weekly snapshots only", needed_by: "0-30"}
+  - {id: DR13, item: DC availability, detail: "Distribution-centre stock for the affected SKUs by week", question: "Was stock missing at the DC or only in stores?", issues: [I2, I3], source: "Warehouse management", owner: Supply Chain, available_in_project: No, needed_by: "0-30"}
+  - {id: DR14, item: Store replenishment and allocation rules, detail: "Allocation logic, replenishment frequency and reorder triggers for Electronics", question: "Did store replenishment limit stock?", issues: [I2, I3], source: "Replenishment system", owner: Supply Chain, available_in_project: No, needed_by: "0-30"}
+  - {id: DR15, item: Purchase orders, detail: "PO lines for Voltix SKUs (and a comparison supplier), H2 2024 and H2 2025", question: "What did Brightwater order, and when?", issues: [I3], source: "ERP", owner: Supply Chain, available_in_project: No, needed_by: "0-30"}
+  - {id: DR16, item: Supplier confirmations and ASNs, detail: "Confirmed quantities and advance shipping notices", question: "What did the supplier commit to and ship?", issues: [I3], source: "ERP / EDI", owner: Supply Chain, available_in_project: No, needed_by: "0-30"}
+  - {id: DR17, item: Supplier fill rate and OTIF, detail: "Delivered vs ordered quantity, on time and in full, by PO line", question: "Did the supplier under-deliver?", issues: [I3], source: "Derived from DR15, DR16 and receipts", owner: Supply Chain, available_in_project: No, needed_by: "31-60"}
+  - {id: DR18, item: Lead times and late deliveries, detail: "Order-to-receipt days by PO, against the agreed lead time", question: "Did lead times lengthen?", issues: [I3], source: "ERP", owner: Supply Chain, available_in_project: No, needed_by: "31-60"}
+  - {id: DR19, item: Ordering parameters, detail: "Min / max, reorder points, safety stock and order quantities by SKU, with change history", question: "Did Brightwater change how much it ordered?", issues: [I2, I3], source: "Replenishment system", owner: Supply Chain, available_in_project: No, needed_by: "0-30"}
+  - {id: DR20, item: Demand forecasts and forecast accuracy, detail: "Forecast vs actual by SKU-week", question: "Did forecasts under-call demand?", issues: [I3], source: "Forecasting / replenishment system", owner: Supply Chain, available_in_project: No, needed_by: "31-60"}
+  - {id: DR21, item: Supplier service levels, detail: "Contracted service levels and any supplier notices of constraints", question: "Was there a known supply constraint?", issues: [I3], source: "Buying / contracts", owner: Buying, available_in_project: No, needed_by: "0-30"}
+  - {id: DR22, item: QA inspection results, detail: "Inspection outcome for held 'Faulty' returns (defect confirmed, no fault found, damage, misuse)", question: "Are returned items actually defective?", issues: [I4], source: "Quality / returns centre", owner: Quality, available_in_project: No, needed_by: "31-60"}
+  - {id: DR23, item: "Batch, lot and serial numbers", detail: "For returned and sold units", question: "Is a specific batch involved?", issues: [I4], source: "Returns process, inventory receipts", owner: Quality, available_in_project: No, needed_by: "0-30"}
+  - {id: DR24, item: Supplier RMA and defect reports, detail: "RMAs raised and supplier defect findings by SKU", question: "Do suppliers see the same pattern elsewhere?", issues: [I4], source: "Suppliers, Buying", owner: Buying, available_in_project: No, needed_by: "31-60"}
+  - {id: DR25, item: Warranty claims and repair outcomes, detail: "Claims and repair results by SKU and purchase date", question: "Do warranty data confirm defects?", issues: [I4], source: "Warranty provider / repair partner", owner: Quality, available_in_project: No, needed_by: "31-60"}
+  - {id: DR26, item: Returns-handling audit, detail: "How staff in the five stores and comparison stores choose the return reason; any policy or guidance change since August 2025", question: "Did recording practice change?", issues: [I4], source: "Store audit", owner: Store Operations, available_in_project: No, needed_by: "0-30"}
+  - {id: DR27, item: Customer complaints about product faults, detail: "Complaints mentioning faults by SKU and store", question: "Do customers report the same faults?", issues: [I4], source: "Customer service", owner: Customer Service, available_in_project: No, needed_by: "31-60"}
+  - {id: DR28, item: Delivery route serving the five stores, detail: "Which DC and route supplies {fy_stores|text}", question: "Do the stores share a supply path?", issues: [I4], source: "Logistics", owner: Supply Chain, available_in_project: No, needed_by: "0-30"}
+  - {id: DR29, item: Promotion calendar with objectives, detail: "Objective, mechanic, planned depth and funding for each Home & Kitchen promotion", question: "What was each promotion meant to achieve?", issues: [I5], source: "Commercial / trading plan", owner: Commercial, available_in_project: Partial, available_note: "Promotion master has dates, type and discount band, not objectives or funding", needed_by: "0-30"}
+  - {id: DR30, item: Planned vs actual discount depth, detail: "Planned depth against the depth realised at the till", question: "Did depth drift above plan?", issues: [I5], source: "Commercial plan and POS", owner: Commercial, available_in_project: Partial, available_note: "Actual depth is in the sales data; the plan is not", needed_by: "0-30"}
+  - {id: DR31, item: Supplier promotional funding, detail: "Funding received per promotion", question: "What did promotions really cost Brightwater?", issues: [I5], source: "Finance / Buying", owner: Finance, available_in_project: No, needed_by: "31-60"}
+  - {id: DR32, item: Controlled test results, detail: "Controlled test of Home & Kitchen promotion depth (see the test design)", question: "Are the promotions incremental?", issues: [I5], source: "New test", owner: Commercial, available_in_project: No, needed_by: "90+"}
+  - {id: DR33, item: SKU-level price elasticities and customer segments, detail: "Elasticity by SKU; response by customer segment if loyalty data exists", question: "Where does depth pay?", issues: [I5], source: "Test data, loyalty / CRM", owner: Data/BI, available_in_project: No, needed_by: "90+"}
+  - {id: DR34, item: Range plan and delisting dates, detail: "Planned range changes and exact delisting dates for Electronics", question: "Which SKUs replaced which?", issues: [I6], source: "Category management", owner: Category Management, available_in_project: Partial, available_note: "Product status only, no dates", needed_by: "31-60"}
+  - {id: DR35, item: Customer-level purchase history, detail: "Purchases by identified customer across Electronics models", question: "Did customers switch between models?", issues: [I6, I7], source: "Loyalty / CRM (if any)", owner: Commercial, available_in_project: No, needed_by: "31-60"}
+  - {id: DR36, item: Market data for Electronics & Tech, detail: "Category market size and share by region", question: "Did the market fall too?", issues: [I7], source: "Market research provider", owner: Commercial, available_in_project: No, needed_by: "61-90"}
+
+# ----------------------------------------------------------------------------- action register
+# category: ACT NOW | INVESTIGATE FIRST | MONITOR | NO ACTION YET
+# type: Control (low-risk operational control) | Governance control | Evidence capture | Investigation |
+#       Monitoring | Hold (a deliberate decision not to act yet) | Analysis
+# An ACT NOW action must be reversible (High) and low effort, and either rest on Root-cause evidence or be an
+# evidence-capture or governance control that is sensible whatever the cause (tested).
+actions:
+  - {id: A01, issue: I1, category: INVESTIGATE FIRST, type: Investigation, window: "0-30", effort: Low, reversibility: High,
+     action: "Confirm the receipt loss is real: reconcile S03 to S05 till receipt counts with card-terminal settlement counts and store banking from January 2025.",
+     why: "Rules out a data-capture explanation cheaply before anyone spends money on a commercial response.",
+     owner: Data/BI, supporting: Finance; Store managers, kpi: Receipts per store-day vs settlement count, trigger: "Any store-day where counts differ materially: report to the Data/BI Lead."}
+  - {id: A02, issue: I1, category: INVESTIGATE FIRST, type: Investigation, window: "0-30", effort: Low, reversibility: High,
+     action: "Collect store operating logs, staffing coverage and local-environment information (works, access, parking, events, competitor openings and promotions) for S03 to S05 and the matched control stores from June 2025.",
+     why: "Tests the internal and external explanations the Phase 6 analysis could not observe.",
+     owner: Retail Operations, supporting: Commercial; Facilities, kpi: Share of listed data items obtained, trigger: "Data not obtainable by day 30: escalate to the Head of Retail."}
+  - {id: A03, issue: I1, category: INVESTIGATE FIRST, type: Investigation, window: "0-30", effort: Low, reversibility: High,
+     action: "Structured area-manager visits to S03 to S05 with a fixed checklist: what changed around mid-July 2025 (access, signage, parking, neighbouring shops, competitors, hours, staffing).",
+     why: "Store teams often know about local changes that no system records.",
+     owner: Retail Operations, supporting: Area managers, kpi: Visit reports completed, trigger: "Any identified change dated near the change point: add to the investigation log."}
+  - {id: A04, issue: I1, category: INVESTIGATE FIRST, type: Investigation, window: "31-60", effort: Medium, reversibility: High,
+     action: "Where footfall counters with history exist, split the transaction gap since July 2025 into footfall and conversion for the cluster and the control stores. Where they do not, the past split cannot be recovered: use proxies for the past (car-park counts, public-transport or mobile-location data, card-spend data for the catchment, where obtainable) and install counters in the three stores and two control stores to measure the current state.",
+     why: "Separates 'fewer visitors' from 'fewer buyers among visitors', which point to different owners; new counters show today's position, not the cause of the July step.",
+     owner: Retail Operations, supporting: Data/BI, kpi: Footfall YoY and conversion rate (new), trigger: "Footfall gap similar to the transaction gap: external or access cause likely; conversion gap: in-store cause likely."}
+  - {id: A05, issue: I1, category: MONITOR, type: Monitoring, window: "0-30", effort: Low, reversibility: High,
+     action: "Report the weekly transaction gap between S03 to S05 and the matched control stores on the dashboard, with the change-point check re-run monthly.",
+     why: "Shows whether the loss persists, recovers or spreads while the cause is investigated.",
+     owner: Data/BI, supporting: Retail Operations, kpi: Weekly transactions-per-store YoY gap vs matched controls, trigger: "Early-warning signal EW01."}
+  - {id: A06, issue: I1, category: NO ACTION YET, type: Hold, window: "0-30", effort: Low, reversibility: High,
+     action: "Hold any price, promotion or local-marketing response aimed at S03 to S05 until the investigation identifies a cause.",
+     why: "The cause is UNRESOLVED; spend aimed at a guessed cause may not work and would blur the later measurement.",
+     owner: Commercial, supporting: Retail Operations, kpi: n/a, trigger: "Lift the hold when the day-60 decision gate names a cause."}
+  - {id: A07, issue: I2, category: ACT NOW, type: Control, window: "0-30", effort: Low, reversibility: High,
+     action: "Weekly zero-stock exception list for the fastest-selling Electronics & Tech SKUs on their current sales rate (last 8 weeks, new launches included), starting with the three SKUs with the largest lost-sales estimates ({top3_skus|text}), sent to replenishment with a named person to act on each line.",
+     why: "Full-week stock-outs are the one mechanism with root-cause evidence, and they concentrate in these SKUs.",
+     owner: Supply Chain (replenishment), supporting: Store Operations, kpi: Full-week stock-outs on listed SKUs; category availability, trigger: "Early-warning signals EW03 and EW04."}
+  - {id: A08, issue: I2, category: ACT NOW, type: Control, window: "0-30", effort: Low, reversibility: High,
+     action: "Review reorder points and safety stock for the most affected SKUs against their current sales rate; where a parameter is out of date, adjust it as a temporary, recorded change (permanent changes wait for the I3 finding) so its effect can be measured.",
+     why: "Opening stock of the affected SKUs fell; checking the internal parameters is safe whatever the supplier's role.",
+     owner: Supply Chain (replenishment), supporting: Electronics & Tech buying, kpi: Weeks of cover on listed SKUs; availability, trigger: "Cover below the reorder point for two weeks on a listed SKU."}
+  - {id: A09, issue: I2, category: INVESTIGATE FIRST, type: Evidence capture, window: "0-30", effort: Medium, reversibility: High,
+     action: "Request daily stock positions for Electronics & Tech so partial-week stock-outs can be measured.",
+     why: "The lost-sales estimate covers full-week stock-outs only; partial weeks are unmeasured.",
+     owner: Data/BI, supporting: Supply Chain, kpi: Days out of stock per store-SKU (new), trigger: "n/a"}
+  - {id: A10, issue: I3, category: INVESTIGATE FIRST, type: Investigation, window: "0-30", effort: Low, reversibility: High,
+     action: "Extract purchase orders, confirmations, ASNs and receipts for Voltix SKUs and one comparison supplier for H2 2024 and H2 2025; calculate fill rate, OTIF and lead time; compare order quantities with the ordering parameters and forecasts in force.",
+     why: "Decides whether supply or Brightwater ordering limited stock, which the current data cannot do.",
+     owner: Supply Chain (supplier management), supporting: Electronics & Tech buying; Finance, kpi: Fill rate; OTIF; lead time (new), trigger: "Day-60 decision gate."}
+  - {id: A11, issue: I3, category: INVESTIGATE FIRST, type: Investigation, window: "31-60", effort: Low, reversibility: High,
+     action: "Joint fact-finding meeting with the Voltix account manager: share the stock-out pattern and ask for their delivery records and any constraint notices.",
+     why: "The supplier may hold the delivery evidence; framing it as fact-finding keeps the relationship intact.",
+     owner: Electronics & Tech buying, supporting: Supply Chain, kpi: n/a, trigger: "n/a"}
+  - {id: A12, issue: I3, category: NO ACTION YET, type: Hold, window: "0-30", effort: Low, reversibility: High,
+     action: "No supplier penalty, delisting or re-sourcing decision for Voltix until the order and delivery review (A10) is complete.",
+     why: "The concentration is a STATISTICAL ASSOCIATION; supplier responsibility is not established.",
+     owner: Commercial, supporting: Supply Chain, kpi: n/a, trigger: "Lift the hold at the day-60 decision gate."}
+  - {id: A13, issue: I4, category: ACT NOW, type: Evidence capture, window: "0-30", effort: Low, reversibility: High,
+     action: "In {fy_stores|text}, and as a comparison sample in three stores without an increase, keep Electronics & Tech items returned as 'Faulty' for inspection (do not dispose of them or send them back unexamined) and record batch, lot or serial numbers, for an initial eight weeks.",
+     why: "Preserves the only direct evidence of whether items are defective; the comparison stores give the normal no-fault-found rate to judge against; costs little and can stop at any time.",
+     owner: Quality, supporting: Store Operations, kpi: Held units inspected; batch captured on returns, trigger: "A confirmed defect in a batch still on sale: escalate to the Quality lead at once."}
+  - {id: A14, issue: I4, category: INVESTIGATE FIRST, type: Investigation, window: "0-30", effort: Low, reversibility: High,
+     action: "Returns-handling audit in the five stores and three comparison stores: how staff choose the return reason, and any change in guidance, systems or staff since August 2025.",
+     why: "Tests the recording-practice explanation directly.",
+     owner: Store Operations, supporting: Quality; Data/BI, kpi: Audit findings, trigger: "Evidence of a coding change: restate the KPI and brief Quality."}
+  - {id: A15, issue: I4, category: INVESTIGATE FIRST, type: Investigation, window: "31-60", effort: Low, reversibility: High,
+     action: "Request supplier RMA and defect reports and warranty claims for the most affected products ({fy_products|text}) and for all four suppliers.",
+     why: "Suppliers and warranty providers see defects across all their customers.",
+     owner: Electronics & Tech buying, supporting: Quality, kpi: RMA and warranty rates by SKU (new), trigger: "n/a"}
+  - {id: A16, issue: I4, category: INVESTIGATE FIRST, type: Evidence capture, window: "31-60", effort: Medium, reversibility: Medium,
+     action: "Add batch or serial capture to the Electronics returns process in all stores (process change; a system change only if the pilot in A13 shows it is needed).",
+     why: "Without batch data the quality question cannot be answered next time either.",
+     owner: Store Operations, supporting: IT; Quality, kpi: Share of Electronics returns with batch recorded, trigger: "n/a"}
+  - {id: A17, issue: I4, category: MONITOR, type: Monitoring, window: "0-30", effort: Low, reversibility: High,
+     action: "Monthly 'Faulty' returned units per 100 sold, by store and by sale month, on the dashboard.",
+     why: "Shows whether the pattern spreads, fades or follows a sale cohort.",
+     owner: Data/BI, supporting: Quality, kpi: "'Faulty' units per 100 sold", trigger: "Early-warning signal EW05."}
+  - {id: A18, issue: I5, category: ACT NOW, type: Governance control, window: "0-30", effort: Low, reversibility: High,
+     action: "Governance control: any new Home & Kitchen promotion deeper than the same SKU's depth in the equivalent prior-year promotion (or, with no prior-year equivalent, deeper than a depth band Commercial sets per mechanic) needs a written objective, a funding line and a planned post-event review on margin as well as sales.",
+     why: "The effect of deeper promotions is uncertain in sign; writing down the objective and measuring it is sensible whatever the true effect, and it cuts nothing.",
+     owner: Commercial / Trading, supporting: Finance, kpi: Share of promotions with an objective and a review, trigger: "Promotions launched without an objective: report monthly."}
+  - {id: A19, issue: I5, category: INVESTIGATE FIRST, type: Investigation, window: "0-30", effort: Medium, reversibility: High,
+     action: "Promotion review of the H2 2025 Home & Kitchen calendar: objective, mechanic, planned vs actual depth and supplier funding for each event.",
+     why: "Establishes what the programme was meant to do before judging whether it worked.",
+     owner: Commercial / Trading, supporting: Finance; Marketing, kpi: n/a, trigger: "n/a"}
+  - {id: A20, issue: I5, category: INVESTIGATE FIRST, type: Investigation, window: "31-60", effort: Medium, reversibility: High,
+     action: "Design, approve and launch the controlled test of Home & Kitchen promotion depth (see the test design), with marketing and legal sign-off and the analysis plan written before launch.",
+     why: "Only a controlled comparison can settle a question on which the four methods disagree in sign.",
+     owner: Commercial / Trading, supporting: Data/BI; Marketing; Store Operations, kpi: Test-vs-comparison-arm net revenue and gross margin per store-week, trigger: "Guardrail breach in the test: stop the test arm."}
+  - {id: A21, issue: I5, category: NO ACTION YET, type: Hold, window: "0-30", effort: Low, reversibility: High,
+     action: "No blanket cut and no blanket increase in Home & Kitchen promotion depth on the strength of any single Phase 6 method.",
+     why: "M1 and M4 say the programme cost revenue; M2 and M3 say it added revenue. Acting on one would be acting on a guess.",
+     owner: Commercial Director, supporting: Finance, kpi: n/a, trigger: "Review at the day-90 gate with the test results."}
+  - {id: A22, issue: I5, category: MONITOR, type: Monitoring, window: "0-30", effort: Low, reversibility: High,
+     action: "Weekly Home & Kitchen discount rate, promotion share and gross margin % against the approved promotion plan.",
+     why: "Detects drift in depth or frequency while the test is prepared.",
+     owner: Data/BI, supporting: Commercial / Trading, kpi: Discount rate; promotion share; gross margin %, trigger: "Early-warning signal EW07."}
+  - {id: A23, issue: I6, category: MONITOR, type: Monitoring, window: "31-60", effort: Low, reversibility: High,
+     action: "Monthly Electronics sales split into continuing, new and delisted SKUs, with the range plan and delisting dates attached.",
+     why: "Separates normal range churn from a real decline in continuing SKUs.",
+     owner: Category Management, supporting: Data/BI, kpi: Continuing-SKU sales per ranged store-week, trigger: "Continuing-SKU sales fall while new-SKU sales do not rise."}
+  - {id: A24, issue: I7, category: NO ACTION YET, type: Analysis, window: "31-60", effort: Low, reversibility: High,
+     action: "Decompose the unattributed residual by store, category, product, week, price, mix, returns and availability, and check the data behind it; no operational action until a driver meets the Phase 6 evidence standard.",
+     why: "Keeps the explanation honest: the residual stays NOT ATTRIBUTED unless evidence says otherwise.",
+     owner: Data/BI, supporting: Finance, kpi: Unattributed share of the change, trigger: "n/a"}
+  - {id: A25, issue: ALL, category: ACT NOW, type: Governance control, window: "0-30", effort: Low, reversibility: High,
+     action: "Start the decision log and a monthly evidence review chaired by the Data/BI Lead with the issue owners; every decision records the evidence level it relied on.",
+     why: "Makes the evidence standard part of how decisions are taken, and gives a record to learn from.",
+     owner: Data/BI Lead, supporting: Finance; all issue owners, kpi: Decisions logged with evidence level, trigger: "n/a"}
+
+# ----------------------------------------------------------------------------- 30 / 60 / 90 day plan
+# Days count from management approval of this plan. No row promises a revenue recovery.
+plan:
+  - {window: "0-30", focus: Validation, activity: "Confirm the S03 to S05 receipt loss is real (A01); confirm the headline and attribution are the agreed baseline for all reporting.", issues: [I1, ALL], actions: [A01], deliverable: "Data completeness note", owner: Data/BI}
+  - {window: "0-30", focus: Data acquisition, activity: "Issue the data requests DR01 to DR04, DR07, DR08, DR12 to DR16, DR19, DR21, DR23, DR26, DR28 to DR30 with named owners and due dates.", issues: [ALL], actions: [A02, A09, A10], deliverable: "Data request log with status", owner: Data/BI}
+  - {window: "0-30", focus: Immediate low-risk controls, activity: "Start the zero-stock exception list and the reorder-point review for top-selling Electronics SKUs (A07, A08).", issues: [I2], actions: [A07, A08], deliverable: "Weekly exception list in use", owner: Supply Chain (replenishment)}
+  - {window: "0-30", focus: Immediate low-risk controls, activity: "Start holding 'Faulty' Electronics returns in the five stores for inspection, with batch capture (A13).", issues: [I4], actions: [A13], deliverable: "Held-returns log", owner: Quality}
+  - {window: "0-30", focus: Immediate low-risk controls, activity: "Apply the Home & Kitchen promotion governance control (A18); confirm the holds A06, A12 and A21 in the decision log.", issues: [I5, I1, I3], actions: [A18, A06, A12, A21], deliverable: "Decision log entries DL-001, DL-004, DL-006", owner: Commercial / Trading}
+  - {window: "0-30", focus: Store investigation, activity: "Area-manager visits and operating-log review for S03 to S05 (A02, A03).", issues: [I1], actions: [A02, A03], deliverable: "Visit reports and operational timeline", owner: Retail Operations}
+  - {window: "0-30", focus: Inventory investigation, activity: "Extract order, confirmation, ASN and receipt history for Voltix and a comparison supplier (A10).", issues: [I3], actions: [A10], deliverable: "Order-to-receipt dataset", owner: Supply Chain (supplier management)}
+  - {window: "0-30", focus: Returns investigation, activity: "Returns-handling audit in the five stores and three comparison stores (A14).", issues: [I4], actions: [A14], deliverable: "Audit report", owner: Store Operations}
+  - {window: "0-30", focus: Promotion review, activity: "Review the H2 2025 Home & Kitchen calendar: objectives, depth, funding (A19).", issues: [I5], actions: [A19], deliverable: "Promotion review note", owner: Commercial / Trading}
+  - {window: "0-30", focus: Governance, activity: "Start the decision log and the monthly evidence review (A25); dashboard monitoring of the cluster gap, 'Faulty' rate and Home & Kitchen discount rate (A05, A17, A22).", issues: [ALL], actions: [A25, A05, A17, A22], deliverable: "First evidence review held", owner: Data/BI Lead}
+  - {window: "31-60", focus: Testing hypotheses, activity: "Split the cluster transaction gap into footfall and conversion (A04); test each store and local hypothesis against the timeline.", issues: [I1], actions: [A04], deliverable: "Cluster hypothesis table: supported, rejected, untestable", owner: Retail Operations}
+  - {window: "31-60", focus: Supplier / replenishment analysis, activity: "Calculate fill rate, OTIF and lead time; compare orders with parameters and forecasts; joint fact-finding with Voltix (A10, A11).", issues: [I3], actions: [A10, A11], deliverable: "Supply vs ordering finding", owner: Supply Chain (supplier management)}
+  - {window: "31-60", focus: Quality investigation, activity: "Inspect held returns; compare with RMA and warranty data; start batch capture in all stores if the pilot needs it (A13, A15, A16).", issues: [I4], actions: [A13, A15, A16], deliverable: "Classification of the 'Faulty' pattern", owner: Quality}
+  - {window: "31-60", focus: Promotion experimentation, activity: "Approve and launch the controlled depth test with a pre-written analysis plan and marketing and legal sign-off (A20).", issues: [I5], actions: [A20], deliverable: "Test launched; analysis plan signed off", owner: Commercial / Trading}
+  - {window: "31-60", focus: Measurement, activity: "Measure partial-week stock-outs from daily stock (A09); read the effect of the Electronics controls on listed SKUs; decompose the residual (A24); monthly range split (A23).", issues: [I2, I6, I7], actions: [A09, A23, A24], deliverable: "Measurement note", owner: Data/BI}
+  - {window: "31-60", focus: Decision gate (day 60), activity: "Evidence review decides: cluster cause named or kept UNRESOLVED; supply vs ordering for Voltix; defect vs recording for 'Faulty' returns. Holds A06 and A12 lifted or kept.", issues: [I1, I3, I4], actions: [A06, A12], deliverable: "Decision log entries with evidence level", owner: Data/BI Lead}
+  - {window: "61-90", focus: Evaluating interventions, activity: "Compare availability and stock-outs on listed SKUs before and after the controls, against unlisted SKUs; review any store-side fix for the cluster against the control stores.", issues: [I1, I2], actions: [A07, A08], deliverable: "Intervention review (effect measured, not assumed)", owner: Data/BI}
+  - {window: "61-90", focus: Standardising successful controls, activity: "Keep, change or stop each control based on its measured effect; write the ones kept into standard procedures.", issues: [I2, I4, I5], actions: [A07, A08, A13, A18], deliverable: "Updated procedures", owner: Issue owners}
+  - {window: "61-90", focus: Closing unsupported hypotheses, activity: "Close hypotheses the new data rejects; keep untestable ones labelled HYPOTHESIS; keep the residual NOT ATTRIBUTED unless a driver meets the evidence standard.", issues: [I1, I3, I4, I6, I7], actions: [A24], deliverable: "Updated evidence matrix (new version, Phase 6 kept as the baseline)", owner: Data/BI Lead}
+  - {window: "61-90", focus: Updating management reporting, activity: "Add the new KPIs that now have data (footfall, conversion, OTIF, fill rate, confirmed-defect rate) to the dashboard; mark the rest as still unavailable.", issues: [ALL], actions: [], deliverable: "Dashboard release notes", owner: Data/BI}
+  - {window: "61-90", focus: Defining ongoing monitoring, activity: "Hand the early-warning requirements to the monitoring phase with owners, recipients and the calibration still to be done; check that the Home & Kitchen test is running as designed (compliance, guardrails). No test result is read before the end date in the analysis plan.", issues: [ALL], actions: [A20, A22], deliverable: "Monitoring specification; test execution check", owner: Data/BI Lead}
+  - {window: "61-90", focus: Decision gate (day 90), activity: "Evidence review keeps or changes the Home & Kitchen governance control and the promotion hold (the depth decision itself waits for the post-test gate, planned around day 150 to 180); agrees the next period's investigation list.", issues: [I5, ALL], actions: [A18, A21], deliverable: "Decision log entries; next-period plan", owner: Commercial Director}
+
+# ----------------------------------------------------------------------------- KPI monitoring framework
+# value_cy / value_py: placeholders to frozen facts, or empty when the KPI does not exist yet (never estimated).
+kpis:
+  - {id: K01, kpi: Net Revenue, definition: "Sales revenue minus refunds (governed Phase 4 definition)", purpose: "Headline performance", owner: Finance, frequency: Weekly, threshold: "Weekly YoY below the lower edge of its own recent weekly variation for 3 weeks: review. Band not calibrated yet.", source: "Sales and returns facts", availability: Available, exists: "Phase 7 measure [Net Revenue]", value_cy: "{nr_cy|eur2}", value_py: "{nr_py|eur2}", issues: [ALL]}
+  - {id: K02, kpi: Transactions, definition: "Distinct receipts", purpose: "Customer activity", owner: Retail Operations, frequency: Weekly, threshold: "Store-level signal EW01 and estate-level signal EW02.", source: "POS", availability: Available, exists: "Phase 7 measure [Transactions]", value_cy: "{tx_cy|int}", value_py: "{tx_py|int}", issues: [I1]}
+  - {id: K03, kpi: Cluster transaction gap vs matched controls, definition: "Transactions per store YoY in S03 to S05 and in the matched control stores, shown side by side; the Phase 6 difference-in-differences gives the gap", purpose: "Tracks the unresolved cluster loss", owner: Retail Operations, frequency: Weekly, threshold: "Gap widens, or a similar step appears elsewhere (EW01).", source: "POS", availability: Available, exists: "Phase 7 measure [Transactions YoY %] by Store[store_group]", value_cy: "{cl_tx_yoy|pct1} vs {mc_tx_yoy|pct1}; gap {cl_did_tx|pctv1} (Phase 6 D01, ESTIMATE)", value_py: "", issues: [I1]}
+  - {id: K04, kpi: Footfall, definition: "Visitors counted at store entrances", purpose: "Separates visits from purchases", owner: Retail Operations, frequency: Daily, threshold: "Define once data exists.", source: "Footfall counters", availability: Not available, exists: "No", value_cy: "", value_py: "", issues: [I1]}
+  - {id: K05, kpi: Conversion Rate, definition: "Transactions / footfall", purpose: "Shows whether visitors buy", owner: Retail Operations, frequency: Weekly, threshold: "Define once footfall exists.", source: "POS and footfall", availability: Not available, exists: "No (needs footfall)", value_cy: "", value_py: "", issues: [I1]}
+  - {id: K06, kpi: UPT, definition: "Units sold / transactions", purpose: "Basket size", owner: Commercial, frequency: Weekly, threshold: "Monitor only; no signal defined.", source: "POS", availability: Available, exists: "Phase 7 measure [UPT]", value_cy: "{upt_cy|dec2}", value_py: "{upt_py|dec2}", issues: [ALL]}
+  - {id: K07, kpi: ASP, definition: "Sales revenue / units sold", purpose: "Price and mix", owner: Commercial, frequency: Weekly, threshold: "Monitor only; no signal defined.", source: "POS", availability: Available, exists: "Phase 7 measure [ASP]", value_cy: "{asp_cy|eur2}", value_py: "{asp_py|eur2}", issues: [I5]}
+  - {id: K08, kpi: Gross Margin %, definition: "(Net revenue minus COGS) / net revenue (Phase 4 definition)", purpose: "Profitability", owner: Finance, frequency: Weekly by category, threshold: "Category gross margin % step down vs the same weeks last year (EW06).", source: "Sales, returns, cost", availability: Available, exists: "Phase 7 measure [Gross Margin %]", value_cy: "{gmpct_cy|pct1}", value_py: "{gmpct_py|pct1}", issues: [I5]}
+  - {id: K09, kpi: Availability, definition: "In-stock store-SKU-weeks / ranged store-SKU-weeks (weekly snapshot)", purpose: "Shelf availability", owner: Supply Chain, frequency: Weekly by category and supplier, threshold: "EW03.", source: "Inventory snapshots", availability: Available, exists: "Phase 7 measure [Availability]", value_cy: "{et_avail_cy|pct1} (Electronics & Tech)", value_py: "{et_avail_py|pct1} (Electronics & Tech)", issues: [I2, I3]}
+  - {id: K10, kpi: Full-week stock-outs, definition: "Store-SKU-weeks with zero stock all week", purpose: "Stock-outs that stop all sales", owner: Supply Chain, frequency: Weekly by SKU and supplier, threshold: "EW04.", source: "Inventory snapshots", availability: Available, exists: "Phase 7 measure [Full-Week Stock-Outs]", value_cy: "{et_full_cy|int} (Electronics & Tech)", value_py: "{et_full_py|int} (Electronics & Tech)", issues: [I2, I3]}
+  - {id: K11, kpi: Estimated lost sales, definition: "Expected sales during full-week stock-outs from an in-stock baseline (Phase 6 method)", purpose: "Sizes availability loss", owner: Data/BI, frequency: Per period review, threshold: "Not a routine alert: an ESTIMATE with a range.", source: "Phase 6 estimate", availability: "Available (analysis only, ESTIMATE)", exists: "Phase 6 electronics_lost_sales_totals.csv; Phase 7 measure [Lost Sales Gross (P6)]", value_cy: "{ls_gross|abseur} (ESTIMATE, change vs prior year)", value_py: "", issues: [I2]}
+  - {id: K12, kpi: Return Rate, definition: "Refund value / sales revenue", purpose: "Returns cost", owner: Finance, frequency: Weekly, threshold: "Monitor only at estate level; category signal EW05.", source: "Returns and sales", availability: Available, exists: "Phase 7 measure [Return Rate]", value_cy: "{rr_cy|pct2}", value_py: "{rr_py|pct2}", issues: [I4]}
+  - {id: K13, kpi: Faulty Return Rate, definition: "Items returned with reason 'Faulty' per 100 units sold, by sale month (recorded reason, not a verified defect)", purpose: "Quality signal", owner: Quality, frequency: Monthly by store and sale month, threshold: "EW05.", source: "Returns (linked to sale date) and sales", availability: Available, exists: "Phase 7 measure [Returned Units per 100 Sold (Sale Cohort)]", value_cy: "{fy_k202509|dec1} (Sep 2025 sales); {fy_k202511|dec1} (Nov 2025 sales)", value_py: "{fy_k202409|dec1} (Sep 2024 sales); {fy_k202411|dec1} (Nov 2024 sales)", issues: [I4]}
+  - {id: K14, kpi: Confirmed defect rate, definition: "Returned items confirmed defective by inspection / items inspected", purpose: "Separates real defects from recording", owner: Quality, frequency: Monthly, threshold: "Define once inspection data exists.", source: "QA inspection", availability: Not available, exists: "No", value_cy: "", value_py: "", issues: [I4]}
+  - {id: K15, kpi: Promotion Share, definition: "Promoted sales revenue / sales revenue", purpose: "Reliance on promotions", owner: Commercial / Trading, frequency: Weekly by category, threshold: "Above the approved plan (EW07).", source: "POS and promotion master", availability: Available, exists: "Phase 7 measure [Promotion Share]", value_cy: "{hk_promo_cy|pct1} (Home & Kitchen)", value_py: "{hk_promo_py|pct1} (Home & Kitchen)", issues: [I5]}
+  - {id: K16, kpi: Discount Rate, definition: "Discount value / gross sales", purpose: "Depth of discounting", owner: Commercial / Trading, frequency: Weekly by category, threshold: "Above the approved plan (EW07).", source: "POS", availability: Available, exists: "Phase 7 measure [Discount Rate]", value_cy: "{hk_disc_cy|pct1} (Home & Kitchen)", value_py: "{hk_disc_py|pct1} (Home & Kitchen)", issues: [I5]}
+  - {id: K17, kpi: Promotion Incrementality, definition: "Net revenue and margin in the test arm minus the comparison arm during and after the promotion period", purpose: "Whether promotions add value", owner: Commercial / Trading, frequency: Per test, threshold: "Decision rule set in the test analysis plan.", source: "Controlled test", availability: Not available, exists: "No (Phase 6 methods disagree in sign, so no value is reported)", value_cy: "", value_py: "", issues: [I5]}
+  - {id: K18, kpi: Supplier OTIF, definition: "PO lines delivered on time and in full / PO lines due", purpose: "Supplier delivery performance", owner: Supply Chain, frequency: Weekly by supplier, threshold: "Define once data exists (contract service level as the reference).", source: "ERP / EDI", availability: Not available, exists: "No", value_cy: "", value_py: "", issues: [I3]}
+  - {id: K19, kpi: Supplier Fill Rate, definition: "Units received / units ordered", purpose: "Supplier supply completeness", owner: Supply Chain, frequency: Weekly by supplier, threshold: "Define once data exists.", source: "ERP", availability: Not available, exists: "No", value_cy: "", value_py: "", issues: [I3]}
+  - {id: K20, kpi: Forecast Accuracy, definition: "1 minus weighted absolute percentage error of SKU-week demand forecasts", purpose: "Ordering quality", owner: Supply Chain, frequency: Weekly, threshold: "Define once forecasts are available.", source: "Forecasting system", availability: Not available, exists: "No", value_cy: "", value_py: "", issues: [I3]}
+
+# ----------------------------------------------------------------------------- early-warning requirements
+# Specification for a later monitoring phase. Thresholds are CONCEPTS: none has been calibrated or tested,
+# and none should be set without back-testing false-alarm and detection rates on history.
+early_warning:
+  - {id: EW01, signal: Store transaction deterioration, metric: "Transactions per store YoY, store vs its matched peer stores", grain: "Store-week (daily for the change-point check)", baseline: "The store's own gap to its peers over the previous 13 weeks", threshold: "A step change in the gap that persists (change-point test as in Phase 6); size and persistence rules to be calibrated", frequency: Weekly, owner: Data/BI, recipient: "Head of Retail; area manager", response: "Area manager checks for a local or operational change within one week; investigation opened if unexplained", data_now: Yes, motivated_by: "I1: the cluster loss was found at half-year; a weekly check could flag a similar step within weeks"}
+  - {id: EW02, signal: Estate transaction deterioration, metric: "Estate transactions YoY", grain: Week, baseline: "Rolling 13-week YoY", threshold: "Sustained move beyond the normal weekly range; to be calibrated", frequency: Weekly, owner: Data/BI, recipient: "Head of Retail; Finance Director", response: "Review at the weekly trading meeting", data_now: Yes, motivated_by: "Headline decline"}
+  - {id: EW03, signal: Availability deterioration, metric: "Availability by category and by supplier", grain: Week, baseline: "Same weeks last year and the previous 8 weeks", threshold: "Below both baselines for 4 consecutive weeks (concept); to be calibrated", frequency: Weekly, owner: Supply Chain, recipient: "Supply Chain Manager; category buyer", response: "Replenishment review of the affected supplier's SKUs", data_now: Yes, motivated_by: "I2: Electronics availability fell over H2 2025"}
+  - {id: EW04, signal: Stock-out spike on top sellers, metric: "Full-week stock-outs and weeks of cover on the top {high_seller_share|pct0} of SKUs by sales", grain: Store-SKU-week (daily once DR12 exists), baseline: "Prior-year level for the same SKUs", threshold: "Any top-seller SKU with a full-week stock-out in 2 consecutive weeks (concept)", frequency: Weekly, owner: Supply Chain (replenishment), recipient: Replenishment planner, response: "Expedite or rebalance stock; log the cause", data_now: Yes, motivated_by: "I2: lost sales concentrate in a few high-selling SKUs"}
+  - {id: EW05, signal: Return-rate increase by reason, metric: "'Faulty' returned units per 100 sold, by store, supplier and sale month", grain: Store-month, baseline: "Same store's prior-year rate", threshold: "Rate increase unlikely under the prior-year rate (a conditional binomial test as in Phase 6); significance level and minimum volume to be set", frequency: Monthly, owner: Quality, recipient: "Quality lead; store operations manager", response: "Hold returns for inspection in the flagged store; check recording practice", data_now: Yes, motivated_by: "I4: 'Faulty' returns concentrated in five stores"}
+  - {id: EW06, signal: Margin deterioration, metric: "Gross margin % by category", grain: Category-week, baseline: "Same weeks last year", threshold: "A step down that persists for 4 weeks (concept); to be calibrated", frequency: Weekly, owner: Finance, recipient: "Finance Director; category manager", response: "Split into price, mix, promotion and cost effects", data_now: Yes, motivated_by: "I5: Home & Kitchen margin fell with deeper promotions"}
+  - {id: EW07, signal: Unusual promotion behaviour, metric: "Discount rate, promotion share and promotion events by category", grain: Category-week, baseline: "The approved promotion plan (once DR29 exists); prior year until then", threshold: "Actual above plan by an agreed tolerance (to be set by Commercial)", frequency: Weekly, owner: Commercial / Trading, recipient: "Commercial Director", response: "Check the promotion has an objective and a review (A18)", data_now: Partial, motivated_by: "I5: discount depth rose sharply"}
+  - {id: EW08, signal: Data completeness, metric: "Receipts per store-day and returns per store-day against expected ranges; missing snapshots", grain: Store-day, baseline: "Same weekday over the previous 8 weeks", threshold: "Zero or near-zero counts on a trading day (concept)", frequency: Daily, owner: Data/BI, recipient: Data/BI Lead, response: "Check the data feed before anyone reads the dashboard", data_now: Yes, motivated_by: "All issues: monitoring is only as good as the feed (and A01 checks this for the cluster)"}
+
+# ----------------------------------------------------------------------------- evidence-to-action matrix
+# driver: the Phase 6 row whose evidence level applies (looked up); `tag` is the figure's own evidence tag.
+evidence_to_action:
+  - {id: E01, finding: "H2 net revenue fell from {nr_py|eur2} to {nr_cy|eur2} ({nr_change|eur2}, {nr_yoy|pct6})", driver: null, tag: FACT,
+     interpretation: "The decline is real and reconciles to the cent across Phases 4 to 7.",
+     permitted: "Net revenue fell by this amount in the week-aligned H2 comparison.",
+     not_permitted: "Any statement of why it fell, from this number alone.",
+     next_step: "Use it as the fixed baseline for every later review."}
+  - {id: E02, finding: "Attribution: cluster {d01_eur|eur}, stock-outs {d03_eur|eur}, 'Faulty' returns {d05_eur|eur}, Home & Kitchen {d07_eur|eur}, residual {d09_eur|eur}; total {att_total|eur2}", driver: null, tag: ESTIMATE,
+     interpretation: "An exclusive split of the decline into estimated components plus a remainder.",
+     permitted: "Each component is an estimate of how much of the change sits with that driver, without double counting.",
+     not_permitted: "Adding other estimates (for example the other promotion methods or the stock-out upper bound) to it; reading a component as proof of its cause.",
+     next_step: "Quote components with their evidence level every time."}
+  - {id: E03, finding: "S03 to S05 transactions per store {cl_tx_yoy|pct1} vs {mc_tx_yoy|pct1} in matched controls; step change on {cl_onset|date}", driver: D01, tag: FACT,
+     interpretation: "A sudden loss of receipts specific to three stores, still present at the end of the data.",
+     permitted: "Three stores lost receipts relative to comparable stores from mid-July 2025; the excess decline is estimated at {d01_eur|eur}.",
+     not_permitted: "That footfall fell (there is no footfall data); that a competitor, local event, staffing or customer behaviour caused it.",
+     next_step: "Investigate in stages: data completeness, store operations, footfall and conversion, local environment, customers (A01 to A04)."}
+  - {id: E04, finding: "External or local cause of the cluster loss", driver: D02, tag: HYPOTHESIS,
+     interpretation: "The pattern fits an outside cause, but an unrecorded internal change fits equally.",
+     permitted: "An external or unrecorded operational cause is a hypothesis consistent with the data.",
+     not_permitted: "Naming any cause, or acting as if one were known.",
+     next_step: "Collect DR01 to DR11; hold targeted spend (A06)."}
+  - {id: E05, finding: "Full-week stock-outs in Electronics & Tech rose from {et_full_py|int} to {et_full_cy|int}; no sales in those weeks", driver: D03, tag: FACT,
+     interpretation: "Root-cause evidence for lost sales during observed full-week stock-outs.",
+     permitted: "Full-week stock-outs caused lost sales, estimated at {ls_gross|abseur} gross, {ls_net|abseur} net of deferred demand.",
+     not_permitted: "That the supplier failed; that fixing availability will return {ls_gross|abseur} (it is a historical estimate, not a forecast).",
+     next_step: "Low-risk replenishment controls now (A07, A08); investigate supply vs ordering (A10)."}
+  - {id: E06, finding: "Voltix SKUs hold {ls_voltix_share|pct0} of the lost sales; their stock-out rate rose {vx_rate_diff|pp1u} more than other suppliers'", driver: D04, tag: STATISTICAL ASSOCIATION,
+     interpretation: "Stock-out concentration is associated with Voltix SKUs. Available data cannot determine whether the cause was supplier performance or Brightwater ordering/replenishment.",
+     permitted: "Stock-out concentration is associated with Voltix SKUs.",
+     not_permitted: "Supplier failure, without purchase order and ASN evidence; that Brightwater's ordering was at fault, equally.",
+     next_step: "Order-to-receipt review (A10); no supplier sanction until then (A12)."}
+  - {id: E07, finding: "Electronics 'Faulty' refunds up {fy_change|abseur} ({fy_yoy|spct0}), concentrated in {fy_stores|text} and in items sold from September 2025", driver: D05, tag: FACT,
+     interpretation: "An observed change in a recorded till reason.",
+     permitted: "More Electronics refunds were recorded as 'Faulty', mainly in five stores and recent sale months.",
+     not_permitted: "That the products are defective; that a supplier shipped a bad batch.",
+     next_step: "Hold returns for inspection with batch capture (A13); audit recording practice (A14)."}
+  - {id: E08, finding: "Product defect vs recording practice behind 'Faulty' returns", driver: D06, tag: HYPOTHESIS,
+     interpretation: "Either explanation fits; no QA data either way.",
+     permitted: "A product-quality problem and a recording change are both hypotheses.",
+     not_permitted: "Choosing one without inspection, batch or RMA evidence.",
+     next_step: "Classification framework (A13 to A16)."}
+  - {id: E09, finding: "Home & Kitchen discount rate {hk_disc_py|pct1} to {hk_disc_cy|pct1}; events {hk_ev_py|int} to {hk_ev_cy|int}", driver: null, tag: FACT,
+     interpretation: "The promotion programme became much deeper and more frequent.",
+     permitted: "Promotion depth and frequency rose sharply.",
+     not_permitted: "That this rise was a mistake or a success, from the rise alone.",
+     next_step: "Promotion review (A19) and governance control (A18)."}
+  - {id: E10, finding: "Home & Kitchen promotion effect: M1 {m1|seur}, M4 {m4|seur}, M2 {m2|seur}, M3 {m3|seur}", driver: D07, tag: ESTIMATE,
+     interpretation: "Promotion activity is associated with the Home & Kitchen decline, but causality is not established. The methods disagree in sign.",
+     permitted: "Promotion activity is associated with the Home & Kitchen decline.",
+     not_permitted: "That promotions caused the category decline; summing or averaging the four methods into one promotion impact.",
+     next_step: "Controlled depth test (A20); no blanket change meanwhile (A21)."}
+  - {id: E11, finding: "Outside the cluster, continuing Electronics SKUs {d08_continuing|eur}; new SKUs {d08_new|seur}; delisted {d08_delisted|eur}", driver: D08, tag: FACT,
+     interpretation: "A partition of the change; the decline sits in continuing SKUs.",
+     permitted: "Continuing SKUs sold less per ranged week while new SKUs added revenue.",
+     not_permitted: "That customers switched to new models (a hypothesis); delisting continuing SKUs on this evidence.",
+     next_step: "Monthly range split with range-plan dates (A23)."}
+  - {id: E12, finding: "Residual {d09_eur|eur} ({d09_share|pct0}) not attributed", driver: D09, tag: NOT ATTRIBUTED,
+     interpretation: "Part of the decline has no identified driver; it also carries the uncertainty of the estimates.",
+     permitted: "UNEXPLAINED / NOT ATTRIBUTED.",
+     not_permitted: "Assigning it to any driver to make the explanation complete.",
+     next_step: "Residual decomposition (A24); no operational action."}
+  - {id: E13, finding: "Scenario values for stock-outs (see the impact framework)", driver: D03, tag: SCENARIO,
+     interpretation: "Restatements of the H2 2025 estimate under stated assumptions.",
+     permitted: "Under the stated assumptions, about this much of the H2 2025 loss would have been avoided.",
+     not_permitted: "A forecast, a target or a promised recovery.",
+     next_step: "Measure the effect of the controls instead (61 to 90 days)."}
+
+# ----------------------------------------------------------------------------- decision log (template, first entries)
+# Dates and results are left empty on purpose: they are filled when management takes the decision.
+decision_log:
+  - {id: DL-001, issue: I1, decision: "Hold price, promotion and local-marketing responses aimed at S03 to S05 until a cause is identified", evidence: "Phase 6 D01 (Observed change) and D02 (Hypothesis); cause UNRESOLVED", driver: D01, owner: Commercial, expected: "No spend on an unverified cause; clean measurement later", kpi: Cluster transaction gap vs controls, review: "Day 60"}
+  - {id: DL-002, issue: I1, decision: "Open the staged cluster investigation (A01 to A04)", evidence: "Phase 6 D01 and D02", driver: D02, owner: Retail Operations, expected: "Cause named or confirmed UNRESOLVED by day 60", kpi: Hypotheses tested, review: "Day 30"}
+  - {id: DL-003, issue: I2, decision: "Start the zero-stock exception list and reorder-point review for top-selling Electronics SKUs", evidence: "Phase 6 D03 (Root-cause evidence for the stock-out mechanism)", driver: D03, owner: Supply Chain (replenishment), expected: "Fewer full-week stock-outs on listed SKUs (to be measured, not assumed)", kpi: Full-week stock-outs on listed SKUs, review: "Day 30"}
+  - {id: DL-004, issue: I3, decision: "No supplier sanction for Voltix until the order-to-receipt review is complete", evidence: "Phase 6 D04 (Statistical association)", driver: D04, owner: Commercial, expected: "Responsibility decided on order and delivery evidence", kpi: Fill rate and OTIF (new), review: "Day 60"}
+  - {id: DL-005, issue: I4, decision: "Hold 'Faulty' Electronics returns in the five stores for inspection, with batch capture", evidence: "Phase 6 D05 (Observed change) and D06 (Hypothesis)", driver: D05, owner: Quality, expected: "Defect vs recording question answerable", kpi: Units inspected; confirmed-defect rate, review: "Day 30"}
+  - {id: DL-006, issue: I5, decision: "No blanket change to Home & Kitchen promotion depth; governance control on deeper promotions; design a controlled depth test", evidence: "Phase 6 D07 (Statistical association; methods disagree in sign)", driver: D07, owner: Commercial Director, expected: "Promotion depth decided on test evidence at the post-test gate", kpi: Test vs comparison arm net revenue and margin, review: "Day 90 after approval (control and hold); post-test gate (depth)"}
+  - {id: DL-007, issue: I7, decision: "Keep the residual labelled NOT ATTRIBUTED; decompose it analytically", evidence: "Phase 6 D09 (not attributed)", driver: D09, owner: Data/BI Lead, expected: "No forced explanation", kpi: Unattributed share, review: "Day 60"}
+  - {id: DL-008, issue: ALL, decision: "Adopt the decision log and monthly evidence review", evidence: "Phase 8 framework", driver: null, owner: Data/BI Lead, expected: "Every decision records its evidence level", kpi: Decisions logged, review: "Day 30"}
+
+# ----------------------------------------------------------------------------- business impact framework
+# Three separate columns. A historical estimate is never relabelled as recoverable value.
+impact:
+  - {issue: I1, observed: "Transactions per store {cl_tx_yoy|pct1} vs {mc_tx_yoy|pct1} in matched controls (FACT)", estimated: "Excess decline {d01_eur|eur}, range {cl_high|eur} to {cl_low|eur} (ESTIMATE)", recoverable: Not estimated, recoverable_reason: "The cause is unknown. Some causes (a lasting change in the local market) may not be recoverable at all; others (a store-side problem) may be. No figure until the cause is known."}
+  - {issue: I2, observed: "Availability {et_avail_py|pct1} to {et_avail_cy|pct1}; full-week stock-outs {et_full_py|int} to {et_full_cy|int} (FACT)", estimated: "Lost sales {ls_gross|abseur} gross, {ls_net|abseur} net of deferred demand; range {ls_low|abseur} to {ls_high|abseur} (ESTIMATE)", recoverable: Scenario only, recoverable_reason: "The mechanism is known, so the historical estimate can be restated as avoidable loss under assumptions; whether any future value exists depends on the cause being controllable (I3) and on the controls working, which is measured, not assumed. See the scenarios."}
+  - {issue: I3, observed: "Voltix episodes {vx_ep_py|int} to {vx_ep_cy|int}; mean length {vx_len_py|dec1} to {vx_len_cy|dec1} weeks (FACT)", estimated: "{ls_voltix|abseur} of the lost-sales estimate (part of I2, ESTIMATE)", recoverable: Not estimated, recoverable_reason: "Included in I2's scenarios; counting it again would double count."}
+  - {issue: I4, observed: "'Faulty' refunds up {fy_change|abseur} ({fy_yoy|spct0}) (FACT)", estimated: "{d05_eur|eur} in the attribution; range {d05_eur|eur} to {fy_range_low|eur} by rate basis", recoverable: Not estimated, recoverable_reason: "Refunds are a recorded cost, but whether any of it is avoidable depends on the cause: a verified defect may support supplier claims (a cost recovery, not revenue); a recording change has no revenue effect at all."}
+  - {issue: I5, observed: "Discount rate {hk_disc_py|pct1} to {hk_disc_cy|pct1}; category net revenue {hk_change|eur} (FACT)", estimated: "M1 {m1|seur}, M4 {m4|seur}, M2 {m2|seur}, M3 {m3|seur}: shown separately, never combined (ESTIMATE)", recoverable: Not estimated, recoverable_reason: "The methods disagree in sign, so even the direction of any recoverable value is unknown until a controlled test is run."}
+  - {issue: I6, observed: "Continuing SKUs {d08_continuing|eur}; new SKUs {d08_new|seur}; delisted {d08_delisted|eur} (FACT)", estimated: "Not quantified (a partition, not an estimate)", recoverable: Not estimated, recoverable_reason: "No driver identified."}
+  - {issue: I7, observed: "Not applicable", estimated: "{d09_eur|eur}: the remainder of the attribution (NOT ATTRIBUTED)", recoverable: Not estimated, recoverable_reason: "UNEXPLAINED / NOT ATTRIBUTED: nothing to recover until a driver is identified."}
+
+scenarios:
+  intro: >-
+    The scenarios restate the historical estimate under stated assumptions: how much of the H2 2025 loss would
+    have been avoided. They describe the past half-year only; they are not forecasts of any future period, not
+    targets and not a promised recovery. Values are rounded, in sales revenue before the cost of holding more
+    stock. Only I2 has scenarios, because it is the only issue with a known mechanism.
+  rows:
+    - {issue: I2, scenario: Conservative, value: "{ls_zero|eur}", assumption: "Nothing is treated as avoidable until the order data (A10) shows the cause was within Brightwater's control and the controls (A07, A08) show a measured effect.", basis: "Assumption"}
+    - {issue: I2, scenario: "Full elimination (best case)", value: "about {ls_net|abseurk}", assumption: "Every full-week stock-out in H2 2025 removed (the prior-year level was {et_full_py|int}); only demand that did not come back after restock counts as avoidable ({ls_deferred|abseurk} came back and is already in H2 2025 revenue); no substitution to other SKUs.", basis: "Phase 6 lost sales net of deferred demand (ESTIMATE)"}
+    - {issue: I2, scenario: "Upper: not provided", value: "n/a", assumption: "No higher figure is avoidable value: the gross estimate ({ls_gross|abseurk}) and the sensitivity high ({ls_high|abseurk}) include demand that came back after restock, and the partial-week upper bound ({ls_upper_bound|abseurk}) is not evidence.", basis: "Phase 6 sensitivity analysis"}
+  margin_note: >-
+    On the gross estimate the margin at stake is about {ls_margin|abseurk} at the category line-margin rate
+    (Phase 6 scenario B): the profit effect is much smaller than the sales figure.
+
+# ----------------------------------------------------------------------------- investigation frameworks
+frameworks:
+  cluster_sequence:
+    title: Store-cluster investigation sequence (I1)
+    note: "Each step is cheap before the next is costly; stop when a step explains the step change on {cl_onset|date}. No cause is assumed."
+    steps:
+      - {step: 1, question: "Is the receipt loss real?", data: [DR01], supports: "Counts match settlement: the loss is real, go to step 2.", otherwise: "Counts differ: a data-capture problem; fix the feed and restate the figures before anything else."}
+      - {step: 2, question: "Did the stores themselves change around mid-July?", data: [DR02, DR03, DR06], supports: "A dated change (shorter hours, closure, refit, lost staff, tills down) that matches the change point in each store.", otherwise: "No store-side change found: go to step 3."}
+      - {step: 3, question: "Fewer visitors, or fewer buyers among visitors?", data: [DR04, DR05], supports: "Historical footfall down by a similar amount: the cause is outside the store's door (go to step 4). Conversion down: the cause is inside (return to step 2 with this evidence).", otherwise: "No historical footfall: the July split cannot be recovered; use proxies for the past, install counters for the present, and go to step 4 with the question open."}
+      - {step: 4, question: "Did the local environment change?", data: [DR07, DR08], supports: "A dated competitor opening, road or access works, parking or transport change near all three stores, matching the change point.", otherwise: "Nothing found: go to step 5."}
+      - {step: 5, question: "Where did the customers go?", data: [DR09, DR10, DR11], supports: "Loyal customers from these stores now shop at another Brightwater store or online, or have stopped visiting; complaints or scores changed.", otherwise: "No customer-level data: the cause stays UNRESOLVED."}
+      - {step: 6, question: "Decision (day-60 gate)", data: [], supports: "Name the cause with its evidence level and choose the response (see I1's decision after investigation).", otherwise: "Keep it reported as UNRESOLVED, keep monitoring (EW01), and do not assign a cause."}
+  inventory_checks:
+    title: Electronics inventory investigation (I2, I3)
+    note: "Each check points either to supply (the supplier delivered less or later than ordered) or to ordering (Brightwater ordered or allocated less). Neither is assumed."
+    rows:
+      - {check: Purchase orders, question: "What quantities were ordered, and when?", supply: "Orders kept pace with sales", ordering: "Order quantities or frequency fell", data: DR15}
+      - {check: Supplier confirmations and ASNs, question: "What did the supplier confirm and ship?", supply: "Confirmed or shipped less than ordered", ordering: "Shipped what was ordered", data: DR16}
+      - {check: Fill rate, question: "Units received / units ordered", supply: "Fill rate fell", ordering: "Fill rate stable", data: DR17}
+      - {check: OTIF, question: "Lines on time and in full", supply: "OTIF fell", ordering: "OTIF stable", data: DR17}
+      - {check: Lead times and late deliveries, question: "Did order-to-receipt time lengthen?", supply: "Lead time longer than agreed", ordering: "Lead time unchanged", data: DR18}
+      - {check: Order quantity vs parameters, question: "Did orders follow the parameters in force?", supply: "Orders followed the parameters", ordering: "Parameters or overrides cut quantities", data: DR19}
+      - {check: Forecast accuracy, question: "Did forecasts under-call demand for these SKUs?", supply: "Forecasts accurate", ordering: "Forecasts too low", data: DR20}
+      - {check: Reorder points and safety stock, question: "Were they changed, or out of date for current sales?", supply: "Adequate and unchanged", ordering: "Lowered or stale", data: DR19}
+      - {check: DC availability, question: "Was stock missing at the DC or only in stores?", supply: "Missing at the DC", ordering: "At the DC but not sent to stores", data: DR13}
+      - {check: Store replenishment and allocation rules, question: "Did allocation starve some stores?", supply: "Allocation normal", ordering: "Rules or frequency changed", data: DR14}
+      - {check: Supplier service levels, question: "Any known constraint or breach of contracted service?", supply: "Supplier notified a constraint", ordering: "No constraint notified", data: DR21}
+  returns_classification:
+    title: "'Faulty' returns classification framework (I4)"
+    note: "Each explanation predicts a different pattern. Choose one only when its evidence is present and the others' is absent."
+    rows:
+      - {explanation: Product quality, evidence_for: "Confirmed-defect rate in the five stores clearly above the comparison stores; defects across batches of the same SKUs; warranty and RMA rates rise too", evidence_against: "Confirmed-defect and no-fault-found rates similar to the comparison stores", data: "DR22, DR24, DR25"}
+      - {explanation: Specific batch, evidence_for: "Confirmed defects share batch or lot numbers; the rise follows when that batch was sold", evidence_against: "Defects spread across batches", data: "DR23, DR22"}
+      - {explanation: Supplier issue, evidence_for: "Confirmed defects concentrate on one supplier; the supplier's RMA data shows the same pattern elsewhere. Phase 6: the largest supplier holds {fy_top_supplier_share|pct0} of the increase in the significant stores", evidence_against: "Phase 6: all four suppliers rose in the same stores, so a store- or distribution-side cause cannot be excluded either", data: "DR24, DR25"}
+      - {explanation: Classification behaviour, evidence_for: "The five stores changed guidance, systems or staff; 'Faulty' used where other reasons would apply; inspection finds no fault", evidence_against: "Consistent coding practice across stores", data: "DR26, DR22"}
+      - {explanation: Store process, evidence_for: "Handling, storage or display damage in those stores (for example a shared delivery route or stockroom issue)", evidence_against: "No process difference found", data: "DR26, DR28"}
+      - {explanation: Customer behaviour, evidence_for: "Complaints or return notes show a change in how customers use or return items (for example a local policy being used)", evidence_against: "Complaints unchanged", data: "DR27"}
+      - {explanation: Another cause, evidence_for: "None of the above fits", evidence_against: "n/a", data: "Keep UNRESOLVED; continue EW05"}
+  promotion_framework:
+    title: Home & Kitchen promotion decision framework (I5)
+    rows:
+      - {topic: Incrementality, question: "Did promotions add sales that would not otherwise have happened?", now: "Unknown: point estimates disagree in sign ({m4|seur} to {m2|seur})", measure: "Test vs comparison arm (K17)"}
+      - {topic: Cannibalisation, question: "Did promoted SKUs take sales from other SKUs in the category?", now: "Phase 6 event study found none measurable ({hk_cannib_cy|abseur} in both years, ESTIMATE), but its baselines are contaminated, so this is weak evidence", measure: "Category-level test outcome, not SKU-level uplift"}
+      - {topic: Pull-forward, question: "Did customers buy earlier rather than more?", now: "Post-promotion shortfall estimated at {hk_dip_py|abseur} (H2 2024) and {hk_dip_cy|abseur} (H2 2025), ESTIMATE", measure: "Post-period of at least 4 weeks in the test"}
+      - {topic: Baseline selection, question: "What would sales have been without the promotion?", now: "Contaminated: {m3_contam|pct0} of current-year events follow another promotion", measure: "The comparison arm provides the baseline"}
+      - {topic: Margin impact, question: "Did promotions add or remove gross margin?", now: "M1 gross margin effect {m1_gm|seur} (ESTIMATE); discount cost {hk_disc_cost_py|abseur} to {hk_disc_cost_cy|abseur} (FACT)", measure: "Gross margin per store-week in the test, after supplier funding"}
+      - {topic: Basket attachment, question: "Did promoted items bring other purchases?", now: "Not measured", measure: "Basket analysis of test stores (transactions with vs without a promoted H&K item)"}
+      - {topic: Customer segment, question: "Which customers respond?", now: "Not measurable without customer data", measure: "Loyalty data if available (DR10, DR35)"}
+      - {topic: Promotion objective, question: "What was each promotion for?", now: "Not recorded in the data", measure: "Promotion review (A19) and governance control (A18)"}
+      - {topic: Control groups, question: "Against what do we judge a promotion?", now: "Phase 6 used control categories in the same store-weeks", measure: "Randomised comparison arm (stores or time periods)"}
+      - {topic: Elasticity, question: "How do volumes respond to depth?", now: "M1: units {m1_units|pct1} against control categories (CI {m1_units_ci_low|pct1} to {m1_units_ci_high|spct1}, not significant) while price fell, so the fall was mostly price; elasticity not estimated", measure: "Two depth arms in the test if store numbers allow"}
+      - {topic: Post-promotion behaviour, question: "What happens after the promotion ends?", now: "See pull-forward", measure: "Test post-period"}
+  test_design:
+    title: Controlled test of Home & Kitchen promotion depth (design outline for approval)
+    items:
+      - "Question: does the current Home & Kitchen promotion depth add net revenue and gross margin, compared with the prior-year depth?"
+      - "Arms: a test arm at the current depth and a comparison arm at the prior-year depth. The comparison arm still runs promotions (it is a lower-depth arm, not a no-promotion holdout)."
+      - "What varies: only in-store, unadvertised mechanics (shelf-edge depth and multibuys on Home & Kitchen lines not in the national flyer or online), because nationally advertised prices must be the same in every store. Marketing and legal (price-display and consumer-protection rules) sign off the design before launch."
+      - "Units and assignment: stores, excluding S03 to S05 (their unresolved traffic loss would contaminate the comparison). Stores close enough to share customers go to the same arm (cluster randomisation) to limit cross-shopping; clusters are paired on prior-year Home & Kitchen sales and, where possible, region and format, and one of each pair is assigned at random. If store numbers are too small, use a time switchback instead (alternating depth by fortnight in all stores)."
+      - "Duration: one full promotion cycle, planned at 8 to 12 weeks, plus a post-period of at least 4 weeks to measure pull-forward. Launch in days 31 to 60, so the result arrives after day 90."
+      - "Primary metrics: Home & Kitchen net revenue and gross margin per store-week (after supplier funding). Secondary: units, basket attachment, other-category sales in the same baskets."
+      - "Analysis: difference-in-differences against the pre-period, written before launch; confidence intervals reported; no early stopping except on a guardrail."
+      - "Power: with {n_test_stores|int} eligible stores the test can detect only large effects; if the pre-test power check says it cannot detect an effect of the size in question, extend the duration or run the test twice rather than read a weak result."
+      - "Guardrails: stop an arm if gross margin or availability falls outside an agreed limit; stores must not add local promotions during the test."
+      - "Decision (post-test gate, planned around day 150 to 180): keep the depth the test shows adds margin; move towards the prior-year depth only where the test shows it loses margin; if the result is inconclusive, keep the current depth under the governance control (A18) and extend or repeat the test. Record the decision and the evidence in the decision log."
+  residual_dimensions:
+    title: Residual investigation framework (I7)
+    note: "The residual stays labelled UNEXPLAINED / NOT ATTRIBUTED unless a new driver meets the Phase 6 evidence standard."
+    rows:
+      - {dimension: Store, check: "Which stores outside the cluster hold it?", data: "Existing model"}
+      - {dimension: Category, check: "Which category (Electronics continuing SKUs hold most of it)?", data: "Existing model"}
+      - {dimension: Product, check: "Which SKUs; are they the same as the stock-out SKUs?", data: "Existing model"}
+      - {dimension: Week, check: "Does it start at a date (a step) or build gradually?", data: "Existing model"}
+      - {dimension: Price, check: "Did ASP move on the affected SKUs?", data: "Existing model"}
+      - {dimension: Mix, check: "Did the sales mix shift to cheaper SKUs?", data: "Existing model"}
+      - {dimension: Returns, check: "Do returns other than 'Faulty' explain any of it?", data: "Existing model"}
+      - {dimension: Availability, check: "Do partial-week stock-outs explain it?", data: "DR12 (daily stock)"}
+      - {dimension: Customer behaviour, check: "Did customers switch models or channels?", data: "DR35, DR11"}
+      - {dimension: Data quality, check: "Any gaps, late loads or quarantined rows concentrated in the affected stores or weeks?", data: "Phase 3 data-quality outputs"}

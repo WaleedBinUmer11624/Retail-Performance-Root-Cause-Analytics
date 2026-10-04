@@ -1,0 +1,5 @@
+level,x,y,n,pearson_r,pearson_p,spearman_rho,spearman_p,significant_at_alpha,evidence_label,note
+Store,availability change (pp),net revenue YoY %,20,-0.237513,0.3133,-0.299248,0.19994,False,Statistical association,Correlation across segments; does not establish that one causes the other.
+Category,availability change (pp),net revenue YoY %,7,0.625679,0.132868,0.0,1.0,False,Statistical association,Correlation across segments; does not establish that one causes the other.
+Store x Category,availability change (pp),net revenue YoY %,140,0.097233,0.253093,0.017743,0.835174,False,Statistical association,Correlation across segments; does not establish that one causes the other.
+Store x Category,change in estimated lost sales (EUR),net revenue change (EUR),140,-0.331059,6.5e-05,-0.304693,0.000252,True,Statistical association,Correlation across segments; does not establish that one causes the other.

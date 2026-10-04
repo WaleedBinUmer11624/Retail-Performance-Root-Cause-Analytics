@@ -1,0 +1,53 @@
+table forecast_model_comparison
+
+	column model
+		dataType: string
+		sourceColumn: model
+		isKey
+
+	column family
+		dataType: string
+		sourceColumn: family
+
+	column origins
+		dataType: int64
+		summarizeBy: none
+		sourceColumn: origins
+
+	column mean_mae
+		dataType: double
+		summarizeBy: none
+		sourceColumn: mean_mae
+
+	column mean_rmse
+		dataType: double
+		summarizeBy: none
+		sourceColumn: mean_rmse
+
+	column mean_wape
+		dataType: double
+		summarizeBy: none
+		sourceColumn: mean_wape
+
+	column mean_mase
+		dataType: double
+		summarizeBy: none
+		sourceColumn: mean_mase
+
+	column mean_bias
+		dataType: double
+		summarizeBy: none
+		sourceColumn: mean_bias
+
+	partition forecast_model_comparison = m
+		mode: import
+		source =
+			let
+			    Source = Csv.Document(File.Contents(ForecastFolder & "\forecast_model_comparison.csv"),
+			                          [Delimiter = ",", Encoding = 65001, QuoteStyle = QuoteStyle.Csv]),
+			    Promoted = Table.PromoteHeaders(Source, [PromoteAllScalars = true]),
+			    Typed = Table.TransformColumnTypes(Promoted, {
+			        {"model", type text}, {"family", type text}, {"origins", Int64.Type}, {"mean_mae", type number}, {"mean_rmse", type number}, {"mean_wape", type number}, {"mean_mase", type number}, {"mean_bias", type number}
+			    }, "en-US")
+			in
+			    Typed

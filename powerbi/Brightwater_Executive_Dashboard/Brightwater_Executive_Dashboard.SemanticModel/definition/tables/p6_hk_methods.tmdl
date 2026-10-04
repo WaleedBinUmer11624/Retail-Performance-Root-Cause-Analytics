@@ -1,0 +1,62 @@
+table p6_hk_methods
+
+	column sort_order
+		dataType: int64
+		summarizeBy: none
+		sourceColumn: sort_order
+
+	column method_code
+		dataType: string
+		sourceColumn: method_code
+
+	column method
+		dataType: string
+		sourceColumn: method
+
+	column effect_eur
+		dataType: double
+		summarizeBy: none
+		sourceColumn: effect_eur
+
+	column ci_low
+		dataType: double
+		summarizeBy: none
+		sourceColumn: ci_low
+
+	column ci_high
+		dataType: double
+		summarizeBy: none
+		sourceColumn: ci_high
+
+	column interval_type
+		dataType: string
+		sourceColumn: interval_type
+
+	column direction
+		dataType: string
+		sourceColumn: direction
+
+	column detail
+		dataType: string
+		sourceColumn: detail
+
+	partition p6_hk_methods = m
+		mode: import
+		source =
+			let
+			    Source = Csv.Document(File.Contents(AnalyticsFolder & "\p6_hk_methods.csv"),
+			                          [Delimiter = ",", Encoding = 65001, QuoteStyle = QuoteStyle.Csv]),
+			    Promoted = Table.PromoteHeaders(Source, [PromoteAllScalars = true]),
+			    Typed = Table.TransformColumnTypes(Promoted, {
+			        {"sort_order", Int64.Type},
+			        {"method_code", type text},
+			        {"method", type text},
+			        {"effect_eur", type number},
+			        {"ci_low", type number},
+			        {"ci_high", type number},
+			        {"interval_type", type text},
+			        {"direction", type text},
+			        {"detail", type text}
+			    }, "en-US")
+			in
+			    Typed

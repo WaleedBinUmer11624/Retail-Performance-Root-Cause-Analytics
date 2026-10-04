@@ -1,0 +1,10 @@
+table_name,rows,columns,primary_key,rows_in_duplicated_keys,exact_duplicate_rows,missing_columns,unexpected_columns,columns_with_blanks,columns_with_type_failures
+dim_store,20,13,store_id,0,0,,,0,0
+dim_product,610,12,product_id,20,0,,,3,0
+dim_date,731,17,date_key,0,0,,,1,0
+fact_sales,1339245,17,transaction_id+line_number,3930,0,,,6,1
+fact_sales_late_batch,2270,17,transaction_id+line_number,0,0,,,1,0
+fact_inventory,939437,10,store_id+product_id+snapshot_date,376,188,,,1,0
+fact_returns,34733,10,return_id,138,69,,,2,0
+fact_promotions,49434,8,promotion_id+product_id+store_id,8,4,,,0,0
+fact_targets,2079,8,store_id+retail_year+retail_week,4,0,,,0,0

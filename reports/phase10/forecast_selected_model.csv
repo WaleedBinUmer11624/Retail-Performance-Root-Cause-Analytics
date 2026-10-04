@@ -1,0 +1,12 @@
+field,value
+selected_model,B2_seasonal_naive
+selected_family,baseline
+selection_metric,wape
+challenger_margin,0.0
+best_baseline,B2_seasonal_naive
+best_baseline_metric,0.07652145212666392
+best_challenger,holt_linear
+best_challenger_metric,0.3404771087575201
+improvement,-0.2639556566308562
+promoted_challenger,False
+rule,"challenger promoted only when its mean metric beats the best baseline by more than the margin; ties break on the configured tie-breakers, then on registry order"

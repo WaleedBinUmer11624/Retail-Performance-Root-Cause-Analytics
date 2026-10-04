@@ -1,0 +1,37 @@
+group,check,value,reference,difference,tolerance,status
+Headline,H2 2024 net revenue vs Phase 4,10188727.55,10188727.55,0.0,0.01,PASS
+Headline,H2 2025 net revenue vs Phase 4,9457457.05,9457457.05,0.0,0.01,PASS
+Headline,H2 YoY % vs Phase 4,-7.177250509559463,-7.177250509559463,0.0,0.0001,PASS
+Headline,H2 2024 net revenue vs direct fact query,10188727.55,10188727.55,0.0,0.01,PASS
+Headline,H2 2025 net revenue vs direct fact query,9457457.05,9457457.05,0.0,0.01,PASS
+Headline,net_revenue change vs Phase 5 headline,-731270.5,-731270.5,0.0,0.01,PASS
+Headline,sales_revenue change vs Phase 5 headline,-716613.0299999993,-716613.03,0.0,0.01,PASS
+Headline,returns_value change vs Phase 5 headline,14657.47000000003,14657.47,0.0,0.01,PASS
+Headline,transactions change vs Phase 5 headline,-13419.0,-13419.0,0.0,0.0,PASS
+Overlap,store group x category cells add up to the total change,-731270.5000000001,-731270.5,0.0,0.01,PASS
+Overlap,exclusive attribution closes exactly to the total change,-731270.5,-731270.5,0.0,0.01,PASS
+Overlap,residual breakdown closes to the residual,-78521.79347194731,-78521.79347194731,0.0,0.01,PASS
+Overlap,E&T stock-outs: exclusive amount never exceeds the measured total,37235.346775933955,37235.346775933955,0.0,0.0,PASS
+Overlap,E&T faulty returns: exclusive amount never exceeds the measured total,31588.73,31588.73,0.0,0.0,PASS
+Overlap,H&K promotion period: exclusive amount never exceeds the measured total,186146.42044890166,186146.42044890166,0.0,0.0,PASS
+Periods,"rca SQL H2 window (retail weeks 27-52, hard-coded in v_store_category_h2) matches the configuration",27-52,27-52,,0.0,PASS
+Overlap,E&T stock-outs: exclusive = total - overlap with cluster excess,-37235.346775933955,-37235.346775933955,0.0,1e-06,PASS
+Overlap,E&T faulty returns: exclusive = total - overlap with cluster excess,-31588.73,-31588.73,0.0,1e-06,PASS
+Overlap,H&K promotion period: exclusive = total - overlap with cluster excess,-186146.42044890166,-186146.42044890166,0.0,1e-06,PASS
+Overlap,pairwise matrix is symmetric,0.0,0.0,0.0,0.0,PASS
+Store cluster,controls exclude every cluster store,0,0,0.0,0.0,PASS
+Store cluster,matched control group has the configured size,5,5,0.0,0.0,PASS
+Store cluster,ratio DiD: actual - counterfactual = excess,-397778.209303217,-397778.209303217,0.0,1e-06,PASS
+Store cluster,cluster H2 net revenue in the weekly panel = governed store view,1092401.65,1092401.6500000001,0.0,0.01,PASS
+Electronics,lost-sales estimates never negative,0.0,0.0,0.0,0.0,PASS
+Electronics,category full-week lost sales equal the frozen Phase 5 figure,37235.346775933955,37235.346776,0.0,0.01,PASS
+Electronics,supplier lost-sales shares add up to 100%,1.0,1.0,0.0,0.0,PASS
+Returns,store faulty-return changes add up to the category change,31588.729999999992,31588.729999999996,0.0,0.01,PASS
+Returns,product faulty-return changes add up to the category change,31588.730000000007,31588.729999999996,0.0,0.01,PASS
+Promotions,M1 bootstrap CI contains the point estimate,-186146.42044890166,-186146.42044890166,0.0,0.0,PASS
+Promotions,M1 by-store effects add up to the category effect,-186146.42044890166,-186146.42044890166,0.0,0.01,PASS
+Evidence,every driver has one BRD evidence level,0,0,0.0,0.0,PASS
+Evidence,no fragile estimate is labelled Root-cause evidence,0,0,0.0,0.0,PASS
+Sensitivity,every central estimate has variants,4,3,1.0,0.0,PASS
+Scenarios,scenario E equals the sum of the exclusive components,652748.7065280527,652748.7065280527,0.0,0.01,PASS
+Robustness,no infinite values in result tables,0,0,0.0,0.0,PASS

@@ -1,0 +1,103 @@
+group,check,value,reference,abs_difference,tolerance,reference_source,status
+Headline,H2 2025 net revenue = Phase 7 brief,9457457.049999999,9457457.05,0.0,0.01,config/powerbi_config.yaml (brief),PASS
+Headline,H2 2024 net revenue = Phase 7 brief,10188727.55,10188727.55,0.0,0.01,config/powerbi_config.yaml (brief),PASS
+Headline,H2 net revenue change = Phase 7 brief,-731270.5000000019,-731270.5,0.0,0.01,config/powerbi_config.yaml (brief),PASS
+Headline,YoY % = Phase 7 brief (6 dp),-7.177251,-7.177251,0.0,1e-06,brief,PASS
+Headline,H2 2024 via the PY measure = H2 2024 filtered directly,10188727.55,10188727.55,0.0,0.01,PY time intelligence,PASS
+Phase 4,H2 2025 net revenue,9457457.049999999,9457457.05,0.0,0.01,reports/phase4/reconciliation_results_duckdb.csv,PASS
+Phase 4,H2 2024 net revenue,10188727.55,10188727.55,0.0,0.01,reports/phase4/reconciliation_results_duckdb.csv,PASS
+Phase 4,H2 YoY %,-7.1772505095594745,-7.177250509559463,0.0,1e-06,reports/phase4/reconciliation_results_duckdb.csv,PASS
+Phase 5,Sales Revenue H2 2025,9840827.879999999,9840827.88,0.0,0.01,reports/phase5/headline_kpis.csv,PASS
+Phase 5,Sales Revenue H2 2024,10557440.91,10557440.91,0.0,0.01,reports/phase5/headline_kpis.csv,PASS
+Phase 5,Returns Value H2 2025,383370.82999999996,383370.83,0.0,0.01,reports/phase5/headline_kpis.csv,PASS
+Phase 5,Returns Value H2 2024,368713.36,368713.36,0.0,0.01,reports/phase5/headline_kpis.csv,PASS
+Phase 5,Net Revenue H2 2025,9457457.049999999,9457457.05,0.0,0.01,reports/phase5/headline_kpis.csv,PASS
+Phase 5,Net Revenue H2 2024,10188727.55,10188727.55,0.0,0.01,reports/phase5/headline_kpis.csv,PASS
+Phase 5,Gross Margin H2 2025,3525708.4499999993,3525708.45,0.0,0.01,reports/phase5/headline_kpis.csv,PASS
+Phase 5,Gross Margin H2 2024,3962593.91,3962593.91,0.0,0.01,reports/phase5/headline_kpis.csv,PASS
+Phase 5,Gross Margin % H2 2025,0.3727966652515752,0.372797,0.0,1e-06,reports/phase5/headline_kpis.csv,PASS
+Phase 5,Gross Margin % H2 2024,0.38891941025550336,0.388919,0.0,1e-06,reports/phase5/headline_kpis.csv,PASS
+Phase 5,Transactions H2 2025,216027.0,216027.0,0.0,0.01,reports/phase5/headline_kpis.csv,PASS
+Phase 5,Transactions H2 2024,229446.0,229446.0,0.0,0.01,reports/phase5/headline_kpis.csv,PASS
+Phase 5,Units H2 2025,457916.0,457916.0,0.0,0.01,reports/phase5/headline_kpis.csv,PASS
+Phase 5,Units H2 2024,487993.0,487993.0,0.0,0.01,reports/phase5/headline_kpis.csv,PASS
+Phase 5,Average Transaction Value H2 2025,45.553694121568135,45.553694,0.0,1e-06,reports/phase5/headline_kpis.csv,PASS
+Phase 5,Average Transaction Value H2 2024,46.012747705342434,46.012748,0.0,1e-06,reports/phase5/headline_kpis.csv,PASS
+Phase 5,UPT H2 2025,2.119716516916867,2.119717,0.0,1e-06,reports/phase5/headline_kpis.csv,PASS
+Phase 5,UPT H2 2024,2.1268315856454243,2.126832,0.0,1e-06,reports/phase5/headline_kpis.csv,PASS
+Phase 5,ASP H2 2025,21.49046523816595,21.490465,0.0,1e-06,reports/phase5/headline_kpis.csv,PASS
+Phase 5,ASP H2 2024,21.634410555069437,21.634411,0.0,1e-06,reports/phase5/headline_kpis.csv,PASS
+Phase 5,Return Rate H2 2025,0.03895717257479357,0.038957,0.0,1e-06,reports/phase5/headline_kpis.csv,PASS
+Phase 5,Return Rate H2 2024,0.034924501414993,0.034925,0.0,1e-06,reports/phase5/headline_kpis.csv,PASS
+Phase 5,Promotion Share H2 2025,0.1690291741999252,0.169029,0.0,1e-06,reports/phase5/headline_kpis.csv,PASS
+Phase 5,Promotion Share H2 2024,0.12747855862732932,0.127479,0.0,1e-06,reports/phase5/headline_kpis.csv,PASS
+Phase 5,Discount Value H2 2025,547251.1000000001,547251.1,0.0,0.01,reports/phase5/headline_kpis.csv,PASS
+Phase 5,Discount Value H2 2024,289926.67000000004,289926.67,0.0,0.01,reports/phase5/headline_kpis.csv,PASS
+Phase 6,H2 2025 net revenue,9457457.049999999,9457457.05,0.0,0.01,reports/phase6/headline_reconciliation.csv,PASS
+Phase 6,H2 2024 net revenue,10188727.55,10188727.55,0.0,0.01,reports/phase6/headline_reconciliation.csv,PASS
+Phase 6,H2 change,-731270.5000000019,-731270.5,0.0,0.01,reports/phase6/headline_reconciliation.csv,PASS
+Weekly,"26 H2 weeks: Net Revenue, Net Revenue PY and Transactions PY (largest difference)",1.1641532182693481e-10,0.0,0.0,0.01,reports/phase5/headline_trend.csv,PASS
+Stores,Net Revenue: 20 stores x 2 periods (largest difference),2.3283064365386963e-10,0.0,0.0,0.01,reports/phase5/store_contribution.csv,PASS
+Stores,Transactions: 20 stores x 2 periods (largest difference),0.0,0.0,0.0,0.0,reports/phase5/store_contribution.csv,PASS
+Stores,Average Transaction Value: 20 stores x 2 periods (largest difference),4.780816809102362e-07,0.0,0.0,1e-06,reports/phase5/store_contribution.csv,PASS
+Stores,UPT: 20 stores x 2 periods (largest difference),4.5378151236619146e-07,0.0,0.0,1e-06,reports/phase5/store_contribution.csv,PASS
+Stores,ASP: 20 stores x 2 periods (largest difference),4.904291834861851e-07,0.0,0.0,1e-06,reports/phase5/store_contribution.csv,PASS
+Stores,Return Rate: 20 stores x 2 periods (largest difference),4.979858984135999e-07,0.0,0.0,1e-06,reports/phase5/store_contribution.csv,PASS
+Stores,Availability: 20 stores x 2 periods (largest difference),4.909175956857581e-07,0.0,0.0,1e-06,reports/phase5/store_contribution.csv,PASS
+Stores,Target Achievement %: 20 stores x 2 periods (largest difference),4.998747599183062e-07,0.0,0.0,1e-06,reports/phase5/store_contribution.csv,PASS
+Targets,estate Target Achievement % H2 2025,0.8663816777879156,0.8663816777879156,0.0,1e-06,reports/phase5/target_performance.csv,PASS
+Targets,estate Target Achievement % H2 2024,0.9279586549208952,0.9279586549208951,0.0,1e-06,reports/phase5/target_performance.csv,PASS
+Categories,Net Revenue: 7 categories x 2 periods (largest difference),4.656612873077393e-10,0.0,0.0,0.01,reports/phase5/category_contribution.csv,PASS
+Categories,Sales Revenue: 7 categories x 2 periods (largest difference),4.656612873077393e-10,0.0,0.0,0.01,reports/phase5/category_contribution.csv,PASS
+Categories,Transactions: 7 categories x 2 periods (largest difference),0.0,0.0,0.0,0.0,reports/phase5/category_contribution.csv,PASS
+Categories,Units: 7 categories x 2 periods (largest difference),0.0,0.0,0.0,0.0,reports/phase5/category_contribution.csv,PASS
+Categories,ASP: 7 categories x 2 periods (largest difference),4.78784031088253e-07,0.0,0.0,1e-06,reports/phase5/category_contribution.csv,PASS
+Categories,Gross Margin: 7 categories x 2 periods (largest difference),5.238689482212067e-10,0.0,0.0,0.01,reports/phase5/category_contribution.csv,PASS
+Categories,Returns Value: 7 categories x 2 periods (largest difference),1.4551915228366852e-11,0.0,0.0,0.01,reports/phase5/category_contribution.csv,PASS
+Categories,Return Rate: 7 categories x 2 periods (largest difference),4.5792499264729614e-07,0.0,0.0,1e-06,reports/phase5/category_contribution.csv,PASS
+Categories,Availability: 7 categories x 2 periods (largest difference),4.915090076051953e-07,0.0,0.0,1e-06,reports/phase5/category_contribution.csv,PASS
+Categories,Promotion Share: 7 categories x 2 periods (largest difference),4.32104119013621e-07,0.0,0.0,1e-06,reports/phase5/category_contribution.csv,PASS
+Categories,Discount Value: 7 categories x 2 periods (largest difference),7.275957614183426e-12,0.0,0.0,0.01,reports/phase5/category_contribution.csv,PASS
+Phase 6,Electronics & Tech net revenue change,-268518.3299999996,-268518.33,0.0,0.01,reports/phase6/electronics_kpis.csv,PASS
+Phase 6,Electronics & Tech availability H2 2025,0.8928076843749079,0.892808,0.0,1e-06,reports/phase6/electronics_kpis.csv,PASS
+Phase 6,Electronics & Tech availability H2 2024,0.9537961458091478,0.953796,0.0,1e-06,reports/phase6/electronics_kpis.csv,PASS
+Phase 6,Voltix Distribution Ltd full-week stock-outs H2 2025,674.0,674.0,0.0,0.0,reports/phase6/electronics_supplier_comparison.csv,PASS
+Phase 6,Voltix Distribution Ltd full-week stock-outs H2 2024,0.0,0.0,0.0,0.0,reports/phase6/electronics_supplier_comparison.csv,PASS
+Phase 6,Voltix Distribution Ltd availability H2 2025,0.8270453289110006,0.827045,0.0,1e-06,reports/phase6/electronics_supplier_comparison.csv,PASS
+Phase 6,Investigated cluster: transactions per store H2 2025,8386.666666666666,8386.666667,0.0,1e-06,reports/phase6/cluster_mechanisms.csv,PASS
+Phase 6,Investigated cluster: transactions YoY % (= per-store change),-27.757199873661243,-27.7572,0.0,0.0001,reports/phase6/cluster_mechanisms.csv,PASS
+Phase 6,Matched control: transactions per store H2 2025,11691.0,11691.0,0.0,1e-06,reports/phase6/cluster_mechanisms.csv,PASS
+Phase 6,Matched control: transactions YoY % (= per-store change),-1.1147951415908297,-1.114795,0.0,0.0001,reports/phase6/cluster_mechanisms.csv,PASS
+Phase 6,Electronics & Tech 'Changed mind' returns change,-1154.300000000003,-1154.3,0.0,0.01,reports/phase6/faulty_returns_reasons.csv,PASS
+Phase 6,Electronics & Tech 'Damaged' returns change,484.0599999999977,484.06,0.0,0.01,reports/phase6/faulty_returns_reasons.csv,PASS
+Phase 6,Electronics & Tech 'Faulty' returns change,31588.729999999996,31588.73,0.0,0.01,reports/phase6/faulty_returns_reasons.csv,PASS
+Phase 6,Electronics & Tech 'Gift return' returns change,-3261.58,-3261.58,0.0,0.01,reports/phase6/faulty_returns_reasons.csv,PASS
+Phase 6,Electronics & Tech 'Not as described' returns change,-1368.2799999999988,-1368.28,0.0,0.01,reports/phase6/faulty_returns_reasons.csv,PASS
+Phase 6,"Faulty cohort rate per 100 units by sale month (24 months, largest difference)",4.979822437745085e-07,0.0,0.0,1e-06,reports/phase6/faulty_returns_by_cohort.csv,PASS
+Phase 6,"Home & Kitchen discount rate H2 2024 (1 dp, as reported)",2.4,2.4,0.0,0.0,reports/phase6/hk_promotion_counterfactuals.csv (M4 detail),PASS
+Phase 6,"Home & Kitchen discount rate H2 2025 (1 dp, as reported)",11.9,11.9,0.0,0.0,reports/phase6/hk_promotion_counterfactuals.csv (M4 detail),PASS
+Attribution,components add up to the H2 change (model),-731270.5,-731270.5000000019,0.0,0.01,powerbi/data/p6_driver_attribution.csv vs measures,PASS
+Attribution,shares add up to 100%,1.0,1.0,0.0,1e-06,p6_driver_attribution,PASS
+Attribution,D01 amount = brief (whole euros),-397778,-397778,0.0,0.0,brief section 4,PASS
+Attribution,D03 amount = brief (whole euros),-37235,-37235,0.0,0.0,brief section 4,PASS
+Attribution,D05 amount = brief (whole euros),-31589,-31589,0.0,0.0,brief section 4,PASS
+Attribution,D07 amount = brief (whole euros),-186146,-186146,0.0,0.0,brief section 4,PASS
+Attribution,D09 amount = brief (whole euros),-78522,-78522,0.0,0.0,brief section 4,PASS
+Evidence,evidence levels identical to the Phase 6 matrix,0,0,0.0,0.0,reports/phase6/root_cause_evidence_matrix.csv,PASS
+Evidence,cause 'Established' only where Phase 6 says Root-cause evidence,True,True,0.0,0.0,config drivers vs Phase 6,PASS
+Evidence,'Unresolved' labels match Phase 6 conclusions (D01 via its cause D02),True,True,0.0,0.0,reports/phase6/root_cause_evidence_matrix.csv,PASS
+Evidence,no association or hypothesis is labelled as an established cause,True,True,0.0,0.0,config drivers,PASS
+Evidence,attribution evidence labels = Phase 6 matrix,True,True,0.0,0.0,Phase 6,PASS
+Promotions,four H&K methods kept separate (no combined figure),4,4,0.0,0.0,p6_hk_methods,PASS
+Promotions,methods disagree in sign (the reported story),True,True,0.0,0.0,p6_hk_methods,PASS
+Guards,"Promotion filter: returns, net revenue, margin and availability are blank (no promotion key)",True,True,0.0,0.0,measure design,PASS
+Guards,Promotion filter: Sales Revenue still answers,True,True,0.0,0.0,measure design,PASS
+Guards,Category filter: Target Achievement is blank (targets are per store),True,True,0.0,0.0,measure design,PASS
+Traceability,"every Power BI extract comes from a frozen, unchanged Phase 5/6 file",0,0,0.0,0.0,reports/phase7/phase1_6_input_manifest.csv,PASS
+DAX,has a description (92 measures),0,0,0.0,0.0,src/powerbi/dax.py,PASS
+DAX,measure names are unique,0,0,0.0,0.0,src/powerbi/dax.py,PASS
+DAX,no circular measure references,0,0,0.0,0.0,src/powerbi/dax.py,PASS
+DAX,parentheses balance (92 measures),0,0,0.0,0.0,src/powerbi/dax.py,PASS
+DAX,referenced columns exist in the model (92 measures),0,0,0.0,0.0,src/powerbi/dax.py,PASS
+DAX,referenced measures exist (92 measures),0,0,0.0,0.0,src/powerbi/dax.py,PASS
+DAX,every referenced Python counterpart exists,0,0,0.0,0.0,src/powerbi/reference.py,PASS

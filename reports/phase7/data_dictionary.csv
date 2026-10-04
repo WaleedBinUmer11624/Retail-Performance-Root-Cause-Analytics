@@ -1,0 +1,431 @@
+table,table_type,table_description,column,dtype,description,source
+Date,dimension,"Calendar, one row per day (plus key -1 'unknown'). Retail weeks Monday-Sunday; H1 = weeks 1-26, H2 = 27-52.",date_key,int32,Surrogate date key yyyymmdd (-1 unknown),pbi.dim_date
+Date,dimension,"Calendar, one row per day (plus key -1 'unknown'). Retail weeks Monday-Sunday; H1 = weeks 1-26, H2 = 27-52.",calendar_date,datetime64[us],Calendar date,pbi.dim_date
+Date,dimension,"Calendar, one row per day (plus key -1 'unknown'). Retail weeks Monday-Sunday; H1 = weeks 1-26, H2 = 27-52.",day_of_week,UInt8,1 = Monday ... 7 = Sunday,pbi.dim_date
+Date,dimension,"Calendar, one row per day (plus key -1 'unknown'). Retail weeks Monday-Sunday; H1 = weeks 1-26, H2 = 27-52.",day_name,str,Weekday name,pbi.dim_date
+Date,dimension,"Calendar, one row per day (plus key -1 'unknown'). Retail weeks Monday-Sunday; H1 = weeks 1-26, H2 = 27-52.",is_weekend,UInt8,1 on Saturday and Sunday,pbi.dim_date
+Date,dimension,"Calendar, one row per day (plus key -1 'unknown'). Retail weeks Monday-Sunday; H1 = weeks 1-26, H2 = 27-52.",calendar_month,UInt8,Month number,pbi.dim_date
+Date,dimension,"Calendar, one row per day (plus key -1 'unknown'). Retail weeks Monday-Sunday; H1 = weeks 1-26, H2 = 27-52.",month_name,str,Month name (sort by calendar_month),pbi.dim_date
+Date,dimension,"Calendar, one row per day (plus key -1 'unknown'). Retail weeks Monday-Sunday; H1 = weeks 1-26, H2 = 27-52.",year_month,Int32,yyyymm,pbi.dim_date
+Date,dimension,"Calendar, one row per day (plus key -1 'unknown'). Retail weeks Monday-Sunday; H1 = weeks 1-26, H2 = 27-52.",calendar_year,Int16,Calendar year,pbi.dim_date
+Date,dimension,"Calendar, one row per day (plus key -1 'unknown'). Retail weeks Monday-Sunday; H1 = weeks 1-26, H2 = 27-52.",retail_year,Int16,Retail year,pbi.dim_date
+Date,dimension,"Calendar, one row per day (plus key -1 'unknown'). Retail weeks Monday-Sunday; H1 = weeks 1-26, H2 = 27-52.",retail_week,UInt8,Retail week 1-52,pbi.dim_date
+Date,dimension,"Calendar, one row per day (plus key -1 'unknown'). Retail weeks Monday-Sunday; H1 = weeks 1-26, H2 = 27-52.",retail_week_key,int32,Retail week key yyyyww,pbi.dim_date
+Date,dimension,"Calendar, one row per day (plus key -1 'unknown'). Retail weeks Monday-Sunday; H1 = weeks 1-26, H2 = 27-52.",retail_week_label,str,e.g. 2025-W27,pbi.dim_date
+Date,dimension,"Calendar, one row per day (plus key -1 'unknown'). Retail weeks Monday-Sunday; H1 = weeks 1-26, H2 = 27-52.",retail_week_start,datetime64[us],Monday of the retail week,pbi.dim_date
+Date,dimension,"Calendar, one row per day (plus key -1 'unknown'). Retail weeks Monday-Sunday; H1 = weeks 1-26, H2 = 27-52.",retail_half,str,H1 (weeks 1-26) or H2 (weeks 27-52),pbi.dim_date
+Date,dimension,"Calendar, one row per day (plus key -1 'unknown'). Retail weeks Monday-Sunday; H1 = weeks 1-26, H2 = 27-52.",period_label,str,e.g. 'H2 2025' (slicer label),pbi.dim_date
+Date,dimension,"Calendar, one row per day (plus key -1 'unknown'). Retail weeks Monday-Sunday; H1 = weeks 1-26, H2 = 27-52.",period_sort,int32,,pbi.dim_date
+Date,dimension,"Calendar, one row per day (plus key -1 'unknown'). Retail weeks Monday-Sunday; H1 = weeks 1-26, H2 = 27-52.",is_bank_holiday,UInt8,1 on Irish bank holidays,pbi.dim_date
+Date,dimension,"Calendar, one row per day (plus key -1 'unknown'). Retail weeks Monday-Sunday; H1 = weeks 1-26, H2 = 27-52.",is_trading_day,UInt8,1 when stores trade,pbi.dim_date
+Date,dimension,"Calendar, one row per day (plus key -1 'unknown'). Retail weeks Monday-Sunday; H1 = weeks 1-26, H2 = 27-52.",same_day_last_year_key,Int32,Date key 364 days earlier (same weekday); drives PY measures,pbi.dim_date
+Date,dimension,"Calendar, one row per day (plus key -1 'unknown'). Retail weeks Monday-Sunday; H1 = weeks 1-26, H2 = 27-52.",is_unknown,uint8,1 for the unknown member (-1),pbi.dim_date
+Store,dimension,"One row per store (plus -1 'unknown'); store_group comes from Phase 6 (investigated cluster, matched control, other).",store_key,int32,Surrogate store key,pbi.dim_store
+Store,dimension,"One row per store (plus -1 'unknown'); store_group comes from Phase 6 (investigated cluster, matched control, other).",store_id,str,"Store code, e.g. S03",pbi.dim_store
+Store,dimension,"One row per store (plus -1 'unknown'); store_group comes from Phase 6 (investigated cluster, matched control, other).",store_name,str,Store name,pbi.dim_store
+Store,dimension,"One row per store (plus -1 'unknown'); store_group comes from Phase 6 (investigated cluster, matched control, other).",store_label,str,store_id + name,pbi.dim_store
+Store,dimension,"One row per store (plus -1 'unknown'); store_group comes from Phase 6 (investigated cluster, matched control, other).",town,str,Town,pbi.dim_store
+Store,dimension,"One row per store (plus -1 'unknown'); store_group comes from Phase 6 (investigated cluster, matched control, other).",county,str,County,pbi.dim_store
+Store,dimension,"One row per store (plus -1 'unknown'); store_group comes from Phase 6 (investigated cluster, matched control, other).",region,str,Region,pbi.dim_store
+Store,dimension,"One row per store (plus -1 'unknown'); store_group comes from Phase 6 (investigated cluster, matched control, other).",store_format,str,Flagship / Standard / Express,pbi.dim_store
+Store,dimension,"One row per store (plus -1 'unknown'); store_group comes from Phase 6 (investigated cluster, matched control, other).",floor_area_m2,Int32,Sales floor area,pbi.dim_store
+Store,dimension,"One row per store (plus -1 'unknown'); store_group comes from Phase 6 (investigated cluster, matched control, other).",open_date,datetime64[us],Opening date,pbi.dim_store
+Store,dimension,"One row per store (plus -1 'unknown'); store_group comes from Phase 6 (investigated cluster, matched control, other).",weekly_trading_hours,Int16,Trading hours per week,pbi.dim_store
+Store,dimension,"One row per store (plus -1 'unknown'); store_group comes from Phase 6 (investigated cluster, matched control, other).",is_unknown,uint8,1 for the unknown member (-1),pbi.dim_store
+Store,dimension,"One row per store (plus -1 'unknown'); store_group comes from Phase 6 (investigated cluster, matched control, other).",store_group,text,Phase 6 group: Investigated cluster / Matched control / Other store / Unknown,pbi.dim_store + p6_store_groups
+Store,dimension,"One row per store (plus -1 'unknown'); store_group comes from Phase 6 (investigated cluster, matched control, other).",store_group,text,Phase 6 group: Investigated cluster / Matched control / Other store / Unknown,pbi.dim_store + p6_store_groups
+Product,dimension,"One row per SKU (plus -1 'unknown'), with category, subcategory, brand and supplier.",product_key,int32,Surrogate product key,pbi.dim_product
+Product,dimension,"One row per SKU (plus -1 'unknown'), with category, subcategory, brand and supplier.",product_id,str,"SKU code, e.g. P00149",pbi.dim_product
+Product,dimension,"One row per SKU (plus -1 'unknown'), with category, subcategory, brand and supplier.",product_name,str,Product name,pbi.dim_product
+Product,dimension,"One row per SKU (plus -1 'unknown'), with category, subcategory, brand and supplier.",product_label,str,product_id + name,pbi.dim_product
+Product,dimension,"One row per SKU (plus -1 'unknown'), with category, subcategory, brand and supplier.",category,str,Category,pbi.dim_product
+Product,dimension,"One row per SKU (plus -1 'unknown'), with category, subcategory, brand and supplier.",subcategory,str,Subcategory,pbi.dim_product
+Product,dimension,"One row per SKU (plus -1 'unknown'), with category, subcategory, brand and supplier.",brand,str,Brand,pbi.dim_product
+Product,dimension,"One row per SKU (plus -1 'unknown'), with category, subcategory, brand and supplier.",supplier_id,str,Supplier code,pbi.dim_product
+Product,dimension,"One row per SKU (plus -1 'unknown'), with category, subcategory, brand and supplier.",supplier_name,str,Supplier name,pbi.dim_product
+Product,dimension,"One row per SKU (plus -1 'unknown'), with category, subcategory, brand and supplier.",list_price,float64,"Current list price (EUR, excl. VAT)",pbi.dim_product
+Product,dimension,"One row per SKU (plus -1 'unknown'), with category, subcategory, brand and supplier.",product_status,str,Active / Discontinued,pbi.dim_product
+Product,dimension,"One row per SKU (plus -1 'unknown'), with category, subcategory, brand and supplier.",is_unknown,uint8,1 for the unknown member (-1),pbi.dim_product
+Promotion,dimension,"One row per promotion event; key 0 = not promoted, -1 = unknown promotion.",promotion_key,int32,Surrogate promotion key (0 = none),pbi.dim_promotion
+Promotion,dimension,"One row per promotion event; key 0 = not promoted, -1 = unknown promotion.",promotion_id,str,Promotion code,pbi.dim_promotion
+Promotion,dimension,"One row per promotion event; key 0 = not promoted, -1 = unknown promotion.",promotion_name,str,Promotion name,pbi.dim_promotion
+Promotion,dimension,"One row per promotion event; key 0 = not promoted, -1 = unknown promotion.",promotion_type,str,Promotion mechanic,pbi.dim_promotion
+Promotion,dimension,"One row per promotion event; key 0 = not promoted, -1 = unknown promotion.",promotion_category,str,Category of the covered products,pbi.dim_promotion
+Promotion,dimension,"One row per promotion event; key 0 = not promoted, -1 = unknown promotion.",start_date,datetime64[us],Promotion start,pbi.dim_promotion
+Promotion,dimension,"One row per promotion event; key 0 = not promoted, -1 = unknown promotion.",end_date,datetime64[us],Promotion end,pbi.dim_promotion
+Promotion,dimension,"One row per promotion event; key 0 = not promoted, -1 = unknown promotion.",duration_days,Int16,Length in days,pbi.dim_promotion
+Promotion,dimension,"One row per promotion event; key 0 = not promoted, -1 = unknown promotion.",min_discount_pct,float64,Lowest discount,pbi.dim_promotion
+Promotion,dimension,"One row per promotion event; key 0 = not promoted, -1 = unknown promotion.",max_discount_pct,float64,Highest discount,pbi.dim_promotion
+Promotion,dimension,"One row per promotion event; key 0 = not promoted, -1 = unknown promotion.",member_type,str,Promotion / No promotion / Unknown,pbi.dim_promotion
+Promotion,dimension,"One row per promotion event; key 0 = not promoted, -1 = unknown promotion.",is_unknown,uint8,1 for the unknown member (-1),pbi.dim_promotion
+Sales,fact,"Fact: one row per receipt line, on the sale date at the selling store.",sales_line_id,int64,Receipt-line id,pbi.fact_sales
+Sales,fact,"Fact: one row per receipt line, on the sale date at the selling store.",date_key,int32,Surrogate date key yyyymmdd (-1 unknown),pbi.fact_sales
+Sales,fact,"Fact: one row per receipt line, on the sale date at the selling store.",store_key,int32,Surrogate store key,pbi.fact_sales
+Sales,fact,"Fact: one row per receipt line, on the sale date at the selling store.",product_key,int32,Surrogate product key,pbi.fact_sales
+Sales,fact,"Fact: one row per receipt line, on the sale date at the selling store.",promotion_key,int32,Surrogate promotion key (0 = none),pbi.fact_sales
+Sales,fact,"Fact: one row per receipt line, on the sale date at the selling store.",transaction_key,int64,Integer surrogate of the receipt id (DISTINCTCOUNT = Transactions),pbi.fact_sales
+Sales,fact,"Fact: one row per receipt line, on the sale date at the selling store.",quantity,int32,Units sold,pbi.fact_sales
+Sales,fact,"Fact: one row per receipt line, on the sale date at the selling store.",gross_amount,float64,Quantity x unit price (EUR),pbi.fact_sales
+Sales,fact,"Fact: one row per receipt line, on the sale date at the selling store.",discount_amount,float64,Discount (EUR),pbi.fact_sales
+Sales,fact,"Fact: one row per receipt line, on the sale date at the selling store.",sales_revenue,float64,Gross amount minus discount (EUR),pbi.fact_sales
+Sales,fact,"Fact: one row per receipt line, on the sale date at the selling store.",cost_amount,float64,Quantity x standard cost (EUR),pbi.fact_sales
+Sales,fact,"Fact: one row per receipt line, on the sale date at the selling store.",is_promoted,int32,1 if sold on promotion,pbi.fact_sales
+Returns,fact,"Fact: one row per return line, on the return date at the returning store (BRD assumption 2).",return_id,str,Return-line id,pbi.fact_returns
+Returns,fact,"Fact: one row per return line, on the return date at the returning store (BRD assumption 2).",return_date_key,int32,Return date key (active relationship),pbi.fact_returns
+Returns,fact,"Fact: one row per return line, on the return date at the returning store (BRD assumption 2).",store_key,int32,Surrogate store key,pbi.fact_returns
+Returns,fact,"Fact: one row per return line, on the return date at the returning store (BRD assumption 2).",product_key,int32,Surrogate product key,pbi.fact_returns
+Returns,fact,"Fact: one row per return line, on the return date at the returning store (BRD assumption 2).",original_sale_date_key,int32,"Original sale date key (inactive relationship, cohort analysis)",pbi.fact_returns
+Returns,fact,"Fact: one row per return line, on the return date at the returning store (BRD assumption 2).",return_quantity,int32,Units returned,pbi.fact_returns
+Returns,fact,"Fact: one row per return line, on the return date at the returning store (BRD assumption 2).",refund_value,float64,Refund (EUR),pbi.fact_returns
+Returns,fact,"Fact: one row per return line, on the return date at the returning store (BRD assumption 2).",restock_cost_credit,float64,Cost credited for restocked units (EUR),pbi.fact_returns
+Returns,fact,"Fact: one row per return line, on the return date at the returning store (BRD assumption 2).",return_reason,str,Till reason code (e.g. 'Faulty'); NOT a verified defect,pbi.fact_returns
+Returns,fact,"Fact: one row per return line, on the return date at the returning store (BRD assumption 2).",is_restockable,int32,1 if returned to stock,pbi.fact_returns
+Returns,fact,"Fact: one row per return line, on the return date at the returning store (BRD assumption 2).",is_linked_to_sale,int32,1 if the original sale line is in the data,pbi.fact_returns
+Returns,fact,"Fact: one row per return line, on the return date at the returning store (BRD assumption 2).",sale_promotion_status,str,Whether the returned item was sold on promotion,pbi.fact_returns
+Inventory,fact,"Fact (periodic snapshot): store x SKU x retail week, Sunday closing stock. Semi-additive.",snapshot_date_key,int32,Sunday snapshot date key,pbi.fact_inventory
+Inventory,fact,"Fact (periodic snapshot): store x SKU x retail week, Sunday closing stock. Semi-additive.",retail_week_key,int32,Retail week key yyyyww,pbi.fact_inventory
+Inventory,fact,"Fact (periodic snapshot): store x SKU x retail week, Sunday closing stock. Semi-additive.",store_key,int32,Surrogate store key,pbi.fact_inventory
+Inventory,fact,"Fact (periodic snapshot): store x SKU x retail week, Sunday closing stock. Semi-additive.",product_key,int32,Surrogate product key,pbi.fact_inventory
+Inventory,fact,"Fact (periodic snapshot): store x SKU x retail week, Sunday closing stock. Semi-additive.",opening_stock,int32,Units at the start of the week,pbi.fact_inventory
+Inventory,fact,"Fact (periodic snapshot): store x SKU x retail week, Sunday closing stock. Semi-additive.",received_qty,int32,Units received in the week,pbi.fact_inventory
+Inventory,fact,"Fact (periodic snapshot): store x SKU x retail week, Sunday closing stock. Semi-additive.",closing_stock,int32,Units at the Sunday snapshot,pbi.fact_inventory
+Inventory,fact,"Fact (periodic snapshot): store x SKU x retail week, Sunday closing stock. Semi-additive.",is_in_stock,int32,1 if closing stock > 0 (availability numerator),pbi.fact_inventory
+Inventory,fact,"Fact (periodic snapshot): store x SKU x retail week, Sunday closing stock. Semi-additive.",is_full_week_stockout,int32,"1 if no opening stock, nothing received and out of stock (full-week stock-out)",pbi.fact_inventory
+Targets,fact,Fact (plan): Finance weekly Net Revenue target per store. Not related to Date; mapped by week in DAX.,retail_week_key,int32,Retail week key yyyyww,pbi.fact_targets
+Targets,fact,Fact (plan): Finance weekly Net Revenue target per store. Not related to Date; mapped by week in DAX.,store_key,int32,Surrogate store key,pbi.fact_targets
+Targets,fact,Fact (plan): Finance weekly Net Revenue target per store. Not related to Date; mapped by week in DAX.,target_net_revenue,float64,Finance weekly Net Revenue target (EUR),pbi.fact_targets
+p6_driver_attribution,Phase 6 analytical (disconnected),"Validated Phase 5/6 output, imported unchanged; not affected by slicers.",sort_order,int64,,reports/phase6/driver_attribution.csv
+p6_driver_attribution,Phase 6 analytical (disconnected),"Validated Phase 5/6 output, imported unchanged; not affected by slicers.",driver_id,str,,reports/phase6/driver_attribution.csv
+p6_driver_attribution,Phase 6 analytical (disconnected),"Validated Phase 5/6 output, imported unchanged; not affected by slicers.",component,str,,reports/phase6/driver_attribution.csv
+p6_driver_attribution,Phase 6 analytical (disconnected),"Validated Phase 5/6 output, imported unchanged; not affected by slicers.",waterfall_label,str,,reports/phase6/driver_attribution.csv
+p6_driver_attribution,Phase 6 analytical (disconnected),"Validated Phase 5/6 output, imported unchanged; not affected by slicers.",driver,str,,reports/phase6/driver_attribution.csv
+p6_driver_attribution,Phase 6 analytical (disconnected),"Validated Phase 5/6 output, imported unchanged; not affected by slicers.",amount_eur,float64,,reports/phase6/driver_attribution.csv
+p6_driver_attribution,Phase 6 analytical (disconnected),"Validated Phase 5/6 output, imported unchanged; not affected by slicers.",share_of_change,float64,,reports/phase6/driver_attribution.csv
+p6_driver_attribution,Phase 6 analytical (disconnected),"Validated Phase 5/6 output, imported unchanged; not affected by slicers.",overlap_removed_eur,float64,,reports/phase6/driver_attribution.csv
+p6_driver_attribution,Phase 6 analytical (disconnected),"Validated Phase 5/6 output, imported unchanged; not affected by slicers.",evidence_level,str,,reports/phase6/driver_attribution.csv
+p6_driver_attribution,Phase 6 analytical (disconnected),"Validated Phase 5/6 output, imported unchanged; not affected by slicers.",evidence_display,str,,reports/phase6/driver_attribution.csv
+p6_driver_attribution,Phase 6 analytical (disconnected),"Validated Phase 5/6 output, imported unchanged; not affected by slicers.",figure_type,str,,reports/phase6/driver_attribution.csv
+p6_driver_attribution,Phase 6 analytical (disconnected),"Validated Phase 5/6 output, imported unchanged; not affected by slicers.",basis,str,,reports/phase6/driver_attribution.csv
+p6_evidence_matrix,Phase 6 analytical (disconnected),"Validated Phase 5/6 output, imported unchanged; not affected by slicers.",driver_id,str,,reports/phase6/root_cause_evidence_matrix.csv
+p6_evidence_matrix,Phase 6 analytical (disconnected),"Validated Phase 5/6 output, imported unchanged; not affected by slicers.",driver,str,,reports/phase6/root_cause_evidence_matrix.csv
+p6_evidence_matrix,Phase 6 analytical (disconnected),"Validated Phase 5/6 output, imported unchanged; not affected by slicers.",candidate_driver,str,,reports/phase6/root_cause_evidence_matrix.csv
+p6_evidence_matrix,Phase 6 analytical (disconnected),"Validated Phase 5/6 output, imported unchanged; not affected by slicers.",evidence_level,str,,reports/phase6/root_cause_evidence_matrix.csv
+p6_evidence_matrix,Phase 6 analytical (disconnected),"Validated Phase 5/6 output, imported unchanged; not affected by slicers.",cause_status,str,,reports/phase6/root_cause_evidence_matrix.csv
+p6_evidence_matrix,Phase 6 analytical (disconnected),"Validated Phase 5/6 output, imported unchanged; not affected by slicers.",evidence_display,str,,reports/phase6/root_cause_evidence_matrix.csv
+p6_evidence_matrix,Phase 6 analytical (disconnected),"Validated Phase 5/6 output, imported unchanged; not affected by slicers.",evidence_strength,int64,,reports/phase6/root_cause_evidence_matrix.csv
+p6_evidence_matrix,Phase 6 analytical (disconnected),"Validated Phase 5/6 output, imported unchanged; not affected by slicers.",evidence_colour,str,,reports/phase6/root_cause_evidence_matrix.csv
+p6_evidence_matrix,Phase 6 analytical (disconnected),"Validated Phase 5/6 output, imported unchanged; not affected by slicers.",observed_effect,str,,reports/phase6/root_cause_evidence_matrix.csv
+p6_evidence_matrix,Phase 6 analytical (disconnected),"Validated Phase 5/6 output, imported unchanged; not affected by slicers.",financial_impact_eur,float64,,reports/phase6/root_cause_evidence_matrix.csv
+p6_evidence_matrix,Phase 6 analytical (disconnected),"Validated Phase 5/6 output, imported unchanged; not affected by slicers.",impact_pp_of_py_revenue,float64,,reports/phase6/root_cause_evidence_matrix.csv
+p6_evidence_matrix,Phase 6 analytical (disconnected),"Validated Phase 5/6 output, imported unchanged; not affected by slicers.",impact_range,str,,reports/phase6/root_cause_evidence_matrix.csv
+p6_evidence_matrix,Phase 6 analytical (disconnected),"Validated Phase 5/6 output, imported unchanged; not affected by slicers.",what_we_know,str,,reports/phase6/root_cause_evidence_matrix.csv
+p6_evidence_matrix,Phase 6 analytical (disconnected),"Validated Phase 5/6 output, imported unchanged; not affected by slicers.",what_we_do_not_know,str,,reports/phase6/root_cause_evidence_matrix.csv
+p6_evidence_matrix,Phase 6 analytical (disconnected),"Validated Phase 5/6 output, imported unchanged; not affected by slicers.",confidence,str,,reports/phase6/root_cause_evidence_matrix.csv
+p6_evidence_matrix,Phase 6 analytical (disconnected),"Validated Phase 5/6 output, imported unchanged; not affected by slicers.",method,str,,reports/phase6/root_cause_evidence_matrix.csv
+p6_evidence_matrix,Phase 6 analytical (disconnected),"Validated Phase 5/6 output, imported unchanged; not affected by slicers.",additional_data_required,str,,reports/phase6/root_cause_evidence_matrix.csv
+p6_evidence_matrix,Phase 6 analytical (disconnected),"Validated Phase 5/6 output, imported unchanged; not affected by slicers.",double_counting_risk,str,,reports/phase6/root_cause_evidence_matrix.csv
+p6_evidence_matrix,Phase 6 analytical (disconnected),"Validated Phase 5/6 output, imported unchanged; not affected by slicers.",conclusion,str,,reports/phase6/root_cause_evidence_matrix.csv
+p6_evidence_matrix,Phase 6 analytical (disconnected),"Validated Phase 5/6 output, imported unchanged; not affected by slicers.",sort_order,int64,,reports/phase6/root_cause_evidence_matrix.csv
+p6_investigations,Phase 6 analytical (disconnected),"Validated Phase 5/6 output, imported unchanged; not affected by slicers.",priority,int64,,reports/phase6/root_cause_evidence_matrix.csv
+p6_investigations,Phase 6 analytical (disconnected),"Validated Phase 5/6 output, imported unchanged; not affected by slicers.",topic,str,,reports/phase6/root_cause_evidence_matrix.csv
+p6_investigations,Phase 6 analytical (disconnected),"Validated Phase 5/6 output, imported unchanged; not affected by slicers.",driver_id,str,,reports/phase6/root_cause_evidence_matrix.csv
+p6_investigations,Phase 6 analytical (disconnected),"Validated Phase 5/6 output, imported unchanged; not affected by slicers.",evidence_level,str,,reports/phase6/root_cause_evidence_matrix.csv
+p6_investigations,Phase 6 analytical (disconnected),"Validated Phase 5/6 output, imported unchanged; not affected by slicers.",known,str,,reports/phase6/root_cause_evidence_matrix.csv
+p6_investigations,Phase 6 analytical (disconnected),"Validated Phase 5/6 output, imported unchanged; not affected by slicers.",unknown,str,,reports/phase6/root_cause_evidence_matrix.csv
+p6_investigations,Phase 6 analytical (disconnected),"Validated Phase 5/6 output, imported unchanged; not affected by slicers.",why_it_matters,str,,reports/phase6/root_cause_evidence_matrix.csv
+p6_investigations,Phase 6 analytical (disconnected),"Validated Phase 5/6 output, imported unchanged; not affected by slicers.",slice_of_decline_eur,float64,,reports/phase6/root_cause_evidence_matrix.csv
+p6_investigations,Phase 6 analytical (disconnected),"Validated Phase 5/6 output, imported unchanged; not affected by slicers.",data_required,str,,reports/phase6/root_cause_evidence_matrix.csv
+p6_investigations,Phase 6 analytical (disconnected),"Validated Phase 5/6 output, imported unchanged; not affected by slicers.",proposed_owner,str,,reports/phase6/root_cause_evidence_matrix.csv
+p6_investigations,Phase 6 analytical (disconnected),"Validated Phase 5/6 output, imported unchanged; not affected by slicers.",owner_note,str,,reports/phase6/root_cause_evidence_matrix.csv
+p6_store_groups,Phase 6 analytical (disconnected),"Validated Phase 5/6 output, imported unchanged; not affected by slicers.",store_id,str,"Store code, e.g. S03",reports/phase6/cluster_control_groups.csv
+p6_store_groups,Phase 6 analytical (disconnected),"Validated Phase 5/6 output, imported unchanged; not affected by slicers.",store_group,str,Phase 6 group: Investigated cluster / Matched control / Other store / Unknown,reports/phase6/cluster_control_groups.csv
+p6_scenarios,Phase 6 analytical (disconnected),"Validated Phase 5/6 output, imported unchanged; not affected by slicers.",scenario,str,,reports/phase6/counterfactual_scenarios.csv
+p6_scenarios,Phase 6 analytical (disconnected),"Validated Phase 5/6 output, imported unchanged; not affected by slicers.",name,str,,reports/phase6/counterfactual_scenarios.csv
+p6_scenarios,Phase 6 analytical (disconnected),"Validated Phase 5/6 output, imported unchanged; not affected by slicers.",question,str,,reports/phase6/counterfactual_scenarios.csv
+p6_scenarios,Phase 6 analytical (disconnected),"Validated Phase 5/6 output, imported unchanged; not affected by slicers.",revenue_impact_eur,float64,,reports/phase6/counterfactual_scenarios.csv
+p6_scenarios,Phase 6 analytical (disconnected),"Validated Phase 5/6 output, imported unchanged; not affected by slicers.",range_low_eur,float64,,reports/phase6/counterfactual_scenarios.csv
+p6_scenarios,Phase 6 analytical (disconnected),"Validated Phase 5/6 output, imported unchanged; not affected by slicers.",range_high_eur,float64,,reports/phase6/counterfactual_scenarios.csv
+p6_scenarios,Phase 6 analytical (disconnected),"Validated Phase 5/6 output, imported unchanged; not affected by slicers.",margin_impact_eur,float64,,reports/phase6/counterfactual_scenarios.csv
+p6_scenarios,Phase 6 analytical (disconnected),"Validated Phase 5/6 output, imported unchanged; not affected by slicers.",assumptions,str,,reports/phase6/counterfactual_scenarios.csv
+p6_scenarios,Phase 6 analytical (disconnected),"Validated Phase 5/6 output, imported unchanged; not affected by slicers.",confidence,str,,reports/phase6/counterfactual_scenarios.csv
+p6_scenarios,Phase 6 analytical (disconnected),"Validated Phase 5/6 output, imported unchanged; not affected by slicers.",evidence_level,str,,reports/phase6/counterfactual_scenarios.csv
+p6_scenarios,Phase 6 analytical (disconnected),"Validated Phase 5/6 output, imported unchanged; not affected by slicers.",robust_in_sensitivity,bool,,reports/phase6/counterfactual_scenarios.csv
+p6_scenarios,Phase 6 analytical (disconnected),"Validated Phase 5/6 output, imported unchanged; not affected by slicers.",share_of_decline_recovered,float64,,reports/phase6/counterfactual_scenarios.csv
+p6_sensitivity_summary,Phase 6 analytical (disconnected),"Validated Phase 5/6 output, imported unchanged; not affected by slicers.",driver,str,,reports/phase6/sensitivity_summary.csv
+p6_sensitivity_summary,Phase 6 analytical (disconnected),"Validated Phase 5/6 output, imported unchanged; not affected by slicers.",n_variants,int64,,reports/phase6/sensitivity_summary.csv
+p6_sensitivity_summary,Phase 6 analytical (disconnected),"Validated Phase 5/6 output, imported unchanged; not affected by slicers.",range_low_eur,float64,,reports/phase6/sensitivity_summary.csv
+p6_sensitivity_summary,Phase 6 analytical (disconnected),"Validated Phase 5/6 output, imported unchanged; not affected by slicers.",range_high_eur,float64,,reports/phase6/sensitivity_summary.csv
+p6_sensitivity_summary,Phase 6 analytical (disconnected),"Validated Phase 5/6 output, imported unchanged; not affected by slicers.",central_eur,float64,,reports/phase6/sensitivity_summary.csv
+p6_sensitivity_summary,Phase 6 analytical (disconnected),"Validated Phase 5/6 output, imported unchanged; not affected by slicers.",robust,bool,,reports/phase6/sensitivity_summary.csv
+p6_sensitivity_summary,Phase 6 analytical (disconnected),"Validated Phase 5/6 output, imported unchanged; not affected by slicers.",variants_excluded_low_coverage,int64,,reports/phase6/sensitivity_summary.csv
+p6_stockout_net_of_recovery,Phase 6 analytical (disconnected),"Validated Phase 5/6 output, imported unchanged; not affected by slicers.",driver,str,,reports/phase6/sensitivity_analysis.csv
+p6_stockout_net_of_recovery,Phase 6 analytical (disconnected),"Validated Phase 5/6 output, imported unchanged; not affected by slicers.",method,str,,reports/phase6/sensitivity_analysis.csv
+p6_stockout_net_of_recovery,Phase 6 analytical (disconnected),"Validated Phase 5/6 output, imported unchanged; not affected by slicers.",variant,str,,reports/phase6/sensitivity_analysis.csv
+p6_stockout_net_of_recovery,Phase 6 analytical (disconnected),"Validated Phase 5/6 output, imported unchanged; not affected by slicers.",estimate_eur,float64,,reports/phase6/sensitivity_analysis.csv
+p6_perimeter,Phase 6 analytical (disconnected),"Validated Phase 5/6 output, imported unchanged; not affected by slicers.",store_group,str,Phase 6 group: Investigated cluster / Matched control / Other store / Unknown,reports/phase6/driver_perimeter_matrix.csv
+p6_perimeter,Phase 6 analytical (disconnected),"Validated Phase 5/6 output, imported unchanged; not affected by slicers.",category_group,str,,reports/phase6/driver_perimeter_matrix.csv
+p6_perimeter,Phase 6 analytical (disconnected),"Validated Phase 5/6 output, imported unchanged; not affected by slicers.",net_revenue_py,float64,,reports/phase6/driver_perimeter_matrix.csv
+p6_perimeter,Phase 6 analytical (disconnected),"Validated Phase 5/6 output, imported unchanged; not affected by slicers.",net_revenue_cy,float64,,reports/phase6/driver_perimeter_matrix.csv
+p6_perimeter,Phase 6 analytical (disconnected),"Validated Phase 5/6 output, imported unchanged; not affected by slicers.",net_revenue_change,float64,,reports/phase6/driver_perimeter_matrix.csv
+p6_residual_breakdown,Phase 6 analytical (disconnected),"Validated Phase 5/6 output, imported unchanged; not affected by slicers.",part,str,,reports/phase6/driver_residual_breakdown.csv
+p6_residual_breakdown,Phase 6 analytical (disconnected),"Validated Phase 5/6 output, imported unchanged; not affected by slicers.",amount_eur,float64,,reports/phase6/driver_residual_breakdown.csv
+p6_residual_breakdown,Phase 6 analytical (disconnected),"Validated Phase 5/6 output, imported unchanged; not affected by slicers.",share_of_residual,float64,,reports/phase6/driver_residual_breakdown.csv
+p6_cluster_did,Phase 6 analytical (disconnected),"Validated Phase 5/6 output, imported unchanged; not affected by slicers.",control_group,str,,reports/phase6/cluster_did.csv
+p6_cluster_did,Phase 6 analytical (disconnected),"Validated Phase 5/6 output, imported unchanged; not affected by slicers.",outcome,str,,reports/phase6/cluster_did.csv
+p6_cluster_did,Phase 6 analytical (disconnected),"Validated Phase 5/6 output, imported unchanged; not affected by slicers.",did_log,float64,,reports/phase6/cluster_did.csv
+p6_cluster_did,Phase 6 analytical (disconnected),"Validated Phase 5/6 output, imported unchanged; not affected by slicers.",did_pct,float64,,reports/phase6/cluster_did.csv
+p6_cluster_did,Phase 6 analytical (disconnected),"Validated Phase 5/6 output, imported unchanged; not affected by slicers.",pre_gap_mean_log,float64,,reports/phase6/cluster_did.csv
+p6_cluster_did,Phase 6 analytical (disconnected),"Validated Phase 5/6 output, imported unchanged; not affected by slicers.",post_gap_mean_log,float64,,reports/phase6/cluster_did.csv
+p6_cluster_did,Phase 6 analytical (disconnected),"Validated Phase 5/6 output, imported unchanged; not affected by slicers.",pre_trend_slope,float64,,reports/phase6/cluster_did.csv
+p6_cluster_did,Phase 6 analytical (disconnected),"Validated Phase 5/6 output, imported unchanged; not affected by slicers.",pre_trend_p,float64,,reports/phase6/cluster_did.csv
+p6_cluster_did,Phase 6 analytical (disconnected),"Validated Phase 5/6 output, imported unchanged; not affected by slicers.",ratio_did_actual,float64,,reports/phase6/cluster_did.csv
+p6_cluster_did,Phase 6 analytical (disconnected),"Validated Phase 5/6 output, imported unchanged; not affected by slicers.",ratio_did_counterfactual,float64,,reports/phase6/cluster_did.csv
+p6_cluster_did,Phase 6 analytical (disconnected),"Validated Phase 5/6 output, imported unchanged; not affected by slicers.",ratio_did_excess,float64,,reports/phase6/cluster_did.csv
+p6_cluster_did,Phase 6 analytical (disconnected),"Validated Phase 5/6 output, imported unchanged; not affected by slicers.",control_yoy,float64,,reports/phase6/cluster_did.csv
+p6_cluster_did,Phase 6 analytical (disconnected),"Validated Phase 5/6 output, imported unchanged; not affected by slicers.",pre_gap_ratio,float64,,reports/phase6/cluster_did.csv
+p6_cluster_onset,Phase 6 analytical (disconnected),"Validated Phase 5/6 output, imported unchanged; not affected by slicers.",series,str,,reports/phase6/cluster_onset.csv
+p6_cluster_onset,Phase 6 analytical (disconnected),"Validated Phase 5/6 output, imported unchanged; not affected by slicers.",onset_date,str,,reports/phase6/cluster_onset.csv
+p6_cluster_onset,Phase 6 analytical (disconnected),"Validated Phase 5/6 output, imported unchanged; not affected by slicers.",step_shift_log,float64,,reports/phase6/cluster_onset.csv
+p6_cluster_onset,Phase 6 analytical (disconnected),"Validated Phase 5/6 output, imported unchanged; not affected by slicers.",step_shift_pct,float64,,reports/phase6/cluster_onset.csv
+p6_cluster_onset,Phase 6 analytical (disconnected),"Validated Phase 5/6 output, imported unchanged; not affected by slicers.",step_r2,float64,,reports/phase6/cluster_onset.csv
+p6_cluster_onset,Phase 6 analytical (disconnected),"Validated Phase 5/6 output, imported unchanged; not affected by slicers.",ramp_days,int64,,reports/phase6/cluster_onset.csv
+p6_cluster_onset,Phase 6 analytical (disconnected),"Validated Phase 5/6 output, imported unchanged; not affected by slicers.",ramp_start,str,,reports/phase6/cluster_onset.csv
+p6_cluster_onset,Phase 6 analytical (disconnected),"Validated Phase 5/6 output, imported unchanged; not affected by slicers.",ramp_end,str,,reports/phase6/cluster_onset.csv
+p6_cluster_onset,Phase 6 analytical (disconnected),"Validated Phase 5/6 output, imported unchanged; not affected by slicers.",bic_step,float64,,reports/phase6/cluster_onset.csv
+p6_cluster_onset,Phase 6 analytical (disconnected),"Validated Phase 5/6 output, imported unchanged; not affected by slicers.",bic_ramp,float64,,reports/phase6/cluster_onset.csv
+p6_cluster_onset,Phase 6 analytical (disconnected),"Validated Phase 5/6 output, imported unchanged; not affected by slicers.",bic_linear,float64,,reports/phase6/cluster_onset.csv
+p6_cluster_onset,Phase 6 analytical (disconnected),"Validated Phase 5/6 output, imported unchanged; not affected by slicers.",best_model,str,,reports/phase6/cluster_onset.csv
+p6_cluster_onset,Phase 6 analytical (disconnected),"Validated Phase 5/6 output, imported unchanged; not affected by slicers.",abrupt,bool,,reports/phase6/cluster_onset.csv
+p6_cluster_onset_by_store,Phase 6 analytical (disconnected),"Validated Phase 5/6 output, imported unchanged; not affected by slicers.",store_id,str,"Store code, e.g. S03",reports/phase6/cluster_onset_by_store.csv
+p6_cluster_onset_by_store,Phase 6 analytical (disconnected),"Validated Phase 5/6 output, imported unchanged; not affected by slicers.",onset_date,str,,reports/phase6/cluster_onset_by_store.csv
+p6_cluster_onset_by_store,Phase 6 analytical (disconnected),"Validated Phase 5/6 output, imported unchanged; not affected by slicers.",shift_log,float64,,reports/phase6/cluster_onset_by_store.csv
+p6_cluster_onset_by_store,Phase 6 analytical (disconnected),"Validated Phase 5/6 output, imported unchanged; not affected by slicers.",shift_pct,float64,,reports/phase6/cluster_onset_by_store.csv
+p6_cluster_onset_by_store,Phase 6 analytical (disconnected),"Validated Phase 5/6 output, imported unchanged; not affected by slicers.",r2,float64,,reports/phase6/cluster_onset_by_store.csv
+p6_cluster_onset_daily,Phase 6 analytical (disconnected),"Validated Phase 5/6 output, imported unchanged; not affected by slicers.",calendar_date,str,Calendar date,reports/phase6/cluster_onset_daily.csv
+p6_cluster_onset_daily,Phase 6 analytical (disconnected),"Validated Phase 5/6 output, imported unchanged; not affected by slicers.",gap_log,float64,,reports/phase6/cluster_onset_daily.csv
+p6_cluster_mechanisms,Phase 6 analytical (disconnected),"Validated Phase 5/6 output, imported unchanged; not affected by slicers.",metric,str,,reports/phase6/cluster_mechanisms.csv
+p6_cluster_mechanisms,Phase 6 analytical (disconnected),"Validated Phase 5/6 output, imported unchanged; not affected by slicers.",cluster_py,float64,,reports/phase6/cluster_mechanisms.csv
+p6_cluster_mechanisms,Phase 6 analytical (disconnected),"Validated Phase 5/6 output, imported unchanged; not affected by slicers.",cluster_cy,float64,,reports/phase6/cluster_mechanisms.csv
+p6_cluster_mechanisms,Phase 6 analytical (disconnected),"Validated Phase 5/6 output, imported unchanged; not affected by slicers.",control_py,float64,,reports/phase6/cluster_mechanisms.csv
+p6_cluster_mechanisms,Phase 6 analytical (disconnected),"Validated Phase 5/6 output, imported unchanged; not affected by slicers.",control_cy,float64,,reports/phase6/cluster_mechanisms.csv
+p6_cluster_mechanisms,Phase 6 analytical (disconnected),"Validated Phase 5/6 output, imported unchanged; not affected by slicers.",unit,str,,reports/phase6/cluster_mechanisms.csv
+p6_cluster_mechanisms,Phase 6 analytical (disconnected),"Validated Phase 5/6 output, imported unchanged; not affected by slicers.",cluster_change,float64,,reports/phase6/cluster_mechanisms.csv
+p6_cluster_mechanisms,Phase 6 analytical (disconnected),"Validated Phase 5/6 output, imported unchanged; not affected by slicers.",control_change,float64,,reports/phase6/cluster_mechanisms.csv
+p6_cluster_mechanisms,Phase 6 analytical (disconnected),"Validated Phase 5/6 output, imported unchanged; not affected by slicers.",difference,float64,,reports/phase6/cluster_mechanisms.csv
+p6_cluster_placebo,Phase 6 analytical (disconnected),"Validated Phase 5/6 output, imported unchanged; not affected by slicers.",actual,float64,,reports/phase6/cluster_placebo.csv
+p6_cluster_placebo,Phase 6 analytical (disconnected),"Validated Phase 5/6 output, imported unchanged; not affected by slicers.",placebo_n,int64,,reports/phase6/cluster_placebo.csv
+p6_cluster_placebo,Phase 6 analytical (disconnected),"Validated Phase 5/6 output, imported unchanged; not affected by slicers.",p_value_one_sided,float64,,reports/phase6/cluster_placebo.csv
+p6_cluster_placebo,Phase 6 analytical (disconnected),"Validated Phase 5/6 output, imported unchanged; not affected by slicers.",placebo_min,float64,,reports/phase6/cluster_placebo.csv
+p6_cluster_placebo,Phase 6 analytical (disconnected),"Validated Phase 5/6 output, imported unchanged; not affected by slicers.",placebo_p05,float64,,reports/phase6/cluster_placebo.csv
+p6_cluster_placebo,Phase 6 analytical (disconnected),"Validated Phase 5/6 output, imported unchanged; not affected by slicers.",placebo_median,float64,,reports/phase6/cluster_placebo.csv
+p6_et_kpis,Phase 6 analytical (disconnected),"Validated Phase 5/6 output, imported unchanged; not affected by slicers.",metric,str,,reports/phase6/electronics_kpis.csv
+p6_et_kpis,Phase 6 analytical (disconnected),"Validated Phase 5/6 output, imported unchanged; not affected by slicers.",prior,float64,,reports/phase6/electronics_kpis.csv
+p6_et_kpis,Phase 6 analytical (disconnected),"Validated Phase 5/6 output, imported unchanged; not affected by slicers.",current,float64,,reports/phase6/electronics_kpis.csv
+p6_et_kpis,Phase 6 analytical (disconnected),"Validated Phase 5/6 output, imported unchanged; not affected by slicers.",change,float64,,reports/phase6/electronics_kpis.csv
+p6_et_kpis,Phase 6 analytical (disconnected),"Validated Phase 5/6 output, imported unchanged; not affected by slicers.",change_pct,float64,,reports/phase6/electronics_kpis.csv
+p6_et_supplier_comparison,Phase 6 analytical (disconnected),"Validated Phase 5/6 output, imported unchanged; not affected by slicers.",supplier_name,str,Supplier name,reports/phase6/electronics_supplier_comparison.csv
+p6_et_supplier_comparison,Phase 6 analytical (disconnected),"Validated Phase 5/6 output, imported unchanged; not affected by slicers.",skus_py,int64,,reports/phase6/electronics_supplier_comparison.csv
+p6_et_supplier_comparison,Phase 6 analytical (disconnected),"Validated Phase 5/6 output, imported unchanged; not affected by slicers.",skus_cy,int64,,reports/phase6/electronics_supplier_comparison.csv
+p6_et_supplier_comparison,Phase 6 analytical (disconnected),"Validated Phase 5/6 output, imported unchanged; not affected by slicers.",ranged_cells_py,int64,,reports/phase6/electronics_supplier_comparison.csv
+p6_et_supplier_comparison,Phase 6 analytical (disconnected),"Validated Phase 5/6 output, imported unchanged; not affected by slicers.",ranged_cells_cy,int64,,reports/phase6/electronics_supplier_comparison.csv
+p6_et_supplier_comparison,Phase 6 analytical (disconnected),"Validated Phase 5/6 output, imported unchanged; not affected by slicers.",out_cells_py,int64,,reports/phase6/electronics_supplier_comparison.csv
+p6_et_supplier_comparison,Phase 6 analytical (disconnected),"Validated Phase 5/6 output, imported unchanged; not affected by slicers.",out_cells_cy,int64,,reports/phase6/electronics_supplier_comparison.csv
+p6_et_supplier_comparison,Phase 6 analytical (disconnected),"Validated Phase 5/6 output, imported unchanged; not affected by slicers.",full_week_out_cells_py,int64,,reports/phase6/electronics_supplier_comparison.csv
+p6_et_supplier_comparison,Phase 6 analytical (disconnected),"Validated Phase 5/6 output, imported unchanged; not affected by slicers.",full_week_out_cells_cy,int64,,reports/phase6/electronics_supplier_comparison.csv
+p6_et_supplier_comparison,Phase 6 analytical (disconnected),"Validated Phase 5/6 output, imported unchanged; not affected by slicers.",sales_revenue_py,float64,,reports/phase6/electronics_supplier_comparison.csv
+p6_et_supplier_comparison,Phase 6 analytical (disconnected),"Validated Phase 5/6 output, imported unchanged; not affected by slicers.",sales_revenue_cy,float64,,reports/phase6/electronics_supplier_comparison.csv
+p6_et_supplier_comparison,Phase 6 analytical (disconnected),"Validated Phase 5/6 output, imported unchanged; not affected by slicers.",est_lost_sales_eur_py,float64,,reports/phase6/electronics_supplier_comparison.csv
+p6_et_supplier_comparison,Phase 6 analytical (disconnected),"Validated Phase 5/6 output, imported unchanged; not affected by slicers.",est_lost_sales_eur_cy,float64,,reports/phase6/electronics_supplier_comparison.csv
+p6_et_supplier_comparison,Phase 6 analytical (disconnected),"Validated Phase 5/6 output, imported unchanged; not affected by slicers.",est_lost_sales_upper_eur_py,float64,,reports/phase6/electronics_supplier_comparison.csv
+p6_et_supplier_comparison,Phase 6 analytical (disconnected),"Validated Phase 5/6 output, imported unchanged; not affected by slicers.",est_lost_sales_upper_eur_cy,float64,,reports/phase6/electronics_supplier_comparison.csv
+p6_et_supplier_comparison,Phase 6 analytical (disconnected),"Validated Phase 5/6 output, imported unchanged; not affected by slicers.",availability_py,float64,,reports/phase6/electronics_supplier_comparison.csv
+p6_et_supplier_comparison,Phase 6 analytical (disconnected),"Validated Phase 5/6 output, imported unchanged; not affected by slicers.",availability_cy,float64,,reports/phase6/electronics_supplier_comparison.csv
+p6_et_supplier_comparison,Phase 6 analytical (disconnected),"Validated Phase 5/6 output, imported unchanged; not affected by slicers.",availability_change_pp,float64,,reports/phase6/electronics_supplier_comparison.csv
+p6_et_supplier_comparison,Phase 6 analytical (disconnected),"Validated Phase 5/6 output, imported unchanged; not affected by slicers.",lost_primary_change,float64,,reports/phase6/electronics_supplier_comparison.csv
+p6_et_supplier_comparison,Phase 6 analytical (disconnected),"Validated Phase 5/6 output, imported unchanged; not affected by slicers.",lost_upper_change,float64,,reports/phase6/electronics_supplier_comparison.csv
+p6_et_supplier_comparison,Phase 6 analytical (disconnected),"Validated Phase 5/6 output, imported unchanged; not affected by slicers.",sales_change,float64,,reports/phase6/electronics_supplier_comparison.csv
+p6_et_supplier_comparison,Phase 6 analytical (disconnected),"Validated Phase 5/6 output, imported unchanged; not affected by slicers.",share_of_lost_primary_change,float64,,reports/phase6/electronics_supplier_comparison.csv
+p6_et_supplier_test,Phase 6 analytical (disconnected),"Validated Phase 5/6 output, imported unchanged; not affected by slicers.",supplier,str,,reports/phase6/electronics_supplier_test.csv
+p6_et_supplier_test,Phase 6 analytical (disconnected),"Validated Phase 5/6 output, imported unchanged; not affected by slicers.",metric,str,,reports/phase6/electronics_supplier_test.csv
+p6_et_supplier_test,Phase 6 analytical (disconnected),"Validated Phase 5/6 output, imported unchanged; not affected by slicers.",supplier_skus,int64,,reports/phase6/electronics_supplier_test.csv
+p6_et_supplier_test,Phase 6 analytical (disconnected),"Validated Phase 5/6 output, imported unchanged; not affected by slicers.",other_skus,int64,,reports/phase6/electronics_supplier_test.csv
+p6_et_supplier_test,Phase 6 analytical (disconnected),"Validated Phase 5/6 output, imported unchanged; not affected by slicers.",supplier_mean,float64,,reports/phase6/electronics_supplier_test.csv
+p6_et_supplier_test,Phase 6 analytical (disconnected),"Validated Phase 5/6 output, imported unchanged; not affected by slicers.",other_mean,float64,,reports/phase6/electronics_supplier_test.csv
+p6_et_supplier_test,Phase 6 analytical (disconnected),"Validated Phase 5/6 output, imported unchanged; not affected by slicers.",difference,float64,,reports/phase6/electronics_supplier_test.csv
+p6_et_supplier_test,Phase 6 analytical (disconnected),"Validated Phase 5/6 output, imported unchanged; not affected by slicers.",ci_low,float64,,reports/phase6/electronics_supplier_test.csv
+p6_et_supplier_test,Phase 6 analytical (disconnected),"Validated Phase 5/6 output, imported unchanged; not affected by slicers.",ci_high,float64,,reports/phase6/electronics_supplier_test.csv
+p6_et_supplier_test,Phase 6 analytical (disconnected),"Validated Phase 5/6 output, imported unchanged; not affected by slicers.",permutation_p_two_sided,float64,,reports/phase6/electronics_supplier_test.csv
+p6_et_supplier_test,Phase 6 analytical (disconnected),"Validated Phase 5/6 output, imported unchanged; not affected by slicers.",leave_one_sku_out_min,float64,,reports/phase6/electronics_supplier_test.csv
+p6_et_supplier_test,Phase 6 analytical (disconnected),"Validated Phase 5/6 output, imported unchanged; not affected by slicers.",leave_one_sku_out_max,float64,,reports/phase6/electronics_supplier_test.csv
+p6_et_supplier_test,Phase 6 analytical (disconnected),"Validated Phase 5/6 output, imported unchanged; not affected by slicers.",supplier_median,float64,,reports/phase6/electronics_supplier_test.csv
+p6_et_supplier_test,Phase 6 analytical (disconnected),"Validated Phase 5/6 output, imported unchanged; not affected by slicers.",other_median,float64,,reports/phase6/electronics_supplier_test.csv
+p6_et_supplier_test,Phase 6 analytical (disconnected),"Validated Phase 5/6 output, imported unchanged; not affected by slicers.",supplier_skus_worse_than_other_median,int64,,reports/phase6/electronics_supplier_test.csv
+p6_et_supplier_test,Phase 6 analytical (disconnected),"Validated Phase 5/6 output, imported unchanged; not affected by slicers.",variant,str,,reports/phase6/electronics_supplier_test.csv
+p6_et_sku_stockouts,Phase 6 analytical (disconnected),"Validated Phase 5/6 output, imported unchanged; not affected by slicers.",product_id,str,"SKU code, e.g. P00149",reports/phase6/electronics_sku_stockouts.csv
+p6_et_sku_stockouts,Phase 6 analytical (disconnected),"Validated Phase 5/6 output, imported unchanged; not affected by slicers.",supplier_name,str,Supplier name,reports/phase6/electronics_sku_stockouts.csv
+p6_et_sku_stockouts,Phase 6 analytical (disconnected),"Validated Phase 5/6 output, imported unchanged; not affected by slicers.",cells_py,float64,,reports/phase6/electronics_sku_stockouts.csv
+p6_et_sku_stockouts,Phase 6 analytical (disconnected),"Validated Phase 5/6 output, imported unchanged; not affected by slicers.",cells_cy,float64,,reports/phase6/electronics_sku_stockouts.csv
+p6_et_sku_stockouts,Phase 6 analytical (disconnected),"Validated Phase 5/6 output, imported unchanged; not affected by slicers.",out_py,float64,,reports/phase6/electronics_sku_stockouts.csv
+p6_et_sku_stockouts,Phase 6 analytical (disconnected),"Validated Phase 5/6 output, imported unchanged; not affected by slicers.",out_cy,float64,,reports/phase6/electronics_sku_stockouts.csv
+p6_et_sku_stockouts,Phase 6 analytical (disconnected),"Validated Phase 5/6 output, imported unchanged; not affected by slicers.",full_py,float64,,reports/phase6/electronics_sku_stockouts.csv
+p6_et_sku_stockouts,Phase 6 analytical (disconnected),"Validated Phase 5/6 output, imported unchanged; not affected by slicers.",full_cy,float64,,reports/phase6/electronics_sku_stockouts.csv
+p6_et_sku_stockouts,Phase 6 analytical (disconnected),"Validated Phase 5/6 output, imported unchanged; not affected by slicers.",revenue_py,float64,,reports/phase6/electronics_sku_stockouts.csv
+p6_et_sku_stockouts,Phase 6 analytical (disconnected),"Validated Phase 5/6 output, imported unchanged; not affected by slicers.",revenue_cy,float64,,reports/phase6/electronics_sku_stockouts.csv
+p6_et_sku_stockouts,Phase 6 analytical (disconnected),"Validated Phase 5/6 output, imported unchanged; not affected by slicers.",units_py,float64,,reports/phase6/electronics_sku_stockouts.csv
+p6_et_sku_stockouts,Phase 6 analytical (disconnected),"Validated Phase 5/6 output, imported unchanged; not affected by slicers.",units_cy,float64,,reports/phase6/electronics_sku_stockouts.csv
+p6_et_sku_stockouts,Phase 6 analytical (disconnected),"Validated Phase 5/6 output, imported unchanged; not affected by slicers.",est_lost_sales_eur_py,float64,,reports/phase6/electronics_sku_stockouts.csv
+p6_et_sku_stockouts,Phase 6 analytical (disconnected),"Validated Phase 5/6 output, imported unchanged; not affected by slicers.",est_lost_sales_eur_cy,float64,,reports/phase6/electronics_sku_stockouts.csv
+p6_et_sku_stockouts,Phase 6 analytical (disconnected),"Validated Phase 5/6 output, imported unchanged; not affected by slicers.",est_lost_sales_upper_eur_py,float64,,reports/phase6/electronics_sku_stockouts.csv
+p6_et_sku_stockouts,Phase 6 analytical (disconnected),"Validated Phase 5/6 output, imported unchanged; not affected by slicers.",est_lost_sales_upper_eur_cy,float64,,reports/phase6/electronics_sku_stockouts.csv
+p6_et_sku_stockouts,Phase 6 analytical (disconnected),"Validated Phase 5/6 output, imported unchanged; not affected by slicers.",oos_rate_py,float64,,reports/phase6/electronics_sku_stockouts.csv
+p6_et_sku_stockouts,Phase 6 analytical (disconnected),"Validated Phase 5/6 output, imported unchanged; not affected by slicers.",oos_rate_cy,float64,,reports/phase6/electronics_sku_stockouts.csv
+p6_et_sku_stockouts,Phase 6 analytical (disconnected),"Validated Phase 5/6 output, imported unchanged; not affected by slicers.",oos_rate_change_pp,float64,,reports/phase6/electronics_sku_stockouts.csv
+p6_et_sku_stockouts,Phase 6 analytical (disconnected),"Validated Phase 5/6 output, imported unchanged; not affected by slicers.",lost_primary_change,float64,,reports/phase6/electronics_sku_stockouts.csv
+p6_et_sku_stockouts,Phase 6 analytical (disconnected),"Validated Phase 5/6 output, imported unchanged; not affected by slicers.",prior_year_revenue_rank,int64,,reports/phase6/electronics_sku_stockouts.csv
+p6_et_sku_stockouts,Phase 6 analytical (disconnected),"Validated Phase 5/6 output, imported unchanged; not affected by slicers.",high_seller,bool,,reports/phase6/electronics_sku_stockouts.csv
+p6_et_episodes,Phase 6 analytical (disconnected),"Validated Phase 5/6 output, imported unchanged; not affected by slicers.",supplier_name,str,Supplier name,reports/phase6/electronics_stockout_episodes.csv
+p6_et_episodes,Phase 6 analytical (disconnected),"Validated Phase 5/6 output, imported unchanged; not affected by slicers.",retail_year,int64,Retail year,reports/phase6/electronics_stockout_episodes.csv
+p6_et_episodes,Phase 6 analytical (disconnected),"Validated Phase 5/6 output, imported unchanged; not affected by slicers.",episodes,int64,,reports/phase6/electronics_stockout_episodes.csv
+p6_et_episodes,Phase 6 analytical (disconnected),"Validated Phase 5/6 output, imported unchanged; not affected by slicers.",mean_weeks_out,float64,,reports/phase6/electronics_stockout_episodes.csv
+p6_et_episodes,Phase 6 analytical (disconnected),"Validated Phase 5/6 output, imported unchanged; not affected by slicers.",median_weeks_out,float64,,reports/phase6/electronics_stockout_episodes.csv
+p6_et_episodes,Phase 6 analytical (disconnected),"Validated Phase 5/6 output, imported unchanged; not affected by slicers.",max_weeks_out,int64,,reports/phase6/electronics_stockout_episodes.csv
+p6_et_episodes,Phase 6 analytical (disconnected),"Validated Phase 5/6 output, imported unchanged; not affected by slicers.",share_4plus_weeks,float64,,reports/phase6/electronics_stockout_episodes.csv
+p6_et_episodes,Phase 6 analytical (disconnected),"Validated Phase 5/6 output, imported unchanged; not affected by slicers.",full_weeks_out,int64,,reports/phase6/electronics_stockout_episodes.csv
+p6_et_lost_sales_totals,Phase 6 analytical (disconnected),"Validated Phase 5/6 output, imported unchanged; not affected by slicers.",scope,str,,reports/phase6/electronics_lost_sales_totals.csv
+p6_et_lost_sales_totals,Phase 6 analytical (disconnected),"Validated Phase 5/6 output, imported unchanged; not affected by slicers.",primary_py,float64,,reports/phase6/electronics_lost_sales_totals.csv
+p6_et_lost_sales_totals,Phase 6 analytical (disconnected),"Validated Phase 5/6 output, imported unchanged; not affected by slicers.",primary_cy,float64,,reports/phase6/electronics_lost_sales_totals.csv
+p6_et_lost_sales_totals,Phase 6 analytical (disconnected),"Validated Phase 5/6 output, imported unchanged; not affected by slicers.",upper_py,float64,,reports/phase6/electronics_lost_sales_totals.csv
+p6_et_lost_sales_totals,Phase 6 analytical (disconnected),"Validated Phase 5/6 output, imported unchanged; not affected by slicers.",upper_cy,float64,,reports/phase6/electronics_lost_sales_totals.csv
+p6_et_lost_sales_totals,Phase 6 analytical (disconnected),"Validated Phase 5/6 output, imported unchanged; not affected by slicers.",primary_change,float64,,reports/phase6/electronics_lost_sales_totals.csv
+p6_et_lost_sales_totals,Phase 6 analytical (disconnected),"Validated Phase 5/6 output, imported unchanged; not affected by slicers.",upper_change,float64,,reports/phase6/electronics_lost_sales_totals.csv
+p6_et_weekly_timeline,Phase 6 analytical (disconnected),"Validated Phase 5/6 output, imported unchanged; not affected by slicers.",retail_week,int64,Retail week 1-52,reports/phase6/electronics_weekly_timeline.csv
+p6_et_weekly_timeline,Phase 6 analytical (disconnected),"Validated Phase 5/6 output, imported unchanged; not affected by slicers.",availability_category_cy,float64,,reports/phase6/electronics_weekly_timeline.csv
+p6_et_weekly_timeline,Phase 6 analytical (disconnected),"Validated Phase 5/6 output, imported unchanged; not affected by slicers.",availability_supplier_cy,float64,,reports/phase6/electronics_weekly_timeline.csv
+p6_et_weekly_timeline,Phase 6 analytical (disconnected),"Validated Phase 5/6 output, imported unchanged; not affected by slicers.",availability_other_suppliers_cy,float64,,reports/phase6/electronics_weekly_timeline.csv
+p6_et_weekly_timeline,Phase 6 analytical (disconnected),"Validated Phase 5/6 output, imported unchanged; not affected by slicers.",category_sales_cy,float64,,reports/phase6/electronics_weekly_timeline.csv
+p6_et_weekly_timeline,Phase 6 analytical (disconnected),"Validated Phase 5/6 output, imported unchanged; not affected by slicers.",supplier_sales_cy,float64,,reports/phase6/electronics_weekly_timeline.csv
+p6_et_weekly_timeline,Phase 6 analytical (disconnected),"Validated Phase 5/6 output, imported unchanged; not affected by slicers.",lost_primary_cy,float64,,reports/phase6/electronics_weekly_timeline.csv
+p6_et_weekly_timeline,Phase 6 analytical (disconnected),"Validated Phase 5/6 output, imported unchanged; not affected by slicers.",lost_upper_cy,float64,,reports/phase6/electronics_weekly_timeline.csv
+p6_et_weekly_timeline,Phase 6 analytical (disconnected),"Validated Phase 5/6 output, imported unchanged; not affected by slicers.",availability_category_py,float64,,reports/phase6/electronics_weekly_timeline.csv
+p6_et_weekly_timeline,Phase 6 analytical (disconnected),"Validated Phase 5/6 output, imported unchanged; not affected by slicers.",availability_supplier_py,float64,,reports/phase6/electronics_weekly_timeline.csv
+p6_et_weekly_timeline,Phase 6 analytical (disconnected),"Validated Phase 5/6 output, imported unchanged; not affected by slicers.",availability_other_suppliers_py,float64,,reports/phase6/electronics_weekly_timeline.csv
+p6_et_weekly_timeline,Phase 6 analytical (disconnected),"Validated Phase 5/6 output, imported unchanged; not affected by slicers.",category_sales_py,float64,,reports/phase6/electronics_weekly_timeline.csv
+p6_et_weekly_timeline,Phase 6 analytical (disconnected),"Validated Phase 5/6 output, imported unchanged; not affected by slicers.",supplier_sales_py,float64,,reports/phase6/electronics_weekly_timeline.csv
+p6_et_weekly_timeline,Phase 6 analytical (disconnected),"Validated Phase 5/6 output, imported unchanged; not affected by slicers.",lost_primary_py,float64,,reports/phase6/electronics_weekly_timeline.csv
+p6_et_weekly_timeline,Phase 6 analytical (disconnected),"Validated Phase 5/6 output, imported unchanged; not affected by slicers.",lost_upper_py,float64,,reports/phase6/electronics_weekly_timeline.csv
+p6_et_weekly_timeline,Phase 6 analytical (disconnected),"Validated Phase 5/6 output, imported unchanged; not affected by slicers.",category_sales_yoy_pct,float64,,reports/phase6/electronics_weekly_timeline.csv
+p6_et_weekly_timeline,Phase 6 analytical (disconnected),"Validated Phase 5/6 output, imported unchanged; not affected by slicers.",supplier_sales_yoy_pct,float64,,reports/phase6/electronics_weekly_timeline.csv
+p6_et_range_distribution,Phase 6 analytical (disconnected),"Validated Phase 5/6 output, imported unchanged; not affected by slicers.",supplier_name,str,Supplier name,reports/phase6/electronics_range_distribution.csv
+p6_et_range_distribution,Phase 6 analytical (disconnected),"Validated Phase 5/6 output, imported unchanged; not affected by slicers.",sku_status,str,,reports/phase6/electronics_range_distribution.csv
+p6_et_range_distribution,Phase 6 analytical (disconnected),"Validated Phase 5/6 output, imported unchanged; not affected by slicers.",skus_py,float64,,reports/phase6/electronics_range_distribution.csv
+p6_et_range_distribution,Phase 6 analytical (disconnected),"Validated Phase 5/6 output, imported unchanged; not affected by slicers.",skus_cy,float64,,reports/phase6/electronics_range_distribution.csv
+p6_et_range_distribution,Phase 6 analytical (disconnected),"Validated Phase 5/6 output, imported unchanged; not affected by slicers.",ranged_cells_py,float64,,reports/phase6/electronics_range_distribution.csv
+p6_et_range_distribution,Phase 6 analytical (disconnected),"Validated Phase 5/6 output, imported unchanged; not affected by slicers.",ranged_cells_cy,float64,,reports/phase6/electronics_range_distribution.csv
+p6_et_range_distribution,Phase 6 analytical (disconnected),"Validated Phase 5/6 output, imported unchanged; not affected by slicers.",sales_py,float64,,reports/phase6/electronics_range_distribution.csv
+p6_et_range_distribution,Phase 6 analytical (disconnected),"Validated Phase 5/6 output, imported unchanged; not affected by slicers.",sales_cy,float64,,reports/phase6/electronics_range_distribution.csv
+p6_et_range_distribution,Phase 6 analytical (disconnected),"Validated Phase 5/6 output, imported unchanged; not affected by slicers.",sales_change,float64,,reports/phase6/electronics_range_distribution.csv
+p6_et_range_distribution,Phase 6 analytical (disconnected),"Validated Phase 5/6 output, imported unchanged; not affected by slicers.",distribution_effect,float64,,reports/phase6/electronics_range_distribution.csv
+p6_et_range_distribution,Phase 6 analytical (disconnected),"Validated Phase 5/6 output, imported unchanged; not affected by slicers.",rate_effect,float64,,reports/phase6/electronics_range_distribution.csv
+p6_faulty_reasons,Phase 6 analytical (disconnected),"Validated Phase 5/6 output, imported unchanged; not affected by slicers.",return_reason,str,Till reason code (e.g. 'Faulty'); NOT a verified defect,reports/phase6/faulty_returns_reasons.csv
+p6_faulty_reasons,Phase 6 analytical (disconnected),"Validated Phase 5/6 output, imported unchanged; not affected by slicers.",returns_value_py,float64,,reports/phase6/faulty_returns_reasons.csv
+p6_faulty_reasons,Phase 6 analytical (disconnected),"Validated Phase 5/6 output, imported unchanged; not affected by slicers.",returns_value_cy,float64,,reports/phase6/faulty_returns_reasons.csv
+p6_faulty_reasons,Phase 6 analytical (disconnected),"Validated Phase 5/6 output, imported unchanged; not affected by slicers.",returned_units_py,int64,,reports/phase6/faulty_returns_reasons.csv
+p6_faulty_reasons,Phase 6 analytical (disconnected),"Validated Phase 5/6 output, imported unchanged; not affected by slicers.",returned_units_cy,int64,,reports/phase6/faulty_returns_reasons.csv
+p6_faulty_reasons,Phase 6 analytical (disconnected),"Validated Phase 5/6 output, imported unchanged; not affected by slicers.",value_change,float64,,reports/phase6/faulty_returns_reasons.csv
+p6_faulty_reasons,Phase 6 analytical (disconnected),"Validated Phase 5/6 output, imported unchanged; not affected by slicers.",value_change_pct,float64,,reports/phase6/faulty_returns_reasons.csv
+p6_faulty_by_store,Phase 6 analytical (disconnected),"Validated Phase 5/6 output, imported unchanged; not affected by slicers.",store_id,str,"Store code, e.g. S03",reports/phase6/faulty_returns_by_store.csv
+p6_faulty_by_store,Phase 6 analytical (disconnected),"Validated Phase 5/6 output, imported unchanged; not affected by slicers.",returned_units_py,int64,,reports/phase6/faulty_returns_by_store.csv
+p6_faulty_by_store,Phase 6 analytical (disconnected),"Validated Phase 5/6 output, imported unchanged; not affected by slicers.",returned_units_cy,int64,,reports/phase6/faulty_returns_by_store.csv
+p6_faulty_by_store,Phase 6 analytical (disconnected),"Validated Phase 5/6 output, imported unchanged; not affected by slicers.",returns_value_py,float64,,reports/phase6/faulty_returns_by_store.csv
+p6_faulty_by_store,Phase 6 analytical (disconnected),"Validated Phase 5/6 output, imported unchanged; not affected by slicers.",returns_value_cy,float64,,reports/phase6/faulty_returns_by_store.csv
+p6_faulty_by_store,Phase 6 analytical (disconnected),"Validated Phase 5/6 output, imported unchanged; not affected by slicers.",units_sold_py,float64,,reports/phase6/faulty_returns_by_store.csv
+p6_faulty_by_store,Phase 6 analytical (disconnected),"Validated Phase 5/6 output, imported unchanged; not affected by slicers.",units_sold_cy,float64,,reports/phase6/faulty_returns_by_store.csv
+p6_faulty_by_store,Phase 6 analytical (disconnected),"Validated Phase 5/6 output, imported unchanged; not affected by slicers.",rate_per_100_py,float64,,reports/phase6/faulty_returns_by_store.csv
+p6_faulty_by_store,Phase 6 analytical (disconnected),"Validated Phase 5/6 output, imported unchanged; not affected by slicers.",rate_per_100_cy,float64,,reports/phase6/faulty_returns_by_store.csv
+p6_faulty_by_store,Phase 6 analytical (disconnected),"Validated Phase 5/6 output, imported unchanged; not affected by slicers.",expected_units_cy_at_py_rate,float64,,reports/phase6/faulty_returns_by_store.csv
+p6_faulty_by_store,Phase 6 analytical (disconnected),"Validated Phase 5/6 output, imported unchanged; not affected by slicers.",excess_units,float64,,reports/phase6/faulty_returns_by_store.csv
+p6_faulty_by_store,Phase 6 analytical (disconnected),"Validated Phase 5/6 output, imported unchanged; not affected by slicers.",excess_value_eur,float64,,reports/phase6/faulty_returns_by_store.csv
+p6_faulty_by_store,Phase 6 analytical (disconnected),"Validated Phase 5/6 output, imported unchanged; not affected by slicers.",p_increase,float64,,reports/phase6/faulty_returns_by_store.csv
+p6_faulty_by_store,Phase 6 analytical (disconnected),"Validated Phase 5/6 output, imported unchanged; not affected by slicers.",value_change,float64,,reports/phase6/faulty_returns_by_store.csv
+p6_faulty_by_store,Phase 6 analytical (disconnected),"Validated Phase 5/6 output, imported unchanged; not affected by slicers.",in_cluster,bool,,reports/phase6/faulty_returns_by_store.csv
+p6_faulty_by_supplier,Phase 6 analytical (disconnected),"Validated Phase 5/6 output, imported unchanged; not affected by slicers.",supplier_name,str,Supplier name,reports/phase6/faulty_returns_by_supplier.csv
+p6_faulty_by_supplier,Phase 6 analytical (disconnected),"Validated Phase 5/6 output, imported unchanged; not affected by slicers.",returned_units_py,int64,,reports/phase6/faulty_returns_by_supplier.csv
+p6_faulty_by_supplier,Phase 6 analytical (disconnected),"Validated Phase 5/6 output, imported unchanged; not affected by slicers.",returned_units_cy,int64,,reports/phase6/faulty_returns_by_supplier.csv
+p6_faulty_by_supplier,Phase 6 analytical (disconnected),"Validated Phase 5/6 output, imported unchanged; not affected by slicers.",returns_value_py,float64,,reports/phase6/faulty_returns_by_supplier.csv
+p6_faulty_by_supplier,Phase 6 analytical (disconnected),"Validated Phase 5/6 output, imported unchanged; not affected by slicers.",returns_value_cy,float64,,reports/phase6/faulty_returns_by_supplier.csv
+p6_faulty_by_supplier,Phase 6 analytical (disconnected),"Validated Phase 5/6 output, imported unchanged; not affected by slicers.",units_sold_py,float64,,reports/phase6/faulty_returns_by_supplier.csv
+p6_faulty_by_supplier,Phase 6 analytical (disconnected),"Validated Phase 5/6 output, imported unchanged; not affected by slicers.",units_sold_cy,float64,,reports/phase6/faulty_returns_by_supplier.csv
+p6_faulty_by_supplier,Phase 6 analytical (disconnected),"Validated Phase 5/6 output, imported unchanged; not affected by slicers.",rate_per_100_py,float64,,reports/phase6/faulty_returns_by_supplier.csv
+p6_faulty_by_supplier,Phase 6 analytical (disconnected),"Validated Phase 5/6 output, imported unchanged; not affected by slicers.",rate_per_100_cy,float64,,reports/phase6/faulty_returns_by_supplier.csv
+p6_faulty_by_supplier,Phase 6 analytical (disconnected),"Validated Phase 5/6 output, imported unchanged; not affected by slicers.",expected_units_cy_at_py_rate,float64,,reports/phase6/faulty_returns_by_supplier.csv
+p6_faulty_by_supplier,Phase 6 analytical (disconnected),"Validated Phase 5/6 output, imported unchanged; not affected by slicers.",excess_units,float64,,reports/phase6/faulty_returns_by_supplier.csv
+p6_faulty_by_supplier,Phase 6 analytical (disconnected),"Validated Phase 5/6 output, imported unchanged; not affected by slicers.",excess_value_eur,float64,,reports/phase6/faulty_returns_by_supplier.csv
+p6_faulty_by_supplier,Phase 6 analytical (disconnected),"Validated Phase 5/6 output, imported unchanged; not affected by slicers.",p_increase,float64,,reports/phase6/faulty_returns_by_supplier.csv
+p6_faulty_by_supplier,Phase 6 analytical (disconnected),"Validated Phase 5/6 output, imported unchanged; not affected by slicers.",value_change,float64,,reports/phase6/faulty_returns_by_supplier.csv
+p6_faulty_by_product,Phase 6 analytical (disconnected),"Validated Phase 5/6 output, imported unchanged; not affected by slicers.",product_id,str,"SKU code, e.g. P00149",reports/phase6/faulty_returns_by_product.csv
+p6_faulty_by_product,Phase 6 analytical (disconnected),"Validated Phase 5/6 output, imported unchanged; not affected by slicers.",returned_units_py,float64,,reports/phase6/faulty_returns_by_product.csv
+p6_faulty_by_product,Phase 6 analytical (disconnected),"Validated Phase 5/6 output, imported unchanged; not affected by slicers.",returned_units_cy,float64,,reports/phase6/faulty_returns_by_product.csv
+p6_faulty_by_product,Phase 6 analytical (disconnected),"Validated Phase 5/6 output, imported unchanged; not affected by slicers.",returns_value_py,float64,,reports/phase6/faulty_returns_by_product.csv
+p6_faulty_by_product,Phase 6 analytical (disconnected),"Validated Phase 5/6 output, imported unchanged; not affected by slicers.",returns_value_cy,float64,,reports/phase6/faulty_returns_by_product.csv
+p6_faulty_by_product,Phase 6 analytical (disconnected),"Validated Phase 5/6 output, imported unchanged; not affected by slicers.",units_sold_py,float64,,reports/phase6/faulty_returns_by_product.csv
+p6_faulty_by_product,Phase 6 analytical (disconnected),"Validated Phase 5/6 output, imported unchanged; not affected by slicers.",units_sold_cy,float64,,reports/phase6/faulty_returns_by_product.csv
+p6_faulty_by_product,Phase 6 analytical (disconnected),"Validated Phase 5/6 output, imported unchanged; not affected by slicers.",rate_per_100_py,float64,,reports/phase6/faulty_returns_by_product.csv
+p6_faulty_by_product,Phase 6 analytical (disconnected),"Validated Phase 5/6 output, imported unchanged; not affected by slicers.",rate_per_100_cy,float64,,reports/phase6/faulty_returns_by_product.csv
+p6_faulty_by_product,Phase 6 analytical (disconnected),"Validated Phase 5/6 output, imported unchanged; not affected by slicers.",expected_units_cy_at_py_rate,float64,,reports/phase6/faulty_returns_by_product.csv
+p6_faulty_by_product,Phase 6 analytical (disconnected),"Validated Phase 5/6 output, imported unchanged; not affected by slicers.",excess_units,float64,,reports/phase6/faulty_returns_by_product.csv
+p6_faulty_by_product,Phase 6 analytical (disconnected),"Validated Phase 5/6 output, imported unchanged; not affected by slicers.",excess_value_eur,float64,,reports/phase6/faulty_returns_by_product.csv
+p6_faulty_by_product,Phase 6 analytical (disconnected),"Validated Phase 5/6 output, imported unchanged; not affected by slicers.",p_increase,float64,,reports/phase6/faulty_returns_by_product.csv
+p6_faulty_by_product,Phase 6 analytical (disconnected),"Validated Phase 5/6 output, imported unchanged; not affected by slicers.",value_change,float64,,reports/phase6/faulty_returns_by_product.csv
+p6_faulty_by_cohort,Phase 6 analytical (disconnected),"Validated Phase 5/6 output, imported unchanged; not affected by slicers.",sale_year_month,int64,,reports/phase6/faulty_returns_by_cohort.csv
+p6_faulty_by_cohort,Phase 6 analytical (disconnected),"Validated Phase 5/6 output, imported unchanged; not affected by slicers.",returned_units,int64,,reports/phase6/faulty_returns_by_cohort.csv
+p6_faulty_by_cohort,Phase 6 analytical (disconnected),"Validated Phase 5/6 output, imported unchanged; not affected by slicers.",value,float64,,reports/phase6/faulty_returns_by_cohort.csv
+p6_faulty_by_cohort,Phase 6 analytical (disconnected),"Validated Phase 5/6 output, imported unchanged; not affected by slicers.",units_sold,float64,,reports/phase6/faulty_returns_by_cohort.csv
+p6_faulty_by_cohort,Phase 6 analytical (disconnected),"Validated Phase 5/6 output, imported unchanged; not affected by slicers.",rate_per_100,float64,,reports/phase6/faulty_returns_by_cohort.csv
+p6_faulty_concentration,Phase 6 analytical (disconnected),"Validated Phase 5/6 output, imported unchanged; not affected by slicers.",dimension,str,,reports/phase6/faulty_returns_concentration.csv
+p6_faulty_concentration,Phase 6 analytical (disconnected),"Validated Phase 5/6 output, imported unchanged; not affected by slicers.",entities,int64,,reports/phase6/faulty_returns_concentration.csv
+p6_faulty_concentration,Phase 6 analytical (disconnected),"Validated Phase 5/6 output, imported unchanged; not affected by slicers.",entities_with_increase,int64,,reports/phase6/faulty_returns_concentration.csv
+p6_faulty_concentration,Phase 6 analytical (disconnected),"Validated Phase 5/6 output, imported unchanged; not affected by slicers.",net_increase,float64,,reports/phase6/faulty_returns_concentration.csv
+p6_faulty_concentration,Phase 6 analytical (disconnected),"Validated Phase 5/6 output, imported unchanged; not affected by slicers.",gross_increase,float64,,reports/phase6/faulty_returns_concentration.csv
+p6_faulty_concentration,Phase 6 analytical (disconnected),"Validated Phase 5/6 output, imported unchanged; not affected by slicers.",top_k,int64,,reports/phase6/faulty_returns_concentration.csv
+p6_faulty_concentration,Phase 6 analytical (disconnected),"Validated Phase 5/6 output, imported unchanged; not affected by slicers.",top_k_share_of_gross,float64,,reports/phase6/faulty_returns_concentration.csv
+p6_faulty_concentration,Phase 6 analytical (disconnected),"Validated Phase 5/6 output, imported unchanged; not affected by slicers.",top_entities,str,,reports/phase6/faulty_returns_concentration.csv
+p6_faulty_concentration,Phase 6 analytical (disconnected),"Validated Phase 5/6 output, imported unchanged; not affected by slicers.",hhi_of_increase,float64,,reports/phase6/faulty_returns_concentration.csv
+p6_faulty_concentration,Phase 6 analytical (disconnected),"Validated Phase 5/6 output, imported unchanged; not affected by slicers.",entities_significant_p01,int64,,reports/phase6/faulty_returns_concentration.csv
+p6_hk_methods,Phase 6 analytical (disconnected),"Validated Phase 5/6 output, imported unchanged; not affected by slicers.",sort_order,int64,,reports/phase6/hk_promotion_counterfactuals.csv
+p6_hk_methods,Phase 6 analytical (disconnected),"Validated Phase 5/6 output, imported unchanged; not affected by slicers.",method_code,str,,reports/phase6/hk_promotion_counterfactuals.csv
+p6_hk_methods,Phase 6 analytical (disconnected),"Validated Phase 5/6 output, imported unchanged; not affected by slicers.",method,str,,reports/phase6/hk_promotion_counterfactuals.csv
+p6_hk_methods,Phase 6 analytical (disconnected),"Validated Phase 5/6 output, imported unchanged; not affected by slicers.",effect_eur,float64,,reports/phase6/hk_promotion_counterfactuals.csv
+p6_hk_methods,Phase 6 analytical (disconnected),"Validated Phase 5/6 output, imported unchanged; not affected by slicers.",ci_low,float64,,reports/phase6/hk_promotion_counterfactuals.csv
+p6_hk_methods,Phase 6 analytical (disconnected),"Validated Phase 5/6 output, imported unchanged; not affected by slicers.",ci_high,float64,,reports/phase6/hk_promotion_counterfactuals.csv
+p6_hk_methods,Phase 6 analytical (disconnected),"Validated Phase 5/6 output, imported unchanged; not affected by slicers.",interval_type,str,,reports/phase6/hk_promotion_counterfactuals.csv
+p6_hk_methods,Phase 6 analytical (disconnected),"Validated Phase 5/6 output, imported unchanged; not affected by slicers.",direction,str,,reports/phase6/hk_promotion_counterfactuals.csv
+p6_hk_methods,Phase 6 analytical (disconnected),"Validated Phase 5/6 output, imported unchanged; not affected by slicers.",detail,str,,reports/phase6/hk_promotion_counterfactuals.csv
+p6_hk_weekly,Phase 6 analytical (disconnected),"Validated Phase 5/6 output, imported unchanged; not affected by slicers.",retail_week,int64,Retail week 1-52,reports/phase6/hk_promotion_weekly.csv
+p6_hk_weekly,Phase 6 analytical (disconnected),"Validated Phase 5/6 output, imported unchanged; not affected by slicers.",sales_revenue_cy,float64,,reports/phase6/hk_promotion_weekly.csv
+p6_hk_weekly,Phase 6 analytical (disconnected),"Validated Phase 5/6 output, imported unchanged; not affected by slicers.",sales_revenue_py,float64,,reports/phase6/hk_promotion_weekly.csv
+p6_hk_weekly,Phase 6 analytical (disconnected),"Validated Phase 5/6 output, imported unchanged; not affected by slicers.",counterfactual_m1,float64,,reports/phase6/hk_promotion_weekly.csv
+p6_hk_weekly,Phase 6 analytical (disconnected),"Validated Phase 5/6 output, imported unchanged; not affected by slicers.",promo_coverage_cy,float64,,reports/phase6/hk_promotion_weekly.csv
+p6_hk_weekly,Phase 6 analytical (disconnected),"Validated Phase 5/6 output, imported unchanged; not affected by slicers.",promo_coverage_py,float64,,reports/phase6/hk_promotion_weekly.csv
+p6_hk_weekly,Phase 6 analytical (disconnected),"Validated Phase 5/6 output, imported unchanged; not affected by slicers.",discount_depth_cy,float64,,reports/phase6/hk_promotion_weekly.csv
+p6_hk_weekly,Phase 6 analytical (disconnected),"Validated Phase 5/6 output, imported unchanged; not affected by slicers.",discount_depth_py,float64,,reports/phase6/hk_promotion_weekly.csv
+p6_hk_events_by_year,Phase 6 analytical (disconnected),"Validated Phase 5/6 output, imported unchanged; not affected by slicers.",retail_year,int64,Retail year,reports/phase6/hk_promotion_events_by_year.csv
+p6_hk_events_by_year,Phase 6 analytical (disconnected),"Validated Phase 5/6 output, imported unchanged; not affected by slicers.",events,int64,,reports/phase6/hk_promotion_events_by_year.csv
+p6_hk_events_by_year,Phase 6 analytical (disconnected),"Validated Phase 5/6 output, imported unchanged; not affected by slicers.",promo_period_revenue,float64,,reports/phase6/hk_promotion_events_by_year.csv
+p6_hk_events_by_year,Phase 6 analytical (disconnected),"Validated Phase 5/6 output, imported unchanged; not affected by slicers.",baseline_revenue,float64,,reports/phase6/hk_promotion_events_by_year.csv
+p6_hk_events_by_year,Phase 6 analytical (disconnected),"Validated Phase 5/6 output, imported unchanged; not affected by slicers.",incremental_revenue,float64,,reports/phase6/hk_promotion_events_by_year.csv
+p6_hk_events_by_year,Phase 6 analytical (disconnected),"Validated Phase 5/6 output, imported unchanged; not affected by slicers.",post_dip_revenue,float64,,reports/phase6/hk_promotion_events_by_year.csv
+p6_hk_events_by_year,Phase 6 analytical (disconnected),"Validated Phase 5/6 output, imported unchanged; not affected by slicers.",discount_cost,float64,,reports/phase6/hk_promotion_events_by_year.csv
+p6_hk_events_by_year,Phase 6 analytical (disconnected),"Validated Phase 5/6 output, imported unchanged; not affected by slicers.",incremental_promo_margin,float64,,reports/phase6/hk_promotion_events_by_year.csv
+p6_hk_events_by_year,Phase 6 analytical (disconnected),"Validated Phase 5/6 output, imported unchanged; not affected by slicers.",uplift_pct,float64,,reports/phase6/hk_promotion_events_by_year.csv
+p6_hk_events_by_year,Phase 6 analytical (disconnected),"Validated Phase 5/6 output, imported unchanged; not affected by slicers.",nonpromo_ratio_no_promo_weeks,float64,,reports/phase6/hk_promotion_events_by_year.csv
+p6_hk_events_by_year,Phase 6 analytical (disconnected),"Validated Phase 5/6 output, imported unchanged; not affected by slicers.",nonpromo_ratio_promo_weeks,float64,,reports/phase6/hk_promotion_events_by_year.csv
+p6_hk_events_by_year,Phase 6 analytical (disconnected),"Validated Phase 5/6 output, imported unchanged; not affected by slicers.",cannibalised_revenue,float64,,reports/phase6/hk_promotion_events_by_year.csv
+p6_hk_events_by_year,Phase 6 analytical (disconnected),"Validated Phase 5/6 output, imported unchanged; not affected by slicers.",store_weeks_with_promo_share,float64,,reports/phase6/hk_promotion_events_by_year.csv
+p6_hk_events_by_year,Phase 6 analytical (disconnected),"Validated Phase 5/6 output, imported unchanged; not affected by slicers.",net_programme_revenue,float64,,reports/phase6/hk_promotion_events_by_year.csv
+p5_revenue_bridge,Phase 6 analytical (disconnected),"Validated Phase 5/6 output, imported unchanged; not affected by slicers.",step,str,,reports/phase5/revenue_bridge.csv
+p5_revenue_bridge,Phase 6 analytical (disconnected),"Validated Phase 5/6 output, imported unchanged; not affected by slicers.",value_eur,float64,,reports/phase5/revenue_bridge.csv
+p5_revenue_bridge,Phase 6 analytical (disconnected),"Validated Phase 5/6 output, imported unchanged; not affected by slicers.",kind,str,,reports/phase5/revenue_bridge.csv
+p5_revenue_bridge,Phase 6 analytical (disconnected),"Validated Phase 5/6 output, imported unchanged; not affected by slicers.",running_total_eur,float64,,reports/phase5/revenue_bridge.csv
+p5_revenue_bridge,Phase 6 analytical (disconnected),"Validated Phase 5/6 output, imported unchanged; not affected by slicers.",contribution_pp,float64,,reports/phase5/revenue_bridge.csv
+p5_revenue_bridge,Phase 6 analytical (disconnected),"Validated Phase 5/6 output, imported unchanged; not affected by slicers.",share_of_change,float64,,reports/phase5/revenue_bridge.csv
+p5_revenue_bridge,Phase 6 analytical (disconnected),"Validated Phase 5/6 output, imported unchanged; not affected by slicers.",method_note,str,,reports/phase5/revenue_bridge.csv

@@ -1,0 +1,142 @@
+table Date
+
+	column date_key
+		dataType: int64
+		summarizeBy: none
+		sourceColumn: date_key
+		isKey
+		isHidden
+
+	column calendar_date
+		dataType: dateTime
+		summarizeBy: none
+		sourceColumn: calendar_date
+
+	column day_of_week
+		dataType: int64
+		summarizeBy: none
+		sourceColumn: day_of_week
+
+	column day_name
+		dataType: string
+		sourceColumn: day_name
+		sortByColumn: day_of_week
+
+	column is_weekend
+		dataType: int64
+		summarizeBy: none
+		sourceColumn: is_weekend
+
+	column calendar_month
+		dataType: int64
+		summarizeBy: none
+		sourceColumn: calendar_month
+
+	column month_name
+		dataType: string
+		sourceColumn: month_name
+		sortByColumn: calendar_month
+
+	column year_month
+		dataType: int64
+		summarizeBy: none
+		sourceColumn: year_month
+
+	column calendar_year
+		dataType: int64
+		summarizeBy: none
+		sourceColumn: calendar_year
+
+	column retail_year
+		dataType: int64
+		summarizeBy: none
+		sourceColumn: retail_year
+
+	column retail_week
+		dataType: int64
+		summarizeBy: none
+		sourceColumn: retail_week
+
+	column retail_week_key
+		dataType: int64
+		summarizeBy: none
+		sourceColumn: retail_week_key
+		isHidden
+
+	column retail_week_label
+		dataType: string
+		sourceColumn: retail_week_label
+		sortByColumn: retail_week_key
+
+	column retail_week_start
+		dataType: dateTime
+		summarizeBy: none
+		sourceColumn: retail_week_start
+
+	column retail_half
+		dataType: string
+		sourceColumn: retail_half
+
+	column period_label
+		dataType: string
+		sourceColumn: period_label
+		sortByColumn: retail_year
+
+	column period_sort
+		dataType: int64
+		summarizeBy: none
+		sourceColumn: period_sort
+
+	column is_bank_holiday
+		dataType: int64
+		summarizeBy: none
+		sourceColumn: is_bank_holiday
+
+	column is_trading_day
+		dataType: int64
+		summarizeBy: none
+		sourceColumn: is_trading_day
+
+	column same_day_last_year_key
+		dataType: int64
+		summarizeBy: none
+		sourceColumn: same_day_last_year_key
+		isHidden
+
+	column is_unknown
+		dataType: int64
+		summarizeBy: none
+		sourceColumn: is_unknown
+
+	partition Date = m
+		mode: import
+		source =
+			let
+			    Source = Csv.Document(File.Contents(ModelFolder & "\date.csv"),
+			                          [Delimiter = ",", Encoding = 65001, QuoteStyle = QuoteStyle.Csv]),
+			    Promoted = Table.PromoteHeaders(Source, [PromoteAllScalars = true]),
+			    Typed = Table.TransformColumnTypes(Promoted, {
+			        {"date_key", Int64.Type},
+			        {"calendar_date", type date},
+			        {"day_of_week", Int64.Type},
+			        {"day_name", type text},
+			        {"is_weekend", Int64.Type},
+			        {"calendar_month", Int64.Type},
+			        {"month_name", type text},
+			        {"year_month", Int64.Type},
+			        {"calendar_year", Int64.Type},
+			        {"retail_year", Int64.Type},
+			        {"retail_week", Int64.Type},
+			        {"retail_week_key", Int64.Type},
+			        {"retail_week_label", type text},
+			        {"retail_week_start", type date},
+			        {"retail_half", type text},
+			        {"period_label", type text},
+			        {"period_sort", Int64.Type},
+			        {"is_bank_holiday", Int64.Type},
+			        {"is_trading_day", Int64.Type},
+			        {"same_day_last_year_key", Int64.Type},
+			        {"is_unknown", Int64.Type}
+			    }, "en-US")
+			in
+			    Typed

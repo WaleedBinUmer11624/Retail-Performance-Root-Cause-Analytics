@@ -1,0 +1,11 @@
+supplier_name,sku_status,skus_py,skus_cy,ranged_cells_py,ranged_cells_cy,sales_py,sales_cy,sales_change,distribution_effect,rate_effect
+Emerald Electronics Wholesale,continuing,13.0,13.0,4159.0,3892.0,201242.38,188770.91,-12471.47,-12919.383376,447.913376
+Emerald Electronics Wholesale,delisted,2.0,0.0,832.0,0.0,79184.36,0.0,-79184.36,,
+Emerald Electronics Wholesale,new,0.0,1.0,0.0,234.0,0.0,6254.49,6254.49,,
+Northbridge Tech Supplies,continuing,31.0,31.0,11409.0,11156.0,728324.58,679309.58,-49015.0,-16150.943881,-32864.056119
+Northbridge Tech Supplies,delisted,1.0,0.0,441.0,0.0,15664.0,0.0,-15664.0,,
+Northbridge Tech Supplies,new,0.0,1.0,0.0,276.0,0.0,6672.75,6672.75,,
+Unknown supplier,continuing,2.0,2.0,805.0,806.0,107656.04,84974.98,-22681.06,133.734211,-22814.794211
+Voltix Distribution Ltd,continuing,35.0,35.0,11122.0,11124.0,906150.27,696014.11,-210136.16,162.94736,-210299.10736
+Voltix Distribution Ltd,delisted,1.0,0.0,64.0,0.0,624.14,0.0,-624.14,,
+Voltix Distribution Ltd,new,0.0,3.0,0.0,914.0,0.0,252305.82,252305.82,,

@@ -1,0 +1,749 @@
+{
+  "storage_mode": "Import",
+  "star_schema_tables": {
+    "Date": {
+      "source_view": "pbi.dim_date",
+      "rows": 732,
+      "columns": [
+        "date_key",
+        "calendar_date",
+        "day_of_week",
+        "day_name",
+        "is_weekend",
+        "calendar_month",
+        "month_name",
+        "year_month",
+        "calendar_year",
+        "retail_year",
+        "retail_week",
+        "retail_week_key",
+        "retail_week_label",
+        "retail_week_start",
+        "retail_half",
+        "period_label",
+        "period_sort",
+        "is_bank_holiday",
+        "is_trading_day",
+        "same_day_last_year_key",
+        "is_unknown"
+      ]
+    },
+    "Store": {
+      "source_view": "pbi.dim_store",
+      "rows": 21,
+      "columns": [
+        "store_key",
+        "store_id",
+        "store_name",
+        "store_label",
+        "town",
+        "county",
+        "region",
+        "store_format",
+        "floor_area_m2",
+        "open_date",
+        "weekly_trading_hours",
+        "is_unknown",
+        "store_group"
+      ]
+    },
+    "Product": {
+      "source_view": "pbi.dim_product",
+      "rows": 601,
+      "columns": [
+        "product_key",
+        "product_id",
+        "product_name",
+        "product_label",
+        "category",
+        "subcategory",
+        "brand",
+        "supplier_id",
+        "supplier_name",
+        "list_price",
+        "product_status",
+        "is_unknown"
+      ]
+    },
+    "Promotion": {
+      "source_view": "pbi.dim_promotion",
+      "rows": 138,
+      "columns": [
+        "promotion_key",
+        "promotion_id",
+        "promotion_name",
+        "promotion_type",
+        "promotion_category",
+        "start_date",
+        "end_date",
+        "duration_days",
+        "min_discount_pct",
+        "max_discount_pct",
+        "member_type",
+        "is_unknown"
+      ]
+    },
+    "Sales": {
+      "source_view": "pbi.fact_sales",
+      "rows": 1339510,
+      "columns": [
+        "sales_line_id",
+        "date_key",
+        "store_key",
+        "product_key",
+        "promotion_key",
+        "transaction_key",
+        "quantity",
+        "gross_amount",
+        "discount_amount",
+        "sales_revenue",
+        "cost_amount",
+        "is_promoted"
+      ]
+    },
+    "Returns": {
+      "source_view": "pbi.fact_returns",
+      "rows": 34562,
+      "columns": [
+        "return_id",
+        "return_date_key",
+        "store_key",
+        "product_key",
+        "original_sale_date_key",
+        "return_quantity",
+        "refund_value",
+        "restock_cost_credit",
+        "return_reason",
+        "is_restockable",
+        "is_linked_to_sale",
+        "sale_promotion_status"
+      ]
+    },
+    "Inventory": {
+      "source_view": "pbi.fact_inventory",
+      "rows": 939249,
+      "columns": [
+        "snapshot_date_key",
+        "retail_week_key",
+        "store_key",
+        "product_key",
+        "opening_stock",
+        "received_qty",
+        "closing_stock",
+        "is_in_stock",
+        "is_full_week_stockout"
+      ]
+    },
+    "Targets": {
+      "source_view": "pbi.fact_targets",
+      "rows": 2077,
+      "columns": [
+        "retail_week_key",
+        "store_key",
+        "target_net_revenue"
+      ]
+    }
+  },
+  "phase6_tables": {
+    "p6_driver_attribution": {
+      "rows": 5,
+      "columns": [
+        "sort_order",
+        "driver_id",
+        "component",
+        "waterfall_label",
+        "driver",
+        "amount_eur",
+        "share_of_change",
+        "overlap_removed_eur",
+        "evidence_level",
+        "evidence_display",
+        "figure_type",
+        "basis"
+      ]
+    },
+    "p6_evidence_matrix": {
+      "rows": 9,
+      "columns": [
+        "driver_id",
+        "driver",
+        "candidate_driver",
+        "evidence_level",
+        "cause_status",
+        "evidence_display",
+        "evidence_strength",
+        "evidence_colour",
+        "observed_effect",
+        "financial_impact_eur",
+        "impact_pp_of_py_revenue",
+        "impact_range",
+        "what_we_know",
+        "what_we_do_not_know",
+        "confidence",
+        "method",
+        "additional_data_required",
+        "double_counting_risk",
+        "conclusion",
+        "sort_order"
+      ]
+    },
+    "p6_investigations": {
+      "rows": 5,
+      "columns": [
+        "priority",
+        "topic",
+        "driver_id",
+        "evidence_level",
+        "known",
+        "unknown",
+        "why_it_matters",
+        "slice_of_decline_eur",
+        "data_required",
+        "proposed_owner",
+        "owner_note"
+      ]
+    },
+    "p6_store_groups": {
+      "rows": 20,
+      "columns": [
+        "store_id",
+        "store_group"
+      ]
+    },
+    "p6_scenarios": {
+      "rows": 6,
+      "columns": [
+        "scenario",
+        "name",
+        "question",
+        "revenue_impact_eur",
+        "range_low_eur",
+        "range_high_eur",
+        "margin_impact_eur",
+        "assumptions",
+        "confidence",
+        "evidence_level",
+        "robust_in_sensitivity",
+        "share_of_decline_recovered"
+      ]
+    },
+    "p6_sensitivity_summary": {
+      "rows": 5,
+      "columns": [
+        "driver",
+        "n_variants",
+        "range_low_eur",
+        "range_high_eur",
+        "central_eur",
+        "robust",
+        "variants_excluded_low_coverage"
+      ]
+    },
+    "p6_stockout_net_of_recovery": {
+      "rows": 2,
+      "columns": [
+        "driver",
+        "method",
+        "variant",
+        "estimate_eur"
+      ]
+    },
+    "p6_perimeter": {
+      "rows": 6,
+      "columns": [
+        "store_group",
+        "category_group",
+        "net_revenue_py",
+        "net_revenue_cy",
+        "net_revenue_change"
+      ]
+    },
+    "p6_residual_breakdown": {
+      "rows": 4,
+      "columns": [
+        "part",
+        "amount_eur",
+        "share_of_residual"
+      ]
+    },
+    "p6_cluster_did": {
+      "rows": 8,
+      "columns": [
+        "control_group",
+        "outcome",
+        "did_log",
+        "did_pct",
+        "pre_gap_mean_log",
+        "post_gap_mean_log",
+        "pre_trend_slope",
+        "pre_trend_p",
+        "ratio_did_actual",
+        "ratio_did_counterfactual",
+        "ratio_did_excess",
+        "control_yoy",
+        "pre_gap_ratio"
+      ]
+    },
+    "p6_cluster_onset": {
+      "rows": 1,
+      "columns": [
+        "series",
+        "onset_date",
+        "step_shift_log",
+        "step_shift_pct",
+        "step_r2",
+        "ramp_days",
+        "ramp_start",
+        "ramp_end",
+        "bic_step",
+        "bic_ramp",
+        "bic_linear",
+        "best_model",
+        "abrupt"
+      ]
+    },
+    "p6_cluster_onset_by_store": {
+      "rows": 3,
+      "columns": [
+        "store_id",
+        "onset_date",
+        "shift_log",
+        "shift_pct",
+        "r2"
+      ]
+    },
+    "p6_cluster_onset_daily": {
+      "rows": 362,
+      "columns": [
+        "calendar_date",
+        "gap_log"
+      ]
+    },
+    "p6_cluster_mechanisms": {
+      "rows": 17,
+      "columns": [
+        "metric",
+        "cluster_py",
+        "cluster_cy",
+        "control_py",
+        "control_cy",
+        "unit",
+        "cluster_change",
+        "control_change",
+        "difference"
+      ]
+    },
+    "p6_cluster_placebo": {
+      "rows": 1,
+      "columns": [
+        "actual",
+        "placebo_n",
+        "p_value_one_sided",
+        "placebo_min",
+        "placebo_p05",
+        "placebo_median"
+      ]
+    },
+    "p6_et_kpis": {
+      "rows": 9,
+      "columns": [
+        "metric",
+        "prior",
+        "current",
+        "change",
+        "change_pct"
+      ]
+    },
+    "p6_et_supplier_comparison": {
+      "rows": 4,
+      "columns": [
+        "supplier_name",
+        "skus_py",
+        "skus_cy",
+        "ranged_cells_py",
+        "ranged_cells_cy",
+        "out_cells_py",
+        "out_cells_cy",
+        "full_week_out_cells_py",
+        "full_week_out_cells_cy",
+        "sales_revenue_py",
+        "sales_revenue_cy",
+        "est_lost_sales_eur_py",
+        "est_lost_sales_eur_cy",
+        "est_lost_sales_upper_eur_py",
+        "est_lost_sales_upper_eur_cy",
+        "availability_py",
+        "availability_cy",
+        "availability_change_pp",
+        "lost_primary_change",
+        "lost_upper_change",
+        "sales_change",
+        "share_of_lost_primary_change"
+      ]
+    },
+    "p6_et_supplier_test": {
+      "rows": 3,
+      "columns": [
+        "supplier",
+        "metric",
+        "supplier_skus",
+        "other_skus",
+        "supplier_mean",
+        "other_mean",
+        "difference",
+        "ci_low",
+        "ci_high",
+        "permutation_p_two_sided",
+        "leave_one_sku_out_min",
+        "leave_one_sku_out_max",
+        "supplier_median",
+        "other_median",
+        "supplier_skus_worse_than_other_median",
+        "variant"
+      ]
+    },
+    "p6_et_sku_stockouts": {
+      "rows": 90,
+      "columns": [
+        "product_id",
+        "supplier_name",
+        "cells_py",
+        "cells_cy",
+        "out_py",
+        "out_cy",
+        "full_py",
+        "full_cy",
+        "revenue_py",
+        "revenue_cy",
+        "units_py",
+        "units_cy",
+        "est_lost_sales_eur_py",
+        "est_lost_sales_eur_cy",
+        "est_lost_sales_upper_eur_py",
+        "est_lost_sales_upper_eur_cy",
+        "oos_rate_py",
+        "oos_rate_cy",
+        "oos_rate_change_pp",
+        "lost_primary_change",
+        "prior_year_revenue_rank",
+        "high_seller"
+      ]
+    },
+    "p6_et_episodes": {
+      "rows": 8,
+      "columns": [
+        "supplier_name",
+        "retail_year",
+        "episodes",
+        "mean_weeks_out",
+        "median_weeks_out",
+        "max_weeks_out",
+        "share_4plus_weeks",
+        "full_weeks_out"
+      ]
+    },
+    "p6_et_lost_sales_totals": {
+      "rows": 3,
+      "columns": [
+        "scope",
+        "primary_py",
+        "primary_cy",
+        "upper_py",
+        "upper_cy",
+        "primary_change",
+        "upper_change"
+      ]
+    },
+    "p6_et_weekly_timeline": {
+      "rows": 26,
+      "columns": [
+        "retail_week",
+        "availability_category_cy",
+        "availability_supplier_cy",
+        "availability_other_suppliers_cy",
+        "category_sales_cy",
+        "supplier_sales_cy",
+        "lost_primary_cy",
+        "lost_upper_cy",
+        "availability_category_py",
+        "availability_supplier_py",
+        "availability_other_suppliers_py",
+        "category_sales_py",
+        "supplier_sales_py",
+        "lost_primary_py",
+        "lost_upper_py",
+        "category_sales_yoy_pct",
+        "supplier_sales_yoy_pct"
+      ]
+    },
+    "p6_et_range_distribution": {
+      "rows": 10,
+      "columns": [
+        "supplier_name",
+        "sku_status",
+        "skus_py",
+        "skus_cy",
+        "ranged_cells_py",
+        "ranged_cells_cy",
+        "sales_py",
+        "sales_cy",
+        "sales_change",
+        "distribution_effect",
+        "rate_effect"
+      ]
+    },
+    "p6_faulty_reasons": {
+      "rows": 5,
+      "columns": [
+        "return_reason",
+        "returns_value_py",
+        "returns_value_cy",
+        "returned_units_py",
+        "returned_units_cy",
+        "value_change",
+        "value_change_pct"
+      ]
+    },
+    "p6_faulty_by_store": {
+      "rows": 20,
+      "columns": [
+        "store_id",
+        "returned_units_py",
+        "returned_units_cy",
+        "returns_value_py",
+        "returns_value_cy",
+        "units_sold_py",
+        "units_sold_cy",
+        "rate_per_100_py",
+        "rate_per_100_cy",
+        "expected_units_cy_at_py_rate",
+        "excess_units",
+        "excess_value_eur",
+        "p_increase",
+        "value_change",
+        "in_cluster"
+      ]
+    },
+    "p6_faulty_by_supplier": {
+      "rows": 4,
+      "columns": [
+        "supplier_name",
+        "returned_units_py",
+        "returned_units_cy",
+        "returns_value_py",
+        "returns_value_cy",
+        "units_sold_py",
+        "units_sold_cy",
+        "rate_per_100_py",
+        "rate_per_100_cy",
+        "expected_units_cy_at_py_rate",
+        "excess_units",
+        "excess_value_eur",
+        "p_increase",
+        "value_change"
+      ]
+    },
+    "p6_faulty_by_product": {
+      "rows": 90,
+      "columns": [
+        "product_id",
+        "returned_units_py",
+        "returned_units_cy",
+        "returns_value_py",
+        "returns_value_cy",
+        "units_sold_py",
+        "units_sold_cy",
+        "rate_per_100_py",
+        "rate_per_100_cy",
+        "expected_units_cy_at_py_rate",
+        "excess_units",
+        "excess_value_eur",
+        "p_increase",
+        "value_change"
+      ]
+    },
+    "p6_faulty_by_cohort": {
+      "rows": 24,
+      "columns": [
+        "sale_year_month",
+        "returned_units",
+        "value",
+        "units_sold",
+        "rate_per_100"
+      ]
+    },
+    "p6_faulty_concentration": {
+      "rows": 3,
+      "columns": [
+        "dimension",
+        "entities",
+        "entities_with_increase",
+        "net_increase",
+        "gross_increase",
+        "top_k",
+        "top_k_share_of_gross",
+        "top_entities",
+        "hhi_of_increase",
+        "entities_significant_p01"
+      ]
+    },
+    "p6_hk_methods": {
+      "rows": 4,
+      "columns": [
+        "sort_order",
+        "method_code",
+        "method",
+        "effect_eur",
+        "ci_low",
+        "ci_high",
+        "interval_type",
+        "direction",
+        "detail"
+      ]
+    },
+    "p6_hk_weekly": {
+      "rows": 26,
+      "columns": [
+        "retail_week",
+        "sales_revenue_cy",
+        "sales_revenue_py",
+        "counterfactual_m1",
+        "promo_coverage_cy",
+        "promo_coverage_py",
+        "discount_depth_cy",
+        "discount_depth_py"
+      ]
+    },
+    "p6_hk_events_by_year": {
+      "rows": 2,
+      "columns": [
+        "retail_year",
+        "events",
+        "promo_period_revenue",
+        "baseline_revenue",
+        "incremental_revenue",
+        "post_dip_revenue",
+        "discount_cost",
+        "incremental_promo_margin",
+        "uplift_pct",
+        "nonpromo_ratio_no_promo_weeks",
+        "nonpromo_ratio_promo_weeks",
+        "cannibalised_revenue",
+        "store_weeks_with_promo_share",
+        "net_programme_revenue"
+      ]
+    },
+    "p5_revenue_bridge": {
+      "rows": 7,
+      "columns": [
+        "step",
+        "value_eur",
+        "kind",
+        "running_total_eur",
+        "contribution_pp",
+        "share_of_change",
+        "method_note"
+      ]
+    }
+  },
+  "relationships": [
+    {
+      "from": "Sales[date_key]",
+      "to": "Date[date_key]",
+      "cardinality": "many-to-one",
+      "cross_filter": "single",
+      "active": true
+    },
+    {
+      "from": "Sales[store_key]",
+      "to": "Store[store_key]",
+      "cardinality": "many-to-one",
+      "cross_filter": "single",
+      "active": true
+    },
+    {
+      "from": "Sales[product_key]",
+      "to": "Product[product_key]",
+      "cardinality": "many-to-one",
+      "cross_filter": "single",
+      "active": true
+    },
+    {
+      "from": "Sales[promotion_key]",
+      "to": "Promotion[promotion_key]",
+      "cardinality": "many-to-one",
+      "cross_filter": "single",
+      "active": true
+    },
+    {
+      "from": "Returns[return_date_key]",
+      "to": "Date[date_key]",
+      "cardinality": "many-to-one",
+      "cross_filter": "single",
+      "active": true
+    },
+    {
+      "from": "Returns[original_sale_date_key]",
+      "to": "Date[date_key]",
+      "cardinality": "many-to-one",
+      "cross_filter": "single",
+      "active": false
+    },
+    {
+      "from": "Returns[store_key]",
+      "to": "Store[store_key]",
+      "cardinality": "many-to-one",
+      "cross_filter": "single",
+      "active": true
+    },
+    {
+      "from": "Returns[product_key]",
+      "to": "Product[product_key]",
+      "cardinality": "many-to-one",
+      "cross_filter": "single",
+      "active": true
+    },
+    {
+      "from": "Inventory[snapshot_date_key]",
+      "to": "Date[date_key]",
+      "cardinality": "many-to-one",
+      "cross_filter": "single",
+      "active": true
+    },
+    {
+      "from": "Inventory[store_key]",
+      "to": "Store[store_key]",
+      "cardinality": "many-to-one",
+      "cross_filter": "single",
+      "active": true
+    },
+    {
+      "from": "Inventory[product_key]",
+      "to": "Product[product_key]",
+      "cardinality": "many-to-one",
+      "cross_filter": "single",
+      "active": true
+    },
+    {
+      "from": "Targets[store_key]",
+      "to": "Store[store_key]",
+      "cardinality": "many-to-one",
+      "cross_filter": "single",
+      "active": true
+    }
+  ],
+  "mark_as_date_table": {
+    "table": "Date",
+    "column": "calendar_date",
+    "note": "Time intelligence uses Date[same_day_last_year_key], not built-in functions"
+  },
+  "hide_in_report_view": [
+    "all *_key columns",
+    "Sales, Returns, Inventory, Targets fact columns (use measures)"
+  ],
+  "sort_by": {
+    "Date[month_name]": "Date[calendar_month]",
+    "Date[day_name]": "Date[day_of_week]",
+    "Date[period_label]": "Date[retail_year]"
+  }
+}

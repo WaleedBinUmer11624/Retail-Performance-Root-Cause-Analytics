@@ -1,0 +1,30 @@
+group,check,value,reference,status,detail
+Input contract,contract columns present,"net_revenue, retail_week, retail_year, week_start_date","net_revenue, retail_week, retail_year, week_start_date",PASS,8 columns supplied
+Input contract,no duplicate estate weeks,104,104,PASS,
+Input contract,"single estate grain, no entity column",104,104,PASS,
+Input contract,chronological by week_start_date,ascending,ascending,PASS,
+Input contract,every week starts on a Monday,104,104,PASS,
+Input contract,contiguous 7-day weeks,[7],[7],PASS,
+Input contract,history covers training plus horizon,104,>= 65,PASS,minimum_training_weeks + primary_horizon_weeks
+Reconciliation,H2 2024 net revenue equals the approved governed total,10188727.55,10188727.55,PASS,"weeks 27-52, cent-exact"
+Reconciliation,H2 2025 net revenue equals the approved governed total,9457457.05,9457457.05,PASS,"weeks 27-52, cent-exact"
+Reconciliation,H2 change and YoY reported from the approved totals,-731270.50; -7.177251%,derived,PASS,headline is never re-fitted to the model
+Back-test,at least one rolling origin,10,> 0,PASS,
+Back-test,every configured model evaluated at every origin,50,50,PASS,
+Back-test,every model completed every origin,5,5,PASS,
+Back-test,four registered baselines compared,"['B1_naive', 'B2_seasonal_naive', 'B3_moving_average', 'B4_trend']",4 baselines,PASS,
+Back-test,every metric finite,250,250,PASS,
+Leakage,training is the strict prefix before every origin,10,10,PASS,no origin can see its own test week or anything after it
+Leakage,forecast horizon never overlaps observed weeks,2025-12-29,after 2025-12-22,PASS,
+Leakage,interval calibration uses out-of-sample errors only,130,> 0 from 10 origins,PASS,"errors come from back-test origins, never from the fitted window"
+Selection,selected model was evaluated at every origin,10,10,PASS,
+Selection,challenger promoted only when it beats the best baseline,False,improvement -0.263956 > margin 0.0,PASS,
+Selection,selected model is the best under the selection rule,B2_seasonal_naive,best baseline B2_seasonal_naive,PASS,
+Forecast,forecast covers the configured horizon,13,13,PASS,
+Forecast,forecast weeks are contiguous and future-dated,[7],[7],PASS,
+Forecast,point forecasts finite and positive,min 262225.39,> 0,PASS,
+Forecast,an interval is published for every week and coverage,26,26,PASS,
+Forecast,every interval brackets its point forecast,0,0,PASS,
+Governance,freeze manifests verified before the run,901,> 0,PASS,
+Governance,weekly input is not a governed Phase 1-9 artifact,reports/phase10/weekly_estate_history.csv,ungoverned Phase 10 input,PASS,
+Governance,no evaluation-only asset referenced,0,0,PASS,none

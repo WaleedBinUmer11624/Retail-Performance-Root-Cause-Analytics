@@ -1,0 +1,54 @@
+table p6_sensitivity_summary
+
+	column driver
+		dataType: string
+		sourceColumn: driver
+
+	column n_variants
+		dataType: int64
+		summarizeBy: none
+		sourceColumn: n_variants
+
+	column range_low_eur
+		dataType: double
+		summarizeBy: none
+		sourceColumn: range_low_eur
+
+	column range_high_eur
+		dataType: double
+		summarizeBy: none
+		sourceColumn: range_high_eur
+
+	column central_eur
+		dataType: double
+		summarizeBy: none
+		sourceColumn: central_eur
+
+	column robust
+		dataType: boolean
+		summarizeBy: none
+		sourceColumn: robust
+
+	column variants_excluded_low_coverage
+		dataType: int64
+		summarizeBy: none
+		sourceColumn: variants_excluded_low_coverage
+
+	partition p6_sensitivity_summary = m
+		mode: import
+		source =
+			let
+			    Source = Csv.Document(File.Contents(AnalyticsFolder & "\p6_sensitivity_summary.csv"),
+			                          [Delimiter = ",", Encoding = 65001, QuoteStyle = QuoteStyle.Csv]),
+			    Promoted = Table.PromoteHeaders(Source, [PromoteAllScalars = true]),
+			    Typed = Table.TransformColumnTypes(Promoted, {
+			        {"driver", type text},
+			        {"n_variants", Int64.Type},
+			        {"range_low_eur", type number},
+			        {"range_high_eur", type number},
+			        {"central_eur", type number},
+			        {"robust", type logical},
+			        {"variants_excluded_low_coverage", Int64.Type}
+			    }, "en-US")
+			in
+			    Typed

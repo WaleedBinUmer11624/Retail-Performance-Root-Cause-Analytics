@@ -1,0 +1,4 @@
+driver,total,in_cluster,expected_in_cluster_at_control_rate,cluster_minus_control_rate,overlap_with_cluster_excess,exclusive
+E&T stock-outs,-37235.346776,-4855.121395,-6575.961528,1720.840133,0.0,-37235.346776
+E&T faulty returns,-31588.73,4936.69,-6423.319093,11360.009093,0.0,-31588.73
+H&K promotion period,-186146.420449,-21391.270981,-29453.672079,8062.401097,0.0,-186146.420449

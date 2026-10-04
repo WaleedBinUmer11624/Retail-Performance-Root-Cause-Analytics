@@ -1,0 +1,200 @@
+table dq_store_week_health
+
+	column store_id
+		dataType: string
+		sourceColumn: store_id
+
+	column retail_week_key
+		dataType: int64
+		formatString: "0"
+		summarizeBy: none
+		sourceColumn: retail_week_key
+		isHidden
+
+	column t
+		dataType: int64
+		formatString: "0"
+		summarizeBy: none
+		sourceColumn: t
+
+	column trading_days
+		dataType: int64
+		formatString: "#,0"
+		summarizeBy: none
+		sourceColumn: trading_days
+
+	column days_asat
+		dataType: int64
+		formatString: "#,0"
+		summarizeBy: none
+		sourceColumn: days_asat
+
+	column lines
+		dataType: int64
+		formatString: "#,0"
+		summarizeBy: none
+		sourceColumn: lines
+
+	column lines_asat
+		dataType: int64
+		formatString: "#,0"
+		summarizeBy: none
+		sourceColumn: lines_asat
+
+	column lines_trailing_median
+		dataType: double
+		formatString: "#,0.00"
+		summarizeBy: none
+		sourceColumn: lines_trailing_median
+
+	column C2_ontime_share
+		dataType: double
+		formatString: "#,0.00"
+		summarizeBy: none
+		sourceColumn: C2_ontime_share
+
+	column n_dup
+		dataType: int64
+		formatString: "#,0"
+		summarizeBy: none
+		sourceColumn: n_dup
+
+	column n_price
+		dataType: int64
+		formatString: "#,0"
+		summarizeBy: none
+		sourceColumn: n_price
+
+	column n_discount
+		dataType: int64
+		formatString: "#,0"
+		summarizeBy: none
+		sourceColumn: n_discount
+
+	column n_quarantine
+		dataType: int64
+		formatString: "#,0"
+		summarizeBy: none
+		sourceColumn: n_quarantine
+
+	column n_missing_snapshots
+		dataType: int64
+		formatString: "#,0"
+		summarizeBy: none
+		sourceColumn: n_missing_snapshots
+
+	column snapshot_rows
+		dataType: int64
+		formatString: "#,0"
+		summarizeBy: none
+		sourceColumn: snapshot_rows
+
+	column lines_unknown_product
+		dataType: int64
+		formatString: "#,0"
+		summarizeBy: none
+		sourceColumn: lines_unknown_product
+
+	column lines_dq_flagged
+		dataType: int64
+		formatString: "#,0"
+		summarizeBy: none
+		sourceColumn: lines_dq_flagged
+
+	column returns_unlinked
+		dataType: int64
+		formatString: "#,0"
+		summarizeBy: none
+		sourceColumn: returns_unlinked
+
+	column lines_expected
+		dataType: double
+		formatString: "#,0.00"
+		summarizeBy: none
+		sourceColumn: lines_expected
+
+	column lines_missing
+		dataType: int64
+		formatString: "#,0"
+		summarizeBy: none
+		sourceColumn: lines_missing
+
+	column C1
+		dataType: boolean
+		summarizeBy: none
+		sourceColumn: C1
+
+	column C2
+		dataType: boolean
+		summarizeBy: none
+		sourceColumn: C2
+
+	column C3
+		dataType: boolean
+		summarizeBy: none
+		sourceColumn: C3
+
+	column C4
+		dataType: boolean
+		summarizeBy: none
+		sourceColumn: C4
+
+	column C5
+		dataType: boolean
+		summarizeBy: none
+		sourceColumn: C5
+
+	column C6
+		dataType: boolean
+		summarizeBy: none
+		sourceColumn: C6
+
+	column C7
+		dataType: boolean
+		summarizeBy: none
+		sourceColumn: C7
+
+	column C8
+		dataType: boolean
+		summarizeBy: none
+		sourceColumn: C8
+
+	column C9
+		dataType: boolean
+		summarizeBy: none
+		sourceColumn: C9
+
+	column C10
+		dataType: boolean
+		summarizeBy: none
+		sourceColumn: C10
+
+	column C11
+		dataType: boolean
+		summarizeBy: none
+		sourceColumn: C11
+
+	column dq_sales_status
+		dataType: string
+		sourceColumn: dq_sales_status
+
+	column dq_inventory_status
+		dataType: string
+		sourceColumn: dq_inventory_status
+
+	column dq_checks_failed
+		dataType: string
+		sourceColumn: dq_checks_failed
+
+	partition dq_store_week_health = m
+		mode: import
+		source =
+			let
+			    Source = Csv.Document(File.Contents(DqFolder & "\dq_store_week_health.csv"),
+			                          [Delimiter = ",", Encoding = 65001, QuoteStyle = QuoteStyle.Csv]),
+			    Promoted = Table.PromoteHeaders(Source, [PromoteAllScalars = true]),
+			    Typed = Table.TransformColumnTypes(Promoted, {
+			        {"store_id", type text}, {"retail_week_key", Int64.Type}, {"t", Int64.Type}, {"trading_days", Int64.Type}, {"days_asat", Int64.Type}, {"lines", Int64.Type}, {"lines_asat", Int64.Type}, {"lines_trailing_median", type number}, {"C2_ontime_share", type number}, {"n_dup", Int64.Type}, {"n_price", Int64.Type}, {"n_discount", Int64.Type}, {"n_quarantine", Int64.Type}, {"n_missing_snapshots", Int64.Type}, {"snapshot_rows", Int64.Type}, {"lines_unknown_product", Int64.Type}, {"lines_dq_flagged", Int64.Type}, {"returns_unlinked", Int64.Type}, {"lines_expected", type number}, {"lines_missing", Int64.Type}, {"C1", type logical}, {"C2", type logical}, {"C3", type logical}, {"C4", type logical}, {"C5", type logical}, {"C6", type logical}, {"C7", type logical}, {"C8", type logical}, {"C9", type logical}, {"C10", type logical}, {"C11", type logical}, {"dq_sales_status", type text}, {"dq_inventory_status", type text}, {"dq_checks_failed", type text}
+			    }, "en-US")
+			in
+			    Typed

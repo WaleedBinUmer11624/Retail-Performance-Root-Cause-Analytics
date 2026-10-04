@@ -1,0 +1,564 @@
+table _Measures
+
+	measure 'Sales Revenue' = SUM ( Sales[sales_revenue] )
+		formatString: "€#,0"
+		displayFolder: 1 Revenue
+
+	/// Quantity x unit price, before discount.
+	measure 'Gross Sales' = SUM ( Sales[gross_amount] )
+		formatString: "€#,0"
+		displayFolder: 1 Revenue
+
+	/// Discount given on sales lines.
+	measure 'Discount Value' = SUM ( Sales[discount_amount] )
+		formatString: "€#,0"
+		displayFolder: 1 Revenue
+
+	/// Refunds, counted on the return date at the returning store (BRD assumption 2). Returns, stock and targets have no promotion key, so it is blank when the Promotion table is filtered.
+	measure 'Returns Value' = IF ( ISCROSSFILTERED ( Promotion ), BLANK (), SUM ( Returns[refund_value] ) )
+		formatString: "€#,0"
+		displayFolder: 4 Returns
+
+	/// Governed headline KPI (BRD 5.1): Sales Revenue minus Returns Value. Returns, stock and targets have no promotion key, so it is blank when the Promotion table is filtered.
+	measure 'Net Revenue' = IF ( ISCROSSFILTERED ( Promotion ), BLANK (), [Sales Revenue] - [Returns Value] )
+		formatString: "€#,0"
+		displayFolder: 1 Revenue
+
+	/// Net Revenue for the same days one year earlier (364 days, so retail weeks align). Drives every YoY comparison.
+	measure 'Net Revenue PY' =
+			VAR _pyDates = VALUES ( 'Date'[same_day_last_year_key] )
+			RETURN
+			    CALCULATE ( [Net Revenue], REMOVEFILTERS ( 'Date' ), TREATAS ( _pyDates, 'Date'[date_key] ) )
+		formatString: "€#,0"
+		displayFolder: 1 Revenue
+
+	/// Net Revenue change against the same period one year earlier.
+	measure 'Net Revenue YoY' = [Net Revenue] - [Net Revenue PY]
+		formatString: "€#,0"
+		displayFolder: 1 Revenue
+
+	/// Net Revenue growth against the same period one year earlier. Blank when the prior year is blank.
+	measure 'Net Revenue YoY %' = DIVIDE ( [Net Revenue] - [Net Revenue PY], [Net Revenue PY] )
+		formatString: "0.00%"
+		displayFolder: 1 Revenue
+
+	/// Sales Revenue for the same days one year earlier (364 days, so retail weeks align).
+	measure 'Sales Revenue PY' =
+			VAR _pyDates = VALUES ( 'Date'[same_day_last_year_key] )
+			RETURN
+			    CALCULATE ( [Sales Revenue], REMOVEFILTERS ( 'Date' ), TREATAS ( _pyDates, 'Date'[date_key] ) )
+		formatString: "€#,0"
+		displayFolder: 1 Revenue
+
+	/// Quantity x standard unit cost on the sale date.
+	measure 'Cost of Sales' = SUM ( Sales[cost_amount] )
+		formatString: "€#,0"
+		displayFolder: 2 Margin
+
+	/// Cost credited back for returned units that go back to stock. Returns, stock and targets have no promotion key, so it is blank when the Promotion table is filtered.
+	measure 'Restock Cost Credit' = IF ( ISCROSSFILTERED ( Promotion ), BLANK (), SUM ( Returns[restock_cost_credit] ) )
+		formatString: "€#,0"
+		displayFolder: 2 Margin
+
+	/// Cost of goods sold net of returned-to-stock units (governed definition). Returns, stock and targets have no promotion key, so it is blank when the Promotion table is filtered.
+	measure 'COGS' = IF ( ISCROSSFILTERED ( Promotion ), BLANK (), [Cost of Sales] - [Restock Cost Credit] )
+		formatString: "€#,0"
+		displayFolder: 2 Margin
+
+	/// Net Revenue minus COGS (governed definition).
+	measure 'Gross Margin' = [Net Revenue] - [COGS]
+		formatString: "€#,0"
+		displayFolder: 2 Margin
+
+	/// Gross Margin as a share of Net Revenue; ratio of sums, never an average of ratios.
+	measure 'Gross Margin %' = DIVIDE ( [Gross Margin], [Net Revenue] )
+		formatString: "0.0%"
+		displayFolder: 2 Margin
+
+	/// Gross Margin for the same days one year earlier (364 days, so retail weeks align).
+	measure 'Gross Margin PY' =
+			VAR _pyDates = VALUES ( 'Date'[same_day_last_year_key] )
+			RETURN
+			    CALCULATE ( [Gross Margin], REMOVEFILTERS ( 'Date' ), TREATAS ( _pyDates, 'Date'[date_key] ) )
+		formatString: "€#,0"
+		displayFolder: 2 Margin
+
+	/// Gross Margin change against the same period one year earlier.
+	measure 'Gross Margin YoY' = [Gross Margin] - [Gross Margin PY]
+		formatString: "€#,0"
+		displayFolder: 2 Margin
+
+	/// Gross Margin % for the same days one year earlier (364 days, so retail weeks align).
+	measure 'Gross Margin % PY' =
+			VAR _pyDates = VALUES ( 'Date'[same_day_last_year_key] )
+			RETURN
+			    CALCULATE ( [Gross Margin %], REMOVEFILTERS ( 'Date' ), TREATAS ( _pyDates, 'Date'[date_key] ) )
+		formatString: "0.0%"
+		displayFolder: 2 Margin
+
+	/// Change in Gross Margin % in percentage points.
+	measure 'Gross Margin % YoY pp' = ( [Gross Margin %] - [Gross Margin % PY] ) * 100
+		formatString: "+0.0;-0.0;0.0"
+		displayFolder: 2 Margin
+
+	/// Receipts. With a product or category filter this is 'transactions containing the selection' (not additive across categories).
+	measure 'Transactions' = DISTINCTCOUNT ( Sales[transaction_key] )
+		formatString: "#,0"
+		displayFolder: 3 Customers and baskets
+
+	/// Transactions for the same days one year earlier (364 days, so retail weeks align).
+	measure 'Transactions PY' =
+			VAR _pyDates = VALUES ( 'Date'[same_day_last_year_key] )
+			RETURN
+			    CALCULATE ( [Transactions], REMOVEFILTERS ( 'Date' ), TREATAS ( _pyDates, 'Date'[date_key] ) )
+		formatString: "#,0"
+		displayFolder: 3 Customers and baskets
+
+	/// Transactions change against the same period one year earlier.
+	measure 'Transactions YoY' = [Transactions] - [Transactions PY]
+		formatString: "#,0"
+		displayFolder: 3 Customers and baskets
+
+	/// Transactions growth against the same period one year earlier. Blank when the prior year is blank.
+	measure 'Transactions YoY %' = DIVIDE ( [Transactions] - [Transactions PY], [Transactions PY] )
+		formatString: "0.00%"
+		displayFolder: 3 Customers and baskets
+
+	/// Units sold.
+	measure 'Units' = SUM ( Sales[quantity] )
+		formatString: "#,0"
+		displayFolder: 3 Customers and baskets
+
+	/// Units for the same days one year earlier (364 days, so retail weeks align).
+	measure 'Units PY' =
+			VAR _pyDates = VALUES ( 'Date'[same_day_last_year_key] )
+			RETURN
+			    CALCULATE ( [Units], REMOVEFILTERS ( 'Date' ), TREATAS ( _pyDates, 'Date'[date_key] ) )
+		formatString: "#,0"
+		displayFolder: 3 Customers and baskets
+
+	/// Units growth year on year.
+	measure 'Units YoY %' = DIVIDE ( [Units] - [Units PY], [Units PY] )
+		formatString: "0.00%"
+		displayFolder: 3 Customers and baskets
+
+	/// Units per transaction.
+	measure 'UPT' = DIVIDE ( [Units], [Transactions] )
+		formatString: "#,0.00"
+		displayFolder: 3 Customers and baskets
+
+	/// UPT for the same days one year earlier (364 days, so retail weeks align).
+	measure 'UPT PY' =
+			VAR _pyDates = VALUES ( 'Date'[same_day_last_year_key] )
+			RETURN
+			    CALCULATE ( [UPT], REMOVEFILTERS ( 'Date' ), TREATAS ( _pyDates, 'Date'[date_key] ) )
+		formatString: "#,0.00"
+		displayFolder: 3 Customers and baskets
+
+	/// Average selling price per unit.
+	measure 'ASP' = DIVIDE ( [Sales Revenue], [Units] )
+		formatString: "€#,0.00"
+		displayFolder: 3 Customers and baskets
+
+	/// ASP for the same days one year earlier (364 days, so retail weeks align).
+	measure 'ASP PY' =
+			VAR _pyDates = VALUES ( 'Date'[same_day_last_year_key] )
+			RETURN
+			    CALCULATE ( [ASP], REMOVEFILTERS ( 'Date' ), TREATAS ( _pyDates, 'Date'[date_key] ) )
+		formatString: "€#,0.00"
+		displayFolder: 3 Customers and baskets
+
+	/// Sales Revenue per receipt (the governed AOV). Undefined for category filters (use ASP).
+	measure 'Average Transaction Value' = DIVIDE ( [Sales Revenue], [Transactions] )
+		formatString: "€#,0.00"
+		displayFolder: 3 Customers and baskets
+
+	/// Average Transaction Value for the same days one year earlier (364 days, so retail weeks align).
+	measure 'Average Transaction Value PY' =
+			VAR _pyDates = VALUES ( 'Date'[same_day_last_year_key] )
+			RETURN
+			    CALCULATE ( [Average Transaction Value], REMOVEFILTERS ( 'Date' ), TREATAS ( _pyDates, 'Date'[date_key] ) )
+		formatString: "€#,0.00"
+		displayFolder: 3 Customers and baskets
+
+	/// Stores with sales in the selection.
+	measure 'Stores Trading' = DISTINCTCOUNT ( Sales[store_key] )
+		formatString: "#,0"
+		displayFolder: 3 Customers and baskets
+
+	/// Receipts per trading store; compares store groups of different sizes.
+	measure 'Transactions per Store' = DIVIDE ( [Transactions], [Stores Trading] )
+		formatString: "#,0"
+		displayFolder: 3 Customers and baskets
+
+	/// Year-on-year change in receipts per trading store.
+	measure 'Transactions per Store YoY %' =
+			VAR _cy = [Transactions per Store]
+			VAR _py = CALCULATE ( [Transactions per Store], REMOVEFILTERS ( 'Date' ),
+			                      TREATAS ( VALUES ( 'Date'[same_day_last_year_key] ), 'Date'[date_key] ) )
+			RETURN DIVIDE ( _cy - _py, _py )
+		formatString: "0.0%"
+		displayFolder: 3 Customers and baskets
+
+	/// Units returned (return date). Returns, stock and targets have no promotion key, so it is blank when the Promotion table is filtered.
+	measure 'Returned Units' = IF ( ISCROSSFILTERED ( Promotion ), BLANK (), SUM ( Returns[return_quantity] ) )
+		formatString: "#,0"
+		displayFolder: 4 Returns
+
+	/// Returns Value for the same days one year earlier (364 days, so retail weeks align).
+	measure 'Returns Value PY' =
+			VAR _pyDates = VALUES ( 'Date'[same_day_last_year_key] )
+			RETURN
+			    CALCULATE ( [Returns Value], REMOVEFILTERS ( 'Date' ), TREATAS ( _pyDates, 'Date'[date_key] ) )
+		formatString: "€#,0"
+		displayFolder: 4 Returns
+
+	/// Returns Value change against the same period one year earlier.
+	measure 'Returns Value YoY' = [Returns Value] - [Returns Value PY]
+		formatString: "€#,0"
+		displayFolder: 4 Returns
+
+	/// Returns Value growth against the same period one year earlier. Blank when the prior year is blank.
+	measure 'Returns Value YoY %' = DIVIDE ( [Returns Value] - [Returns Value PY], [Returns Value PY] )
+		formatString: "0.00%"
+		displayFolder: 4 Returns
+
+	/// Returns Value as a share of Sales Revenue in the same period (governed return rate, value basis).
+	measure 'Return Rate' = DIVIDE ( [Returns Value], [Sales Revenue] )
+		formatString: "0.00%"
+		displayFolder: 4 Returns
+
+	/// Return Rate for the same days one year earlier (364 days, so retail weeks align).
+	measure 'Return Rate PY' =
+			VAR _pyDates = VALUES ( 'Date'[same_day_last_year_key] )
+			RETURN
+			    CALCULATE ( [Return Rate], REMOVEFILTERS ( 'Date' ), TREATAS ( _pyDates, 'Date'[date_key] ) )
+		formatString: "0.00%"
+		displayFolder: 4 Returns
+
+	/// Change in Return Rate in percentage points.
+	measure 'Return Rate YoY pp' = ( [Return Rate] - [Return Rate PY] ) * 100
+		formatString: "+0.0;-0.0;0.0"
+		displayFolder: 4 Returns
+
+	/// Refunds placed on the ORIGINAL sale date (sale cohort view); uses the inactive relationship.
+	measure 'Returns Value (by Sale Date)' = CALCULATE ( [Returns Value], USERELATIONSHIP ( Returns[original_sale_date_key], 'Date'[date_key] ) )
+		formatString: "€#,0"
+		displayFolder: 4 Returns
+
+	/// Returned units placed on the original sale date.
+	measure 'Returned Units (by Sale Date)' = CALCULATE ( [Returned Units], USERELATIONSHIP ( Returns[original_sale_date_key], 'Date'[date_key] ) )
+		formatString: "#,0"
+		displayFolder: 4 Returns
+
+	/// Returned units per 100 units sold, both on the sale date: the cohort rate used in Phase 6.
+	measure 'Returned Units per 100 Sold (Sale Cohort)' = DIVIDE ( [Returned Units (by Sale Date)], [Units] ) * 100
+		formatString: "#,0.00"
+		displayFolder: 4 Returns
+
+	/// Weekly stock snapshots of ranged store-SKUs. Returns, stock and targets have no promotion key, so it is blank when the Promotion table is filtered.
+	measure 'Ranged Store-SKU-Weeks' = IF ( ISCROSSFILTERED ( Promotion ), BLANK (), COUNTROWS ( Inventory ) )
+		formatString: "#,0"
+		displayFolder: 5 Availability
+
+	/// Snapshots with closing stock above zero. Returns, stock and targets have no promotion key, so it is blank when the Promotion table is filtered.
+	measure 'In-Stock Store-SKU-Weeks' = IF ( ISCROSSFILTERED ( Promotion ), BLANK (), SUM ( Inventory[is_in_stock] ) )
+		formatString: "#,0"
+		displayFolder: 5 Availability
+
+	/// Stock Availability % (BRD 5.3): share of ranged store-SKU-weeks in stock at the weekly snapshot.
+	measure 'Availability' = DIVIDE ( [In-Stock Store-SKU-Weeks], [Ranged Store-SKU-Weeks] )
+		formatString: "0.0%"
+		displayFolder: 5 Availability
+
+	/// Availability for the same days one year earlier (364 days, so retail weeks align).
+	measure 'Availability PY' =
+			VAR _pyDates = VALUES ( 'Date'[same_day_last_year_key] )
+			RETURN
+			    CALCULATE ( [Availability], REMOVEFILTERS ( 'Date' ), TREATAS ( _pyDates, 'Date'[date_key] ) )
+		formatString: "0.0%"
+		displayFolder: 5 Availability
+
+	/// Change in Availability in percentage points.
+	measure 'Availability YoY pp' = ( [Availability] - [Availability PY] ) * 100
+		formatString: "+0.0;-0.0;0.0"
+		displayFolder: 5 Availability
+
+	/// Store-SKU-weeks with no opening stock, nothing received and out of stock at the snapshot (Phase 5/6 definition).
+	measure 'Full-Week Stock-Outs' = IF ( ISCROSSFILTERED ( Promotion ), BLANK (), SUM ( Inventory[is_full_week_stockout] ) )
+		formatString: "#,0"
+		displayFolder: 5 Availability
+
+	/// Full-Week Stock-Outs for the same days one year earlier (364 days, so retail weeks align).
+	measure 'Full-Week Stock-Outs PY' =
+			VAR _pyDates = VALUES ( 'Date'[same_day_last_year_key] )
+			RETURN
+			    CALCULATE ( [Full-Week Stock-Outs], REMOVEFILTERS ( 'Date' ), TREATAS ( _pyDates, 'Date'[date_key] ) )
+		formatString: "#,0"
+		displayFolder: 5 Availability
+
+	/// Sales Revenue on promoted lines.
+	measure 'Promotion Revenue' = CALCULATE ( [Sales Revenue], KEEPFILTERS ( Sales[is_promoted] = 1 ) )
+		formatString: "€#,0"
+		displayFolder: 6 Promotions
+
+	/// Promoted share of Sales Revenue (governed promo revenue share).
+	measure 'Promotion Share' = DIVIDE ( [Promotion Revenue], [Sales Revenue] )
+		formatString: "0.0%"
+		displayFolder: 6 Promotions
+
+	/// Promotion Share for the same days one year earlier (364 days, so retail weeks align).
+	measure 'Promotion Share PY' =
+			VAR _pyDates = VALUES ( 'Date'[same_day_last_year_key] )
+			RETURN
+			    CALCULATE ( [Promotion Share], REMOVEFILTERS ( 'Date' ), TREATAS ( _pyDates, 'Date'[date_key] ) )
+		formatString: "0.0%"
+		displayFolder: 6 Promotions
+
+	/// Discount as a share of gross sales (the Phase 6 discount-rate definition).
+	measure 'Discount Rate' = DIVIDE ( [Discount Value], [Gross Sales] )
+		formatString: "0.0%"
+		displayFolder: 6 Promotions
+
+	/// Discount Rate for the same days one year earlier (364 days, so retail weeks align).
+	measure 'Discount Rate PY' =
+			VAR _pyDates = VALUES ( 'Date'[same_day_last_year_key] )
+			RETURN
+			    CALCULATE ( [Discount Rate], REMOVEFILTERS ( 'Date' ), TREATAS ( _pyDates, 'Date'[date_key] ) )
+		formatString: "0.0%"
+		displayFolder: 6 Promotions
+
+	/// Finance weekly Net Revenue target for the retail weeks in the selection (a partial week selection returns the whole week's target). Targets are set per store only, so the measure is blank under a product or promotion filter.
+	measure 'Target Net Revenue' =
+			IF (
+			    ISCROSSFILTERED ( Product ) || ISCROSSFILTERED ( Promotion ),
+			    BLANK (),
+			    CALCULATE (
+			        SUM ( Targets[target_net_revenue] ),
+			        TREATAS ( VALUES ( 'Date'[retail_week_key] ), Targets[retail_week_key] )
+			    )
+			)
+		formatString: "€#,0"
+		displayFolder: 7 Targets
+
+	/// Net Revenue over the store-weeks that have a Finance target (weeks without a target are excluded from Target Achievement, as in Phase 5). Blank under a product or promotion filter.
+	measure 'Net Revenue (Target Weeks)' =
+			IF ( ISCROSSFILTERED ( Product ) || ISCROSSFILTERED ( Promotion ), BLANK (),
+			VAR _pairs =
+			    CALCULATETABLE (
+			        SUMMARIZE ( Targets, Targets[store_key], Targets[retail_week_key] ),
+			        TREATAS ( VALUES ( 'Date'[retail_week_key] ), Targets[retail_week_key] )
+			    )
+			RETURN
+			    SUMX (
+			        _pairs,
+			        VAR _s = Targets[store_key]
+			        VAR _w = Targets[retail_week_key]
+			        RETURN CALCULATE ( [Net Revenue], Store[store_key] = _s, 'Date'[retail_week_key] = _w )
+			    )
+			)
+		formatString: "€#,0"
+		displayFolder: 7 Targets
+
+	/// Net Revenue as a share of target over store-weeks with a target (BRD 5.4; Phase 5 definition).
+	measure 'Target Achievement %' = DIVIDE ( [Net Revenue (Target Weeks)], [Target Net Revenue] )
+		formatString: "0.0%"
+		displayFolder: 7 Targets
+
+	/// Net Revenue minus target, over store-weeks with a target.
+	measure 'Variance to Target' = [Net Revenue (Target Weeks)] - [Target Net Revenue]
+		formatString: "€#,0"
+		displayFolder: 7 Targets
+
+	/// Exclusive attribution of the H2 net revenue change (Phase 6). Not affected by slicers.
+	measure 'Driver Amount' = SUM ( p6_driver_attribution[amount_eur] )
+		formatString: "€#,0"
+		displayFolder: 8 Phase 6 evidence (fixed H2 2025 vs H2 2024)
+
+	/// Share of the H2 net revenue change (Phase 6).
+	measure 'Driver Share of Decline' = SUM ( p6_driver_attribution[share_of_change] )
+		formatString: "0.0%"
+		displayFolder: 8 Phase 6 evidence (fixed H2 2025 vs H2 2024)
+
+	/// Sum of all attribution components; equals the H2 change exactly.
+	measure 'Attribution Total' = CALCULATE ( [Driver Amount], REMOVEFILTERS ( p6_driver_attribution ) )
+		formatString: "€#,0"
+		displayFolder: 8 Phase 6 evidence (fixed H2 2025 vs H2 2024)
+
+	/// Impact of ONE driver (Phase 6). Blank at total level: the rows overlap (D02 repeats D01, D04 is part of D03, D06 repeats D05) and must never be added.
+	measure 'Driver Impact (single driver)' = IF ( HASONEVALUE ( p6_evidence_matrix[driver_id] ), SUM ( p6_evidence_matrix[financial_impact_eur] ) )
+		formatString: "€#,0"
+		displayFolder: 8 Phase 6 evidence (fixed H2 2025 vs H2 2024)
+
+	/// Size of the slice an investigation would explain. Blank at total level (slices overlap).
+	measure 'Investigation Slice (single row)' = IF ( HASONEVALUE ( p6_investigations[priority] ), SUM ( p6_investigations[slice_of_decline_eur] ) )
+		formatString: "€#,0"
+		displayFolder: 8 Phase 6 evidence (fixed H2 2025 vs H2 2024)
+
+	/// BRD evidence level of the selected driver (Phase 6).
+	measure 'Evidence Level' = SELECTEDVALUE ( p6_evidence_matrix[evidence_level] )
+		displayFolder: 8 Phase 6 evidence (fixed H2 2025 vs H2 2024)
+
+	/// Colour for conditional formatting; always shown together with the text label.
+	measure 'Evidence Colour' = SELECTEDVALUE ( p6_evidence_matrix[evidence_colour], "#8F8D87" )
+		displayFolder: 8 Phase 6 evidence (fixed H2 2025 vs H2 2024)
+
+	/// Colour of an attribution bar by evidence level (residual in light grey).
+	measure 'Driver Evidence Colour' =
+			VAR _lvl = SELECTEDVALUE ( p6_driver_attribution[evidence_level] )
+			RETURN SWITCH ( _lvl, "Root-cause evidence", "#1BAF7A", "Observed change", "#2A78D6",
+			                "Statistical association", "#EDA100", "Hypothesis", "#8F8D87", "#C9C7C1" )
+		displayFolder: 8 Phase 6 evidence (fixed H2 2025 vs H2 2024)
+
+	/// Store-cluster excess decline vs matched control stores (Phase 6 ESTIMATE).
+	measure 'Cluster Excess (P6)' = CALCULATE ( [Driver Amount], p6_driver_attribution[driver_id] = "D01" )
+		formatString: "€#,0"
+		displayFolder: 8 Phase 6 evidence (fixed H2 2025 vs H2 2024)
+
+	/// Increase in Electronics sales lost in full-week stock-outs (Phase 6 ESTIMATE).
+	measure 'Lost Sales Gross (P6)' = CALCULATE ( SUM ( p6_et_lost_sales_totals[primary_change] ), p6_et_lost_sales_totals[scope] = "category" )
+		formatString: "€#,0"
+		displayFolder: 8 Phase 6 evidence (fixed H2 2025 vs H2 2024)
+
+	/// Lost sales after netting off demand that returned after restock (Phase 6 ESTIMATE).
+	measure 'Lost Sales Net of Deferred Demand (P6)' =
+			- CALCULATE ( SUM ( p6_stockout_net_of_recovery[estimate_eur] ),
+			              p6_stockout_net_of_recovery[driver] = "electronics_stockouts_primary" )
+		formatString: "€#,0"
+		displayFolder: 8 Phase 6 evidence (fixed H2 2025 vs H2 2024)
+
+	/// Low end of the stock-out sensitivity range (Phase 6).
+	measure 'Lost Sales Range Low (P6)' =
+			- CALCULATE ( MAX ( p6_sensitivity_summary[range_high_eur] ),
+			              p6_sensitivity_summary[driver] = "electronics_stockouts_primary" )
+		formatString: "€#,0"
+		displayFolder: 8 Phase 6 evidence (fixed H2 2025 vs H2 2024)
+
+	/// High end of the stock-out sensitivity range (Phase 6).
+	measure 'Lost Sales Range High (P6)' =
+			- CALCULATE ( MIN ( p6_sensitivity_summary[range_low_eur] ),
+			              p6_sensitivity_summary[driver] = "electronics_stockouts_primary" )
+		formatString: "€#,0"
+		displayFolder: 8 Phase 6 evidence (fixed H2 2025 vs H2 2024)
+
+	/// Increase in estimated full-week lost sales by SKU (Phase 6 ESTIMATE).
+	measure 'SKU Lost Sales Change (P6)' = SUM ( p6_et_sku_stockouts[lost_primary_change] )
+		formatString: "€#,0"
+		displayFolder: 8 Phase 6 evidence (fixed H2 2025 vs H2 2024)
+
+	/// Share of the lost-sales increase on the top 10% SKUs by prior-year revenue (Phase 6).
+	measure 'High-Seller Share of Lost Sales (P6)' =
+			DIVIDE (
+			    CALCULATE ( [SKU Lost Sales Change (P6)], REMOVEFILTERS ( p6_et_sku_stockouts ), p6_et_sku_stockouts[high_seller] = TRUE () ),
+			    CALCULATE ( [SKU Lost Sales Change (P6)], REMOVEFILTERS ( p6_et_sku_stockouts ) )
+			)
+		formatString: "0.0%"
+		displayFolder: 8 Phase 6 evidence (fixed H2 2025 vs H2 2024)
+
+	/// Share of the lost-sales increase on the single largest SKU (Phase 6).
+	measure 'Top SKU Share of Lost Sales (P6)' =
+			DIVIDE (
+			    MAXX ( ALL ( p6_et_sku_stockouts ), p6_et_sku_stockouts[lost_primary_change] ),
+			    CALCULATE ( [SKU Lost Sales Change (P6)], REMOVEFILTERS ( p6_et_sku_stockouts ) )
+			)
+		formatString: "0.0%"
+		displayFolder: 8 Phase 6 evidence (fixed H2 2025 vs H2 2024)
+
+	/// Share of the lost-sales increase on the three largest SKUs (Phase 6).
+	measure 'Top 3 SKU Share of Lost Sales (P6)' =
+			DIVIDE (
+			    SUMX (
+			        TOPN ( 3, ALL ( p6_et_sku_stockouts ), p6_et_sku_stockouts[lost_primary_change], DESC ),
+			        p6_et_sku_stockouts[lost_primary_change]
+			    ),
+			    CALCULATE ( [SKU Lost Sales Change (P6)], REMOVEFILTERS ( p6_et_sku_stockouts ) )
+			)
+		formatString: "0.0%"
+		displayFolder: 8 Phase 6 evidence (fixed H2 2025 vs H2 2024)
+
+	/// Stock-out episodes (runs of consecutive out-of-stock weeks), by supplier and year (Phase 6 FACT).
+	measure 'Stock-Out Episodes (P6)' = SUM ( p6_et_episodes[episodes] )
+		formatString: "#,0"
+		displayFolder: 8 Phase 6 evidence (fixed H2 2025 vs H2 2024)
+
+	/// Mean episode length in weeks; use with one supplier and one year selected (Phase 6 FACT).
+	measure 'Mean Episode Weeks (P6)' = AVERAGE ( p6_et_episodes[mean_weeks_out] )
+		formatString: "0.0"
+		displayFolder: 8 Phase 6 evidence (fixed H2 2025 vs H2 2024)
+
+	/// Home & Kitchen promotion events analysed in Phase 6, by year (FACT).
+	measure 'Promotion Events (P6)' = SUM ( p6_hk_events_by_year[events] )
+		formatString: "#,0"
+		displayFolder: 8 Phase 6 evidence (fixed H2 2025 vs H2 2024)
+
+	/// Revenue shortfall after promotions against event baselines (Phase 6 ESTIMATE).
+	measure 'Post-Promotion Dip (P6)' = SUM ( p6_hk_events_by_year[post_dip_revenue] )
+		formatString: "€#,0"
+		displayFolder: 8 Phase 6 evidence (fixed H2 2025 vs H2 2024)
+
+	/// Effect of the Home & Kitchen promotion change by method (Phase 6). Never summed across methods.
+	measure 'HK Method Effect' = SUM ( p6_hk_methods[effect_eur] )
+		formatString: "€#,0"
+		displayFolder: 8 Phase 6 evidence (fixed H2 2025 vs H2 2024)
+
+	/// Blank at total level, so the four methods are never combined into one number.
+	measure 'HK Method Effect Guarded' = IF ( HASONEVALUE ( p6_hk_methods[method_code] ), [HK Method Effect] )
+		formatString: "€#,0"
+		displayFolder: 8 Phase 6 evidence (fixed H2 2025 vs H2 2024)
+
+	/// Period in the current filter context.
+	measure 'Selected Period' =
+			VAR _p = SELECTEDVALUE ( 'Date'[period_label] )
+			RETURN IF ( ISBLANK ( _p ), "Multiple periods selected", _p )
+		displayFolder: 9 Labels and subtitles
+
+	/// Dynamic headline for the selected period, e.g. 'Net revenue €10.189M to €9.457M (-€731k, -7.18%)'.
+	measure 'Headline Subtitle' =
+			"Net revenue " & FORMAT ( [Net Revenue PY] / 1000000, "€#,0.000" ) & "M to "
+			    & FORMAT ( [Net Revenue] / 1000000, "€#,0.000" ) & "M ("
+			    & FORMAT ( [Net Revenue YoY] / 1000, "+€#,0;-€#,0" ) & "k, "
+			    & FORMAT ( [Net Revenue YoY %], "+0.00%;-0.00%" ) & ")"
+		displayFolder: 9 Labels and subtitles
+
+	/// Caption for every visual built on imported Phase 6 tables.
+	measure 'Phase 6 Scope Note' = "Validated Phase 6 result for H2 2025 vs H2 2024. Not affected by slicers."
+		displayFolder: 9 Labels and subtitles
+
+	/// Required callout on the store page (Phase 6: cause UNRESOLVED).
+	measure 'Cluster Cause Callout' = "Cause not established from available internal data."
+		displayFolder: 9 Labels and subtitles
+
+	/// Required wording on the inventory page (Phase 6 D04: Statistical association).
+	measure 'Voltix Wording' = "Stock-out concentration is associated with Voltix SKUs. Available data cannot determine whether the cause was supplier performance or Brightwater ordering/replenishment."
+		displayFolder: 9 Labels and subtitles
+
+	/// Required wording on the promotions page (Phase 6 D07).
+	measure 'Promotion Wording' = "Promotion activity is associated with the Home & Kitchen decline, but causality is not established."
+		displayFolder: 9 Labels and subtitles
+
+	/// Fixed-context check value: must equal €9,457,457.05 (Phase 4, 5, 6).
+	measure 'QA Net Revenue H2 2025' = CALCULATE ( [Net Revenue], REMOVEFILTERS (), 'Date'[retail_year] = 2025, 'Date'[retail_half] = "H2" )
+		formatString: "€#,0.00"
+		displayFolder: 0 Validation
+
+	/// Fixed-context check value: must equal €10,188,727.55.
+	measure 'QA Net Revenue H2 2024' = CALCULATE ( [Net Revenue], REMOVEFILTERS (), 'Date'[retail_year] = 2024, 'Date'[retail_half] = "H2" )
+		formatString: "€#,0.00"
+		displayFolder: 0 Validation
+
+	/// Compares the imported Phase 6 attribution with the model's own H2 change.
+	measure 'QA Attribution Check' =
+			VAR _change = [QA Net Revenue H2 2025] - [QA Net Revenue H2 2024]
+			VAR _attr = [Attribution Total]
+			RETURN IF ( ABS ( _change - _attr ) < 0.01, "PASS: attribution = H2 change",
+			            "FAIL: attribution differs from H2 change by " & FORMAT ( _attr - _change, "€#,0.00" ) )
+		displayFolder: 0 Validation
+
+	column _Measures
+		dataType: string
+		isHidden
+		sourceColumn: [_Measures]
+
+	partition _Measures = calculated
+		mode: import
+		source = ROW ( "_Measures", "" )

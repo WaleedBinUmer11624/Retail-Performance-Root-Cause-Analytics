@@ -1,0 +1,10 @@
+[    0.4s] freeze verified: 34 Phase 1-4 files unchanged
+[   14.0s] model open (duckdb)
+[   14.4s] diagnostic SQL: 30 batches in 9 scripts
+[   14.7s] headline reconciled: H2 2024 10,188,727.55 -> H2 2025 9,457,457.05 (-7.177251%)
+[   14.8s] trend profile: a persistent decline with no clear trend within the period, 20/26 weeks negative
+[   17.4s] bridge: T -614,363  UPT -34,173  ASP -68,077  returns -14,657  (residual -5.82e-10)
+[   19.4s] estimated lost sales (ESTIMATE): H2 2024 19  H2 2025 37,280; backtest bias 0.993
+[   20.3s] checks: 64/64 pass
+[   22.9s] figures: 8
+[   22.9s] PASSED; outputs in /home/claude/Retail_Performance_Root_Cause_Analytics/reports/phase5

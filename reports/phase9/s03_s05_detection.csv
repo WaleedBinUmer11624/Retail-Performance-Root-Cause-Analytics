@@ -1,0 +1,22 @@
+method,rule,store,change_point_week,first_watch_week,first_detection_week,detection_delay_weeks,severity_at_first_detection,first_critical_week,max_severity,warning_plus_alerts_on_this_store_before_change_point,unconfirmed_warning_plus_alerts_estate_before_detection,active_share_after_change_point,active_in_final_week,cause_status,within_budget,selected_for_operations,alerts_on_this_store_before_change_point,unconfirmed_alerts_estate_before_detection,method_unconfirmed_rate
+"operational EW01 (selected rule, severity, change-point continuation)","peer_gap_threshold: 10, 3 week(s) OR online change-point test (changepoint_online delta 6)",S03,2025-W29,2025-W29,2025-W31,2.0,CRITICAL,2025-W31,CRITICAL,1.0,9.0,0.916667,True,Cause not established from available internal data.,,,,,
+"operational EW01 (selected rule, severity, change-point continuation)","peer_gap_threshold: 10, 3 week(s) OR online change-point test (changepoint_online delta 6)",S04,2025-W28,2025-W29,2025-W33,5.0,CRITICAL,2025-W33,CRITICAL,0.0,9.0,0.68,False,Cause not established from available internal data.,,,,,
+"operational EW01 (selected rule, severity, change-point continuation)","peer_gap_threshold: 10, 3 week(s) OR online change-point test (changepoint_online delta 6)",S05,2025-W30,2025-W30,2025-W33,3.0,CRITICAL,2025-W33,CRITICAL,0.0,9.0,0.869565,True,Cause not established from available internal data.,,,,,
+peer_gap_threshold,"b_gap10 (threshold 10, persistence 3)",S03,2025-W29,,2025-W31,2.0,,,,,,0.916667,True,Cause not established from available internal data.,True,True,1.0,9.0,0.019876
+peer_gap_threshold,"b_gap10 (threshold 10, persistence 3)",S04,2025-W28,,2025-W33,5.0,,,,,,0.32,False,Cause not established from available internal data.,True,True,0.0,9.0,0.019876
+peer_gap_threshold,"b_gap10 (threshold 10, persistence 3)",S05,2025-W30,,2025-W35,5.0,,,,,,0.782609,True,Cause not established from available internal data.,True,True,0.0,11.0,0.019876
+robust_z,"b_rz2.5 (threshold 2.5, persistence 2)",S03,2025-W29,,2025-W30,1.0,,,,,,0.625,True,Cause not established from available internal data.,True,False,0.0,2.0,0.003727
+robust_z,"b_rz2.5 (threshold 2.5, persistence 2)",S04,2025-W28,,2025-W32,4.0,,,,,,0.08,False,Cause not established from available internal data.,True,False,0.0,2.0,0.003727
+robust_z,"b_rz2.5 (threshold 2.5, persistence 2)",S05,2025-W30,,2025-W34,4.0,,,,,,0.521739,True,Cause not established from available internal data.,True,False,0.0,2.0,0.003727
+cusum,"b_cusum6 (threshold 6, persistence 1)",S03,2025-W29,,2025-W30,1.0,,,,,,0.958333,True,Cause not established from available internal data.,False,False,0.0,37.0,0.095652
+cusum,"b_cusum6 (threshold 6, persistence 1)",S04,2025-W28,,2025-W32,4.0,,,,,,0.84,True,Cause not established from available internal data.,False,False,0.0,40.0,0.095652
+cusum,"b_cusum6 (threshold 6, persistence 1)",S05,2025-W30,,2025-W30,0.0,,,,,,1.0,True,Cause not established from available internal data.,False,False,0.0,37.0,0.095652
+changepoint_online,"b_cp6 (threshold 6, persistence 1)",S03,2025-W29,,2025-W31,2.0,,,,,,0.833333,True,Cause not established from available internal data.,True,True,0.0,0.0,0.0
+changepoint_online,"b_cp6 (threshold 6, persistence 1)",S04,2025-W28,,2025-W33,5.0,,,,,,0.68,False,Cause not established from available internal data.,True,True,0.0,0.0,0.0
+changepoint_online,"b_cp6 (threshold 6, persistence 1)",S05,2025-W30,,2025-W33,3.0,,,,,,0.869565,True,Cause not established from available internal data.,True,True,0.0,0.0,0.0
+yoy_threshold,"b_yoy10 (threshold 10, persistence 3)",S03,2025-W29,,2025-W31,2.0,,,,,,0.791667,True,Cause not established from available internal data.,True,False,1.0,2.0,0.009938
+yoy_threshold,"b_yoy10 (threshold 10, persistence 3)",S04,2025-W28,,2025-W33,5.0,,,,,,0.64,True,Cause not established from available internal data.,True,False,0.0,2.0,0.009938
+yoy_threshold,"b_yoy10 (threshold 10, persistence 3)",S05,2025-W30,,2025-W30,0.0,,,,,,0.826087,True,Cause not established from available internal data.,True,False,0.0,2.0,0.009938
+rolling_z,"b_zroll2.5 (threshold 2.5, persistence 2)",S03,2025-W29,,not detected,,,,,,,0.0,False,Cause not established from available internal data.,True,False,0.0,0.0,0.0
+rolling_z,"b_zroll2.5 (threshold 2.5, persistence 2)",S04,2025-W28,,not detected,,,,,,,0.0,False,Cause not established from available internal data.,True,False,0.0,0.0,0.0
+rolling_z,"b_zroll2.5 (threshold 2.5, persistence 2)",S05,2025-W30,,not detected,,,,,,,0.0,False,Cause not established from available internal data.,True,False,0.0,0.0,0.0

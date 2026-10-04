@@ -1,0 +1,126 @@
+# Phase 3: data-quality configuration.
+#
+# Business rules, contracts and tolerances for the data-quality pipeline
+# (src/data_quality). Everything here comes from the BRD (docs/01), the data
+# contract (docs/02 section 5) or profiling of the raw extracts. Nothing here
+# is taken from evaluation-only assets.
+
+# The ONLY files Phase 3 may read. The loader refuses anything else, including
+# every file whose name starts with an underscore.
+inputs:
+  dim_store: dim_store.csv
+  dim_product: dim_product.csv
+  dim_date: dim_date.csv
+  fact_sales: fact_sales.csv
+  fact_sales_late_batch: fact_sales_late_batch.csv
+  fact_inventory: fact_inventory.csv
+  fact_returns: fact_returns.csv
+  fact_promotions: fact_promotions.csv
+  fact_targets: fact_targets.csv
+
+period:
+  start: 2024-01-01
+  end: 2025-12-31
+
+# Column contracts: type per column, primary key, mandatory columns.
+# Types: str, int, decimal, date, datetime, time, bool.
+contract:
+  dim_store:
+    key: [store_id]
+    required: [store_id, store_name, region, store_format]
+    types: {store_id: str, store_name: str, town: str, county: str, region: str, store_format: str,
+            floor_area_m2: int, open_date: date, manager_name: str, headcount_fte: decimal,
+            weekly_trading_hours: int, latitude: decimal, longitude: decimal}
+  dim_product:
+    key: [product_id]
+    required: [product_id, product_name, category, subcategory, brand, supplier_id, list_price, unit_cost, launch_date, status]
+    types: {product_id: str, product_name: str, category: str, subcategory: str, brand: str, supplier_id: str,
+            supplier_name: str, list_price: decimal, unit_cost: decimal, launch_date: date,
+            discontinued_date: date, status: str}
+  dim_date:
+    key: [date_key]
+    required: [date_key, date, retail_year, retail_week, is_trading_day]
+    types: {date_key: int, date: date, day_of_week: int, day_name: str, is_weekend: bool, calendar_month: int,
+            month_name: str, calendar_quarter: int, calendar_year: int, retail_year: int, retail_week: int,
+            retail_week_start: date, retail_half: str, is_bank_holiday: bool, holiday_name: str,
+            is_trading_day: bool, same_day_last_year: date}
+  fact_sales:
+    key: [transaction_id, line_number]
+    required: [transaction_id, line_number, transaction_date, store_id, product_id, quantity, unit_price,
+               discount, revenue, unit_cost, cost, margin, extract_batch_id, extract_timestamp]
+    types: {transaction_id: str, line_number: int, transaction_date: date, transaction_time: time, store_id: str,
+            product_id: str, category: str, quantity: int, unit_price: decimal, discount: decimal,
+            revenue: decimal, unit_cost: decimal, cost: decimal, margin: decimal, promotion_id: str,
+            extract_batch_id: str, extract_timestamp: datetime}
+  fact_sales_late_batch:
+    key: [transaction_id, line_number]
+    required: [transaction_id, line_number, transaction_date, store_id, product_id, quantity, unit_price,
+               discount, revenue, unit_cost, cost, margin, extract_batch_id, extract_timestamp]
+    types: {transaction_id: str, line_number: int, transaction_date: date, transaction_time: time, store_id: str,
+            product_id: str, category: str, quantity: int, unit_price: decimal, discount: decimal,
+            revenue: decimal, unit_cost: decimal, cost: decimal, margin: decimal, promotion_id: str,
+            extract_batch_id: str, extract_timestamp: datetime}
+  fact_inventory:
+    key: [store_id, product_id, snapshot_date]
+    required: [snapshot_date, retail_year, retail_week, store_id, product_id, opening_stock, received_qty,
+               sold_qty, adjustment_qty, closing_stock]
+    types: {snapshot_date: date, retail_year: int, retail_week: int, store_id: str, product_id: str,
+            opening_stock: int, received_qty: int, sold_qty: int, adjustment_qty: int, closing_stock: int}
+  fact_returns:
+    key: [return_id]
+    required: [return_id, return_date, store_id, product_id, return_quantity, refund_value, return_reason,
+               restockable_flag]
+    types: {return_id: str, return_date: date, store_id: str, original_transaction_id: str,
+            original_line_number: int, product_id: str, return_quantity: int, refund_value: decimal,
+            return_reason: str, restockable_flag: bool}
+  fact_promotions:
+    key: [promotion_id, product_id, store_id]
+    required: [promotion_id, promotion_type, product_id, store_id, start_date, end_date, discount_pct]
+    types: {promotion_id: str, promotion_name: str, promotion_type: str, product_id: str, store_id: str,
+            start_date: date, end_date: date, discount_pct: decimal}
+  fact_targets:
+    key: [store_id, retail_year, retail_week]
+    required: [store_id, retail_year, retail_week, target_net_revenue, target_version]
+    types: {store_id: str, retail_year: int, retail_week: int, week_start_date: date, week_end_date: date,
+            target_net_revenue: decimal, target_version: str, target_set_date: date}
+
+# Canonical reference values (BRD sections 2 and 4).
+domains:
+  categories: [Home & Kitchen, Electronics & Tech, Health & Beauty, Toys & Games, Garden & Outdoor,
+               Stationery & Crafts, Seasonal & Gifts]
+  category_aliases: {}          # explicit overrides if the automatic matcher is ever wrong
+  regions: [Dublin, Leinster, Munster, Connacht, Ulster (ROI)]
+  store_formats: [Flagship, Standard, Compact]
+  return_reasons: [Changed mind, Faulty, Not as described, Damaged, Gift return]
+  restockable_reasons: [Changed mind, Not as described, Gift return]
+  promotion_types: [Percent Off, Clearance]
+  product_status: [Active, Discontinued]
+
+# Formats of identifiers (from the data contract).
+formats:
+  store_id: '^S\d{2}$'
+  product_id: '^P\d{5}$'
+  transaction_id: '^S\d{2}-\d{8}-\d{5}$'     # store - yyyymmdd - sequence
+  return_id: '^R\d{7}$'
+  promotion_id: '^PR\d{5}$'
+
+tolerances:
+  money: 0.011                  # EUR rounding tolerance for line arithmetic
+  price_reference: 0.01         # unit price may differ from the SKU-year reference price by 1%
+  decimal_shift_ratio: [95, 105]   # price or target about 100x its reference = misplaced decimal point
+  max_plausible_line_quantity: 20  # largest regular line in the data is 4; a store POS line above 20
+                                   # would need a trade/B2B process that is out of scope (BRD 4.3)
+  max_discount_share: 0.60      # deepest promotion in the calendar is 50%
+  target_outlier_ratio: 10      # weekly target more than 10x the store's median target
+  target_decimal_shift_band: [0.25, 4]   # ...and dividing it by 100 gives 0.25x to 4x the median
+  low_volume_day_ratio: 0.30    # store-day revenue below 30% of the store's usual same-weekday revenue
+
+timeliness:
+  expected_max_lag_days: 2      # daily POS batches normally land the next morning
+  return_policy_days: 30
+  christmas_return_window: {purchase_from: '11-15', purchase_to: '12-24', return_by: '01-31'}
+
+outputs:
+  curated: data/processed/curated
+  quarantine: data/processed/quarantine
+  reports: reports/phase3

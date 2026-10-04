@@ -1,0 +1,161 @@
+store_id,category,net_revenue_py,net_revenue_cy,net_revenue_change,in_cluster
+S01,Electronics & Tech,214183.89,195082.97,-19100.92,False
+S01,Garden & Outdoor,45484.9,44736.22,-748.68,False
+S01,Health & Beauty,143107.0,145013.79,1906.79,False
+S01,Home & Kitchen,245330.42,228940.77,-16389.65,False
+S01,Seasonal & Gifts,126537.6,115762.62,-10774.98,False
+S01,Stationery & Crafts,62370.57,59715.75,-2654.82,False
+S01,Toys & Games,117686.91,117028.3,-658.61,False
+S01,Unknown,1043.66,886.45,-157.21,False
+S02,Electronics & Tech,255718.03,244155.69,-11562.34,False
+S02,Garden & Outdoor,53202.93,59986.23,6783.3,False
+S02,Health & Beauty,170546.32,181662.7,11116.38,False
+S02,Home & Kitchen,296267.61,286565.78,-9701.83,False
+S02,Seasonal & Gifts,163122.4,162964.67,-157.73,False
+S02,Stationery & Crafts,75217.5,75412.96,195.46,False
+S02,Toys & Games,151822.13,150970.95,-851.18,False
+S02,Unknown,1324.01,996.12,-327.89,False
+S03,Electronics & Tech,125988.43,79577.93,-46410.5,True
+S03,Garden & Outdoor,24064.47,19134.03,-4930.44,True
+S03,Health & Beauty,85670.3,57588.97,-28081.33,True
+S03,Home & Kitchen,135222.93,95513.23,-39709.7,True
+S03,Seasonal & Gifts,75680.67,51154.93,-24525.74,True
+S03,Stationery & Crafts,36915.68,25144.11,-11771.57,True
+S03,Toys & Games,66462.5,50676.51,-15785.99,True
+S03,Unknown,462.27,360.49,-101.78,True
+S04,Electronics & Tech,116241.81,81778.08,-34463.73,True
+S04,Garden & Outdoor,24769.07,19963.24,-4805.83,True
+S04,Health & Beauty,81381.26,58694.21,-22687.05,True
+S04,Home & Kitchen,138552.78,94356.9,-44195.88,True
+S04,Seasonal & Gifts,69106.07,53444.43,-15661.64,True
+S04,Stationery & Crafts,35083.79,26358.22,-8725.57,True
+S04,Toys & Games,69239.83,46101.7,-23138.13,True
+S04,Unknown,396.31,121.62,-274.69,True
+S05,Electronics & Tech,101138.83,70568.28,-30570.55,True
+S05,Garden & Outdoor,21589.02,17099.89,-4489.13,True
+S05,Health & Beauty,69327.33,54390.85,-14936.48,True
+S05,Home & Kitchen,111886.66,80484.6,-31402.06,True
+S05,Seasonal & Gifts,64381.11,43962.7,-20418.41,True
+S05,Stationery & Crafts,29712.85,22869.83,-6843.02,True
+S05,Toys & Games,58658.58,42488.7,-16169.88,True
+S05,Unknown,441.08,568.2,127.12,True
+S06,Electronics & Tech,62283.3,61694.96,-588.34,False
+S06,Garden & Outdoor,10610.93,10403.49,-207.44,False
+S06,Health & Beauty,37798.43,38315.12,516.69,False
+S06,Home & Kitchen,71702.54,61909.43,-9793.11,False
+S06,Seasonal & Gifts,36492.56,32935.85,-3556.71,False
+S06,Stationery & Crafts,18814.18,17334.84,-1479.34,False
+S06,Toys & Games,37161.61,35177.31,-1984.3,False
+S06,Unknown,286.77,422.04,135.27,False
+S07,Electronics & Tech,135113.73,117217.18,-17896.55,False
+S07,Garden & Outdoor,27429.66,29510.0,2080.34,False
+S07,Health & Beauty,89674.7,93925.02,4250.32,False
+S07,Home & Kitchen,152121.71,145635.92,-6485.79,False
+S07,Seasonal & Gifts,81508.81,78720.34,-2788.47,False
+S07,Stationery & Crafts,41115.36,39150.85,-1964.51,False
+S07,Toys & Games,76031.69,78724.91,2693.22,False
+S07,Unknown,396.22,488.64,92.42,False
+S08,Electronics & Tech,60508.37,53374.51,-7133.86,False
+S08,Garden & Outdoor,13455.08,10556.61,-2898.47,False
+S08,Health & Beauty,36617.87,38248.71,1630.84,False
+S08,Home & Kitchen,64458.93,61344.07,-3114.86,False
+S08,Seasonal & Gifts,35364.6,33660.52,-1704.08,False
+S08,Stationery & Crafts,18468.4,16821.16,-1647.24,False
+S08,Toys & Games,32243.28,32884.1,640.82,False
+S08,Unknown,260.82,466.42,205.6,False
+S09,Electronics & Tech,105334.69,102408.4,-2926.29,False
+S09,Garden & Outdoor,22493.91,23749.99,1256.08,False
+S09,Health & Beauty,71149.64,75599.68,4450.04,False
+S09,Home & Kitchen,124120.77,114925.5,-9195.27,False
+S09,Seasonal & Gifts,65800.24,64212.96,-1587.28,False
+S09,Stationery & Crafts,32526.81,32465.95,-60.86,False
+S09,Toys & Games,58967.01,61616.77,2649.76,False
+S09,Unknown,500.18,288.18,-212.0,False
+S10,Electronics & Tech,62346.25,61218.8,-1127.45,False
+S10,Garden & Outdoor,11776.31,13943.71,2167.4,False
+S10,Health & Beauty,40947.49,43105.11,2157.62,False
+S10,Home & Kitchen,68295.56,69881.5,1585.94,False
+S10,Seasonal & Gifts,37664.73,36452.39,-1212.34,False
+S10,Stationery & Crafts,18924.08,19000.16,76.08,False
+S10,Toys & Games,36940.02,34553.99,-2386.03,False
+S10,Unknown,260.54,195.17,-65.37,False
+S11,Electronics & Tech,63166.17,54051.1,-9115.07,False
+S11,Garden & Outdoor,12358.23,12217.77,-140.46,False
+S11,Health & Beauty,43908.24,44109.63,201.39,False
+S11,Home & Kitchen,70823.61,60686.5,-10137.11,False
+S11,Seasonal & Gifts,37325.71,33819.68,-3506.03,False
+S11,Stationery & Crafts,18728.57,18330.08,-398.49,False
+S11,Toys & Games,36448.13,32424.99,-4023.14,False
+S11,Unknown,377.97,643.67,265.7,False
+S12,Electronics & Tech,117041.29,117789.26,747.97,False
+S12,Garden & Outdoor,25403.43,25736.23,332.8,False
+S12,Health & Beauty,77330.76,78798.12,1467.36,False
+S12,Home & Kitchen,134812.0,127861.28,-6950.72,False
+S12,Seasonal & Gifts,70304.09,74366.24,4062.15,False
+S12,Stationery & Crafts,35856.43,34218.36,-1638.07,False
+S12,Toys & Games,68986.15,66150.31,-2835.84,False
+S12,Unknown,727.3,402.15,-325.15,False
+S13,Electronics & Tech,218912.18,202638.93,-16273.25,False
+S13,Garden & Outdoor,49090.26,46961.22,-2129.04,False
+S13,Health & Beauty,148109.75,155440.08,7330.33,False
+S13,Home & Kitchen,257908.7,255647.92,-2260.78,False
+S13,Seasonal & Gifts,132970.45,137447.36,4476.91,False
+S13,Stationery & Crafts,65042.77,65352.55,309.78,False
+S13,Toys & Games,127114.39,126810.03,-304.36,False
+S13,Unknown,1007.6,1022.49,14.89,False
+S14,Electronics & Tech,120636.8,109137.41,-11499.39,False
+S14,Garden & Outdoor,25943.62,26960.18,1016.56,False
+S14,Health & Beauty,82867.73,80086.63,-2781.1,False
+S14,Home & Kitchen,146592.28,129288.6,-17303.68,False
+S14,Seasonal & Gifts,73667.07,69126.0,-4541.07,False
+S14,Stationery & Crafts,35772.11,34798.68,-973.43,False
+S14,Toys & Games,68366.88,68240.84,-126.04,False
+S14,Unknown,557.24,691.69,134.45,False
+S15,Electronics & Tech,104688.05,84024.17,-20663.88,False
+S15,Garden & Outdoor,21455.71,21450.49,-5.22,False
+S15,Health & Beauty,69429.92,68265.3,-1164.62,False
+S15,Home & Kitchen,123844.09,110565.17,-13278.92,False
+S15,Seasonal & Gifts,62674.6,58563.92,-4110.68,False
+S15,Stationery & Crafts,30610.74,27650.42,-2960.32,False
+S15,Toys & Games,59413.05,56269.61,-3143.44,False
+S15,Unknown,503.28,342.62,-160.66,False
+S16,Electronics & Tech,111043.28,95234.6,-15808.68,False
+S16,Garden & Outdoor,22968.35,23594.65,626.3,False
+S16,Health & Beauty,73124.2,79439.72,6315.52,False
+S16,Home & Kitchen,118472.29,120648.93,2176.64,False
+S16,Seasonal & Gifts,65719.1,68793.18,3074.08,False
+S16,Stationery & Crafts,32724.49,33178.48,453.99,False
+S16,Toys & Games,61509.82,63243.51,1733.69,False
+S16,Unknown,933.26,429.94,-503.32,False
+S17,Electronics & Tech,52701.21,50677.78,-2023.43,False
+S17,Garden & Outdoor,12210.65,10971.55,-1239.1,False
+S17,Health & Beauty,38226.14,37632.05,-594.09,False
+S17,Home & Kitchen,62961.39,56198.14,-6763.25,False
+S17,Seasonal & Gifts,35132.3,31211.42,-3920.88,False
+S17,Stationery & Crafts,15803.79,15615.11,-188.68,False
+S17,Toys & Games,32247.05,30875.04,-1372.01,False
+S17,Unknown,373.73,224.11,-149.62,False
+S18,Electronics & Tech,113099.2,100059.6,-13039.6,False
+S18,Garden & Outdoor,24254.96,23423.36,-831.6,False
+S18,Health & Beauty,75909.28,78301.92,2392.64,False
+S18,Home & Kitchen,132367.55,120088.19,-12279.36,False
+S18,Seasonal & Gifts,66556.87,69329.01,2772.14,False
+S18,Stationery & Crafts,32582.69,32046.41,-536.28,False
+S18,Toys & Games,64483.41,63422.59,-1060.82,False
+S18,Unknown,402.44,486.54,84.1,False
+S19,Electronics & Tech,60926.82,54780.53,-6146.29,False
+S19,Garden & Outdoor,11672.24,10516.0,-1156.24,False
+S19,Health & Beauty,39810.42,39965.63,155.21,False
+S19,Home & Kitchen,64479.55,58784.62,-5694.93,False
+S19,Seasonal & Gifts,33119.75,31224.03,-1895.72,False
+S19,Stationery & Crafts,19195.84,17749.53,-1446.31,False
+S19,Toys & Games,34577.02,32611.61,-1965.41,False
+S19,Unknown,308.3,193.79,-114.51,False
+S20,Electronics & Tech,65801.73,62885.55,-2916.18,False
+S20,Garden & Outdoor,10577.92,12882.35,2304.43,False
+S20,Health & Beauty,36873.67,41780.5,4906.83,False
+S20,Home & Kitchen,70801.01,71701.54,900.53,False
+S20,Seasonal & Gifts,37063.33,38919.43,1856.1,False
+S20,Stationery & Crafts,18102.51,18909.32,806.81,False
+S20,Toys & Games,35083.52,36057.48,973.96,False
+S20,Unknown,441.83,157.75,-284.08,False

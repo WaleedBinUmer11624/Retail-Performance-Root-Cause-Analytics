@@ -1,0 +1,86 @@
+table p6_cluster_onset
+
+	column series
+		dataType: string
+		sourceColumn: series
+
+	column onset_date
+		dataType: string
+		sourceColumn: onset_date
+
+	column step_shift_log
+		dataType: double
+		summarizeBy: none
+		sourceColumn: step_shift_log
+
+	column step_shift_pct
+		dataType: double
+		summarizeBy: none
+		sourceColumn: step_shift_pct
+
+	column step_r2
+		dataType: double
+		summarizeBy: none
+		sourceColumn: step_r2
+
+	column ramp_days
+		dataType: int64
+		summarizeBy: none
+		sourceColumn: ramp_days
+
+	column ramp_start
+		dataType: string
+		sourceColumn: ramp_start
+
+	column ramp_end
+		dataType: string
+		sourceColumn: ramp_end
+
+	column bic_step
+		dataType: double
+		summarizeBy: none
+		sourceColumn: bic_step
+
+	column bic_ramp
+		dataType: double
+		summarizeBy: none
+		sourceColumn: bic_ramp
+
+	column bic_linear
+		dataType: double
+		summarizeBy: none
+		sourceColumn: bic_linear
+
+	column best_model
+		dataType: string
+		sourceColumn: best_model
+
+	column abrupt
+		dataType: boolean
+		summarizeBy: none
+		sourceColumn: abrupt
+
+	partition p6_cluster_onset = m
+		mode: import
+		source =
+			let
+			    Source = Csv.Document(File.Contents(AnalyticsFolder & "\p6_cluster_onset.csv"),
+			                          [Delimiter = ",", Encoding = 65001, QuoteStyle = QuoteStyle.Csv]),
+			    Promoted = Table.PromoteHeaders(Source, [PromoteAllScalars = true]),
+			    Typed = Table.TransformColumnTypes(Promoted, {
+			        {"series", type text},
+			        {"onset_date", type text},
+			        {"step_shift_log", type number},
+			        {"step_shift_pct", type number},
+			        {"step_r2", type number},
+			        {"ramp_days", Int64.Type},
+			        {"ramp_start", type text},
+			        {"ramp_end", type text},
+			        {"bic_step", type number},
+			        {"bic_ramp", type number},
+			        {"bic_linear", type number},
+			        {"best_model", type text},
+			        {"abrupt", type logical}
+			    }, "en-US")
+			in
+			    Typed

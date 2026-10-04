@@ -1,0 +1,4 @@
+contribution_rank,store_format,stores,stores_declining,net_revenue_py,net_revenue_cy,net_revenue_change,net_revenue_yoy_pct,contribution_pp,share_of_change,transactions_yoy_pct,aov_yoy_pct,upt_yoy_pct,asp_yoy_pct,return_rate_value_change_pp,availability_change_pp,target_achievement_py,target_achievement_cy,worst_store_yoy_pct,best_store_yoy_pct,worst_store_change,best_store_change
+1,Standard,10,10.0,5180294.57,4593546.25,-586748.32,-11.326544,-5.758799,0.802368,-9.849898,-1.059846,-0.443353,-0.619239,0.563883,-0.628677,0.923365,0.842704,-31.122115,-0.397081,-171317.05,-1931.78
+2,Compact,7,5.0,1885311.0,1802708.25,-82602.75,-4.381386,-0.810727,0.112958,-3.324831,-1.115016,0.107023,-1.220733,-0.021582,-0.74767,0.937304,0.875462,-9.484188,3.111388,-26853.21,8548.4
+3,Flagship,3,3.0,3123121.98,3061202.55,-61919.43,-1.982613,-0.607725,0.084674,-0.653757,-0.913747,-0.491643,-0.424189,0.413001,-0.568704,0.930018,0.898786,-5.082745,-0.386031,-48578.08,-4505.83

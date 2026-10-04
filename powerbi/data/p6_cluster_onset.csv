@@ -1,0 +1,2 @@
+series,onset_date,step_shift_log,step_shift_pct,step_r2,ramp_days,ramp_start,ramp_end,bic_step,bic_ramp,bic_linear,best_model,abrupt
+cluster vs primary controls,2025-07-15,-0.311317,-26.751813,0.483842,0,2025-07-15,2025-07-15,-1308.467122,-1302.575477,-1249.192621,step,True

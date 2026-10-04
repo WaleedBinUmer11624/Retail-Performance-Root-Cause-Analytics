@@ -1,0 +1,115 @@
+table p6_et_weekly_timeline
+
+	column retail_week
+		dataType: int64
+		summarizeBy: none
+		sourceColumn: retail_week
+
+	column availability_category_cy
+		dataType: double
+		summarizeBy: none
+		sourceColumn: availability_category_cy
+
+	column availability_supplier_cy
+		dataType: double
+		summarizeBy: none
+		sourceColumn: availability_supplier_cy
+
+	column availability_other_suppliers_cy
+		dataType: double
+		summarizeBy: none
+		sourceColumn: availability_other_suppliers_cy
+
+	column category_sales_cy
+		dataType: double
+		summarizeBy: none
+		sourceColumn: category_sales_cy
+
+	column supplier_sales_cy
+		dataType: double
+		summarizeBy: none
+		sourceColumn: supplier_sales_cy
+
+	column lost_primary_cy
+		dataType: double
+		summarizeBy: none
+		sourceColumn: lost_primary_cy
+
+	column lost_upper_cy
+		dataType: double
+		summarizeBy: none
+		sourceColumn: lost_upper_cy
+
+	column availability_category_py
+		dataType: double
+		summarizeBy: none
+		sourceColumn: availability_category_py
+
+	column availability_supplier_py
+		dataType: double
+		summarizeBy: none
+		sourceColumn: availability_supplier_py
+
+	column availability_other_suppliers_py
+		dataType: double
+		summarizeBy: none
+		sourceColumn: availability_other_suppliers_py
+
+	column category_sales_py
+		dataType: double
+		summarizeBy: none
+		sourceColumn: category_sales_py
+
+	column supplier_sales_py
+		dataType: double
+		summarizeBy: none
+		sourceColumn: supplier_sales_py
+
+	column lost_primary_py
+		dataType: double
+		summarizeBy: none
+		sourceColumn: lost_primary_py
+
+	column lost_upper_py
+		dataType: double
+		summarizeBy: none
+		sourceColumn: lost_upper_py
+
+	column category_sales_yoy_pct
+		dataType: double
+		summarizeBy: none
+		sourceColumn: category_sales_yoy_pct
+
+	column supplier_sales_yoy_pct
+		dataType: double
+		summarizeBy: none
+		sourceColumn: supplier_sales_yoy_pct
+
+	partition p6_et_weekly_timeline = m
+		mode: import
+		source =
+			let
+			    Source = Csv.Document(File.Contents(AnalyticsFolder & "\p6_et_weekly_timeline.csv"),
+			                          [Delimiter = ",", Encoding = 65001, QuoteStyle = QuoteStyle.Csv]),
+			    Promoted = Table.PromoteHeaders(Source, [PromoteAllScalars = true]),
+			    Typed = Table.TransformColumnTypes(Promoted, {
+			        {"retail_week", Int64.Type},
+			        {"availability_category_cy", type number},
+			        {"availability_supplier_cy", type number},
+			        {"availability_other_suppliers_cy", type number},
+			        {"category_sales_cy", type number},
+			        {"supplier_sales_cy", type number},
+			        {"lost_primary_cy", type number},
+			        {"lost_upper_cy", type number},
+			        {"availability_category_py", type number},
+			        {"availability_supplier_py", type number},
+			        {"availability_other_suppliers_py", type number},
+			        {"category_sales_py", type number},
+			        {"supplier_sales_py", type number},
+			        {"lost_primary_py", type number},
+			        {"lost_upper_py", type number},
+			        {"category_sales_yoy_pct", type number},
+			        {"supplier_sales_yoy_pct", type number}
+			    }, "en-US")
+			in
+			    Typed
