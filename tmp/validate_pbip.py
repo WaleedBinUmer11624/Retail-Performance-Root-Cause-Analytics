@@ -1268,6 +1268,50 @@ check(dip.get("visual", {}).get("visualType") == "tableEx"
       and dip_sort.get("Column", {}).get("Property") == "retail_year"
       and dip["position"] == {"x": 16, "y": 612, "z": 0, "height": 100, "width": 400, "tabOrder": dip["position"].get("tabOrder")},
       "Page 5 post-promotion dip must be a Year / Sum(post_dip_revenue) table at 16,612 400x100")
+# Page 3: two matrices of existing measures, values switched to rows, replace seven cards.
+# (Measures-only bar charts were tried first and drew overlapping lines in Desktop.)
+P3_VISUALS = PAGE_ROOT / "ReportSection3ProductInventory" / "visuals"
+P3_MATRICES = {
+    "page3LostSalesRange": ("Estimated lost sales: gross, net and sensitivity range (estimate)", (486, 396, 450, 188), [
+        ("Lost Sales Gross (P6)", "Gross"), ("Lost Sales Net of Deferred Demand (P6)", "Net of deferred demand"),
+        ("Lost Sales Range Low (P6)", "Range low"), ("Lost Sales Range High (P6)", "Range high")]),
+    "page3LostSalesShares": ("Share of estimated lost sales: high sellers, top SKU and top 3 SKUs (estimate)",
+                             (16, 396, 460, 188), [
+        ("High-Seller Share of Lost Sales (P6)", "High sellers"), ("Top SKU Share of Lost Sales (P6)", "Top SKU"),
+        ("Top 3 SKU Share of Lost Sales (P6)", "Top 3 SKUs")]),
+}
+for matrix_name, (matrix_title, matrix_box, matrix_values) in P3_MATRICES.items():
+    matrix_path = P3_VISUALS / matrix_name / "visual.json"
+    if not check(matrix_path.is_file(), f"Page 3 {matrix_name} is missing"):
+        continue
+    matrix = json.loads(matrix_path.read_text(encoding="utf-8"))
+    matrix_state = matrix.get("visual", {}).get("query", {}).get("queryState", {})
+    projected = [(p.get("field", {}).get("Measure", {}).get("Property"), p.get("nativeQueryRef"))
+                 for p in matrix_state.get("Values", {}).get("projections", [])]
+    shown_title = matrix.get("visual", {}).get("visualContainerObjects", {}).get("title", [{}])[0].get(
+        "properties", {}).get("text", {}).get("expr", {}).get("Literal", {}).get("Value", "")
+    on_rows = matrix.get("visual", {}).get("objects", {}).get("values", [{}])[0].get("properties", {}).get(
+        "valuesOnRow", {}).get("expr", {}).get("Literal", {}).get("Value")
+    position = matrix["position"]
+    check(matrix.get("visual", {}).get("visualType") == "pivotTable" and set(matrix_state) == {"Values"}
+          and projected == matrix_values,
+          f"Page 3 {matrix_name}: matrix of {[m for m, _ in matrix_values]} with short labels, values only")
+    check(on_rows == "true", f"Page 3 {matrix_name}: values must be switched to rows (label | value)")
+    check(shown_title == f"'{matrix_title}'", f"Page 3 {matrix_name}: title must be {matrix_title!r}")
+    check((position["x"], position["y"], position["width"], position["height"]) == matrix_box,
+          f"Page 3 {matrix_name}: must stay at {matrix_box}")
+retired_cards = ["page3LostGross", "page3LostNet", "page3RangeLow", "page3RangeHigh",
+                 "page3HighSellerShare", "page3TopSkuShare", "page3Top3SkuShare"]
+check(not [n for n in retired_cards if (P3_VISUALS / n).exists()], "Page 3 replaced cards must be removed")
+p3_boxes = [(d.name, json.loads((d / "visual.json").read_text(encoding="utf-8"))["position"])
+            for d in sorted(P3_VISUALS.iterdir())]
+p3_overlaps = [(a, b) for i, (a, pa) in enumerate(p3_boxes) for b, pb in p3_boxes[i + 1:]
+               if pa["x"] < pb["x"] + pb["width"] and pb["x"] < pa["x"] + pa["width"]
+               and pa["y"] < pb["y"] + pb["height"] and pb["y"] < pa["y"] + pa["height"]]
+check(not p3_overlaps, f"Page 3 visuals overlap: {p3_overlaps}")
+check(all(p["x"] + p["width"] <= PAGE_W and p["y"] + p["height"] <= PAGE_H for _, p in p3_boxes),
+      "Page 3 visuals must stay inside the 1280x720 page")
+
 # A title leaves room for the header only; the rows must fit without a scrollbar.
 check(dip_title_shown == "false"
       and "Post-promotion shortfall: €23K (2024) to €110K (2025)" in dip_alt

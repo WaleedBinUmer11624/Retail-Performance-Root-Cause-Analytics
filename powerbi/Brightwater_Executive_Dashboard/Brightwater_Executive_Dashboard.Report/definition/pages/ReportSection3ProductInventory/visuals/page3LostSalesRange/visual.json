@@ -1,16 +1,16 @@
 {
   "$schema": "https://developer.microsoft.com/json-schemas/fabric/item/report/definition/visualContainer/2.13.0/schema.json",
-  "name": "page3RangeHigh",
+  "name": "page3LostSalesRange",
   "position": {
-    "x": 946,
-    "y": 504,
+    "x": 486,
+    "y": 396,
     "z": 0,
-    "height": 80,
-    "width": 318,
+    "height": 188,
+    "width": 450,
     "tabOrder": 0
   },
   "visual": {
-    "visualType": "card",
+    "visualType": "pivotTable",
     "query": {
       "queryState": {
         "Values": {
@@ -23,28 +23,99 @@
                       "Entity": "_Measures"
                     }
                   },
+                  "Property": "Lost Sales Gross (P6)"
+                }
+              },
+              "queryRef": "m.LostSalesGross(P6)",
+              "displayName": "Gross",
+              "nativeQueryRef": "Gross"
+            },
+            {
+              "field": {
+                "Measure": {
+                  "Expression": {
+                    "SourceRef": {
+                      "Entity": "_Measures"
+                    }
+                  },
+                  "Property": "Lost Sales Net of Deferred Demand (P6)"
+                }
+              },
+              "queryRef": "m.LostSalesNetofDeferredDemand(P6)",
+              "displayName": "Net of deferred demand",
+              "nativeQueryRef": "Net of deferred demand"
+            },
+            {
+              "field": {
+                "Measure": {
+                  "Expression": {
+                    "SourceRef": {
+                      "Entity": "_Measures"
+                    }
+                  },
+                  "Property": "Lost Sales Range Low (P6)"
+                }
+              },
+              "queryRef": "m.LostSalesRangeLow(P6)",
+              "displayName": "Range low",
+              "nativeQueryRef": "Range low"
+            },
+            {
+              "field": {
+                "Measure": {
+                  "Expression": {
+                    "SourceRef": {
+                      "Entity": "_Measures"
+                    }
+                  },
                   "Property": "Lost Sales Range High (P6)"
                 }
               },
               "queryRef": "m.LostSalesRangeHigh(P6)",
-              "displayName": "Sensitivity range high",
-              "nativeQueryRef": "Sensitivity range high"
+              "displayName": "Range high",
+              "nativeQueryRef": "Range high"
             }
           ]
         }
       }
     },
     "objects": {
-      "categoryLabels": [
+      "values": [
         {
           "properties": {
-            "show": {
+            "valuesOnRow": {
               "expr": {
                 "Literal": {
                   "Value": "true"
                 }
               }
             },
+            "fontSize": {
+              "expr": {
+                "Literal": {
+                  "Value": "9L"
+                }
+              }
+            }
+          }
+        }
+      ],
+      "columnHeaders": [
+        {
+          "properties": {
+            "fontSize": {
+              "expr": {
+                "Literal": {
+                  "Value": "9L"
+                }
+              }
+            }
+          }
+        }
+      ],
+      "rowHeaders": [
+        {
+          "properties": {
             "fontSize": {
               "expr": {
                 "Literal": {
@@ -63,7 +134,28 @@
             "show": {
               "expr": {
                 "Literal": {
-                  "Value": "false"
+                  "Value": "true"
+                }
+              }
+            },
+            "text": {
+              "expr": {
+                "Literal": {
+                  "Value": "'Estimated lost sales: gross, net and sensitivity range (estimate)'"
+                }
+              }
+            },
+            "fontSize": {
+              "expr": {
+                "Literal": {
+                  "Value": "12D"
+                }
+              }
+            },
+            "titleWrap": {
+              "expr": {
+                "Literal": {
+                  "Value": "true"
                 }
               }
             }
@@ -152,46 +244,6 @@
               "expr": {
                 "Literal": {
                   "Value": "false"
-                }
-              }
-            }
-          }
-        }
-      ],
-      "general": [
-        {
-          "properties": {
-            "altText": {
-              "expr": {
-                "Literal": {
-                  "Value": "'Sensitivity range high'"
-                }
-              }
-            }
-          }
-        }
-      ],
-      "visualTooltip": [
-        {
-          "properties": {
-            "show": {
-              "expr": {
-                "Literal": {
-                  "Value": "true"
-                }
-              }
-            },
-            "type": {
-              "expr": {
-                "Literal": {
-                  "Value": "'ReportPage'"
-                }
-              }
-            },
-            "section": {
-              "expr": {
-                "Literal": {
-                  "Value": "'ReportSectionT1KpiTooltip'"
                 }
               }
             }

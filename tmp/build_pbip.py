@@ -1414,6 +1414,25 @@ def measure_projection(name: str, query_ref: str | None = None) -> dict:
     return projection(measure_ref(name), query_ref or f"m.{name.replace(' ', '')}", name)
 
 
+def measure_rows_matrix(name: str, x: int, y: int, width: int, height: int, title: str,
+                        measures: list[tuple[str, str]]) -> tuple[str, dict]:
+    """A matrix of governed measures with values on rows: one "label | value" row per measure.
+
+    `measures` pairs each measure with the short label shown in place of its full name.
+    """
+    return name, visual(
+        name, x, y, width, height, "pivotTable",
+        {"Values": {"projections": [
+            projection(measure_ref(measure), f"m.{measure.replace(' ', '')}", label)
+            for measure, label in measures
+        ]}},
+        title=title,
+        objects={"values": [{"properties": {"valuesOnRow": True, "fontSize": 9}}],
+                 "columnHeaders": [{"properties": {"fontSize": 9}}],
+                 "rowHeaders": [{"properties": {"fontSize": 9}}]},
+    )
+
+
 def csv_top_values(filename: str, column: str, score_column: str, limit: int) -> list[str]:
     """Top `limit` values of a column from a powerbi/data extract, ranked by a score column."""
     import csv
@@ -1726,9 +1745,23 @@ def build_page3() -> dict:
                 csv_top_values("p6_et_sku_stockouts.csv", "product_id", "lost_primary_change", 8),
             )]},
         )),
-        measure_card("page3HighSellerShare", "High-Seller Share of Lost Sales (P6)", 16, 396, 300, 80, "High sellers share"),
-        measure_card("page3TopSkuShare", "Top SKU Share of Lost Sales (P6)", 326, 396, 300, 80, "Top SKU share"),
-        measure_card("page3Top3SkuShare", "Top 3 SKU Share of Lost Sales (P6)", 636, 396, 300, 80, "Top 3 SKU share"),
+        # The three concentration shares and the four lost-sales figures were seven separate cards.
+        # Each is now a matrix of existing governed measures with values switched to rows, so it
+        # reads "label | value". A measures-only bar chart had no category and drew overlapping
+        # lines in Desktop. Formats come from the measures themselves (EUR #,0 and 0.0%).
+        measure_rows_matrix("page3LostSalesShares", 16, 396, 460, 188,
+                            "Share of estimated lost sales: high sellers, top SKU and top 3 SKUs (estimate)", [
+                                ("High-Seller Share of Lost Sales (P6)", "High sellers"),
+                                ("Top SKU Share of Lost Sales (P6)", "Top SKU"),
+                                ("Top 3 SKU Share of Lost Sales (P6)", "Top 3 SKUs"),
+                            ]),
+        measure_rows_matrix("page3LostSalesRange", 486, 396, 450, 188,
+                            "Estimated lost sales: gross, net and sensitivity range (estimate)", [
+                                ("Lost Sales Gross (P6)", "Gross"),
+                                ("Lost Sales Net of Deferred Demand (P6)", "Net of deferred demand"),
+                                ("Lost Sales Range Low (P6)", "Range low"),
+                                ("Lost Sales Range High (P6)", "Range high"),
+                            ]),
         phase6_caption_visual("page3Scope", 946, 396, 318, 104),
         table_visual("page3VoltixEpisodes", 16, 588, 610, 128, [
             column_projection("p6_et_episodes", "retail_year", "ep.retail_year", "Year"),
@@ -1743,10 +1776,6 @@ def build_page3() -> dict:
             column_projection("p6_et_supplier_test", "ci_high", "test.ci_high", "CI high"),
             column_projection("p6_et_supplier_test", "permutation_p_two_sided", "test.permutation_p_two_sided", "Permutation p"),
         ], "Voltix supplier test: +6.8pp stock-out rate difference (statistical association, P3-S1)", [categorical_filter(filter_name("p3-voltix-test"), "p6_et_supplier_test", "supplier", ["Voltix Distribution Ltd"])]),
-        measure_card("page3LostGross", "Lost Sales Gross (P6)", 16, 504, 300, 80, "Estimated gross lost sales"),
-        measure_card("page3LostNet", "Lost Sales Net of Deferred Demand (P6)", 326, 504, 300, 80, "After deferred demand"),
-        measure_card("page3RangeLow", "Lost Sales Range Low (P6)", 636, 504, 300, 80, "Sensitivity range low"),
-        measure_card("page3RangeHigh", "Lost Sales Range High (P6)", 946, 504, 318, 80, "Sensitivity range high"),
         measure_card("page3VoltixWording", "Voltix Wording", 638, 588, 626, 128, "Required wording"),
     ]
     return page_spec(

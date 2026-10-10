@@ -1,16 +1,16 @@
 {
   "$schema": "https://developer.microsoft.com/json-schemas/fabric/item/report/definition/visualContainer/2.13.0/schema.json",
-  "name": "page3LostGross",
+  "name": "page3LostSalesShares",
   "position": {
     "x": 16,
-    "y": 504,
+    "y": 396,
     "z": 0,
-    "height": 80,
-    "width": 300,
+    "height": 188,
+    "width": 460,
     "tabOrder": 0
   },
   "visual": {
-    "visualType": "card",
+    "visualType": "pivotTable",
     "query": {
       "queryState": {
         "Values": {
@@ -23,28 +23,84 @@
                       "Entity": "_Measures"
                     }
                   },
-                  "Property": "Lost Sales Gross (P6)"
+                  "Property": "High-Seller Share of Lost Sales (P6)"
                 }
               },
-              "queryRef": "m.LostSalesGross(P6)",
-              "displayName": "Estimated gross lost sales",
-              "nativeQueryRef": "Estimated gross lost sales"
+              "queryRef": "m.High-SellerShareofLostSales(P6)",
+              "displayName": "High sellers",
+              "nativeQueryRef": "High sellers"
+            },
+            {
+              "field": {
+                "Measure": {
+                  "Expression": {
+                    "SourceRef": {
+                      "Entity": "_Measures"
+                    }
+                  },
+                  "Property": "Top SKU Share of Lost Sales (P6)"
+                }
+              },
+              "queryRef": "m.TopSKUShareofLostSales(P6)",
+              "displayName": "Top SKU",
+              "nativeQueryRef": "Top SKU"
+            },
+            {
+              "field": {
+                "Measure": {
+                  "Expression": {
+                    "SourceRef": {
+                      "Entity": "_Measures"
+                    }
+                  },
+                  "Property": "Top 3 SKU Share of Lost Sales (P6)"
+                }
+              },
+              "queryRef": "m.Top3SKUShareofLostSales(P6)",
+              "displayName": "Top 3 SKUs",
+              "nativeQueryRef": "Top 3 SKUs"
             }
           ]
         }
       }
     },
     "objects": {
-      "categoryLabels": [
+      "values": [
         {
           "properties": {
-            "show": {
+            "valuesOnRow": {
               "expr": {
                 "Literal": {
                   "Value": "true"
                 }
               }
             },
+            "fontSize": {
+              "expr": {
+                "Literal": {
+                  "Value": "9L"
+                }
+              }
+            }
+          }
+        }
+      ],
+      "columnHeaders": [
+        {
+          "properties": {
+            "fontSize": {
+              "expr": {
+                "Literal": {
+                  "Value": "9L"
+                }
+              }
+            }
+          }
+        }
+      ],
+      "rowHeaders": [
+        {
+          "properties": {
             "fontSize": {
               "expr": {
                 "Literal": {
@@ -63,7 +119,28 @@
             "show": {
               "expr": {
                 "Literal": {
-                  "Value": "false"
+                  "Value": "true"
+                }
+              }
+            },
+            "text": {
+              "expr": {
+                "Literal": {
+                  "Value": "'Share of estimated lost sales: high sellers, top SKU and top 3 SKUs (estimate)'"
+                }
+              }
+            },
+            "fontSize": {
+              "expr": {
+                "Literal": {
+                  "Value": "12D"
+                }
+              }
+            },
+            "titleWrap": {
+              "expr": {
+                "Literal": {
+                  "Value": "true"
                 }
               }
             }
@@ -152,46 +229,6 @@
               "expr": {
                 "Literal": {
                   "Value": "false"
-                }
-              }
-            }
-          }
-        }
-      ],
-      "general": [
-        {
-          "properties": {
-            "altText": {
-              "expr": {
-                "Literal": {
-                  "Value": "'Estimated gross lost sales'"
-                }
-              }
-            }
-          }
-        }
-      ],
-      "visualTooltip": [
-        {
-          "properties": {
-            "show": {
-              "expr": {
-                "Literal": {
-                  "Value": "true"
-                }
-              }
-            },
-            "type": {
-              "expr": {
-                "Literal": {
-                  "Value": "'ReportPage'"
-                }
-              }
-            },
-            "section": {
-              "expr": {
-                "Literal": {
-                  "Value": "'ReportSectionT1KpiTooltip'"
                 }
               }
             }

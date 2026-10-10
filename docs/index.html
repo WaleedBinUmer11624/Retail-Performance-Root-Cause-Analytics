@@ -1,0 +1,196 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Retail Performance Root Cause Analytics</title>
+<meta name="description" content="A &euro;731K revenue decline at a 20-store retailer, traced from raw data to root causes, management decisions, early warning and a 13-week forecast.">
+<style>
+  :root {
+    --ink: #1f2328; --muted: #5b6168; --line: #e1dfdb; --bg: #f7f6f3; --card: #ffffff;
+    --accent: #2a78d6; --fact: #5b6168; --root: #1a7f4b; --assoc: #b7791f; --est: #2a78d6;
+  }
+  * { box-sizing: border-box; }
+  html { scroll-behavior: smooth; }
+  body { margin: 0; background: var(--bg); color: var(--ink);
+         font: 16px/1.6 "Segoe UI", system-ui, -apple-system, Roboto, Helvetica, Arial, sans-serif; }
+  .wrap { max-width: 1080px; margin: 0 auto; padding: 0 20px; }
+  header { background: var(--card); border-bottom: 1px solid var(--line); }
+  header .wrap { padding-top: 40px; padding-bottom: 32px; }
+  .eyebrow { margin: 0 0 8px; color: var(--accent); font-weight: 600; font-size: 14px;
+             letter-spacing: .04em; text-transform: uppercase; }
+  h1 { margin: 0 0 12px; font-size: clamp(28px, 4vw, 40px); line-height: 1.2; }
+  .lede { margin: 0 0 24px; font-size: 18px; color: var(--muted); max-width: 760px; }
+  .links { display: flex; flex-wrap: wrap; gap: 10px; }
+  .btn { display: inline-block; padding: 9px 16px; border-radius: 6px; border: 1px solid var(--accent);
+         color: var(--accent); text-decoration: none; font-weight: 600; font-size: 15px; }
+  .btn.primary { background: var(--accent); color: #fff; }
+  .btn:hover, .btn:focus { filter: brightness(.92); }
+  main section { padding: 40px 0 8px; }
+  h2 { margin: 0 0 16px; font-size: 24px; }
+  p { margin: 0 0 14px; }
+  .kpis { display: grid; grid-template-columns: repeat(auto-fit, minmax(200px, 1fr)); gap: 14px; margin: 8px 0 18px; }
+  .kpi { background: var(--card); border: 1px solid var(--line); border-radius: 8px; padding: 16px 18px; }
+  .kpi .value { font-size: 28px; font-weight: 700; line-height: 1.2; }
+  .kpi .label { color: var(--muted); font-size: 14px; }
+  ol.questions { margin: 0 0 14px; padding-left: 22px; }
+  .findings { display: grid; grid-template-columns: repeat(auto-fit, minmax(240px, 1fr)); gap: 14px; }
+  .finding { background: var(--card); border: 1px solid var(--line); border-radius: 8px; padding: 18px; }
+  .finding h3 { margin: 10px 0 8px; font-size: 17px; line-height: 1.35; }
+  .finding p { margin: 0; font-size: 15px; color: var(--muted); }
+  .tag { display: inline-block; padding: 2px 9px; border-radius: 999px; font-size: 12px; font-weight: 700;
+         color: #fff; letter-spacing: .02em; }
+  .tag.est { background: var(--est); } .tag.root { background: var(--root); }
+  .tag.fact { background: var(--fact); } .tag.assoc { background: var(--assoc); }
+  .note { font-size: 15px; color: var(--muted); }
+  .byline { margin: -12px 0 24px; font-size: 15px; color: var(--muted); }
+  .byline strong { color: var(--ink); }
+  .about { background: var(--card); border: 1px solid var(--line); border-radius: 8px; padding: 20px 22px; }
+  .about p { margin: 0 0 14px; }
+  .gallery { display: grid; grid-template-columns: repeat(auto-fill, minmax(300px, 1fr)); gap: 16px; }
+  .gallery figure { margin: 0; background: var(--card); border: 1px solid var(--line); border-radius: 8px; overflow: hidden; }
+  .gallery a { display: block; }
+  .gallery img { display: block; width: 100%; height: auto; aspect-ratio: 16 / 9; object-fit: cover; object-position: top; }
+  .gallery figcaption { padding: 10px 14px; font-size: 14px; font-weight: 600; }
+  /* Click to enlarge: CSS-only lightbox through :target, so the page needs no script. */
+  .lightbox { display: none; position: fixed; inset: 0; z-index: 10; background: rgba(20, 22, 25, .88);
+              padding: 24px; align-items: center; justify-content: center; }
+  .lightbox:target { display: flex; }
+  .lightbox img { max-width: 100%; max-height: calc(100vh - 80px); border-radius: 6px; background: #fff; }
+  .lightbox .close { position: absolute; top: 14px; right: 20px; color: #fff; font-size: 15px;
+                     text-decoration: none; font-weight: 600; }
+  .stack { display: flex; flex-wrap: wrap; gap: 8px; padding: 0; margin: 0; list-style: none; }
+  .stack li { background: var(--card); border: 1px solid var(--line); border-radius: 6px; padding: 6px 12px; font-size: 15px; }
+  footer { margin-top: 40px; border-top: 1px solid var(--line); background: var(--card); }
+  footer .wrap { padding-top: 24px; padding-bottom: 32px; font-size: 14px; color: var(--muted); }
+  footer a { color: var(--accent); }
+  @media (max-width: 600px) { header .wrap { padding-top: 28px; } .lede { font-size: 16px; } }
+</style>
+</head>
+<body>
+
+<header>
+  <div class="wrap">
+    <p class="eyebrow">Retail analytics case study</p>
+    <h1>Retail Performance Root Cause Analytics</h1>
+    <p class="lede">A &euro;731K revenue decline at a 20-store retailer, traced from raw data to root causes,
+      management decisions, early warning, a 13-week forecast and an evidence-grounded AI assistant.</p>
+    <p class="byline">By <strong>Waleed Bin Umer</strong> &middot; MSc Data Analytics, National College of Ireland</p>
+    <div class="links">
+      <a class="btn primary" href="https://github.com/WaleedBinUmer11624/Retail-Performance-Root-Cause-Analytics">View the repository</a>
+      <a class="btn" href="https://github.com/WaleedBinUmer11624/Retail-Performance-Root-Cause-Analytics#readme">Read the README</a>
+      <a class="btn" href="https://www.linkedin.com/in/waleedbinumer">LinkedIn</a>
+    </div>
+  </div>
+</header>
+
+<main class="wrap">
+
+  <section id="headline" aria-labelledby="headline-title">
+    <h2 id="headline-title">The headline</h2>
+    <div class="kpis">
+      <div class="kpi"><div class="value">&minus;&euro;731,270.50</div><div class="label">Net revenue change, H2 2025 vs H2 2024</div></div>
+      <div class="kpi"><div class="value">&minus;7.18%</div><div class="label">Year-on-year change</div></div>
+      <div class="kpi"><div class="value">84%</div><div class="label">Of the decline from fewer transactions (Shapley revenue bridge)</div></div>
+      <div class="kpi"><div class="value">20</div><div class="label">Stores in Ireland</div></div>
+    </div>
+    <p class="note">H2 2024 net revenue &euro;10,188,727.55; H2 2025 net revenue &euro;9,457,457.05.</p>
+  </section>
+
+  <section id="question" aria-labelledby="question-title">
+    <h2 id="question-title">The business question</h2>
+    <p>Brightwater Retail runs 20 stores in Ireland. In the second half of 2025, net revenue fell against the same period of 2024. Management asked three questions:</p>
+    <ol class="questions">
+      <li><strong>Why</strong> did revenue fall?</li>
+      <li><strong>Where</strong> did the problem start: which stores, categories, products and suppliers?</li>
+      <li><strong>What</strong> should we do about it, and how would we spot it sooner next time?</li>
+    </ol>
+    <p>The hard part is not finding a number that moved. It is separating what the data <strong>proves</strong> from what it only <strong>suggests</strong>, so that money is spent fixing real causes rather than guesses.</p>
+  </section>
+
+  <section id="findings" aria-labelledby="findings-title">
+    <h2 id="findings-title">Key findings</h2>
+    <div class="findings">
+      <article class="finding">
+        <span class="tag est">Estimate &middot; cause not established</span>
+        <h3>Three stores account for over half of the decline</h3>
+        <p>Stores S03, S04 and S05 lost about 27.8% of their transactions, against 1.1% for matched controls. A difference-in-differences estimate puts the excess decline at &euro;397,778 (54% of the total), range &euro;377,245 to &euro;435,210. Footfall, competitor and store-operations data were not available, so the cause is not established.</p>
+      </article>
+      <article class="finding">
+        <span class="tag root">Root-cause evidence</span>
+        <h3>Electronics stock-outs cost measurable sales</h3>
+        <p>Electronics &amp; Tech availability fell from 95.4% to 89.3%, mostly on Voltix-supplied products. Estimated lost sales were about &euro;37,235 gross and &euro;23,963 net (range &euro;23,963 to &euro;44,460). Whether the supplier or the retailer's ordering is responsible is not established.</p>
+      </article>
+      <article class="finding">
+        <span class="tag fact">Observed change</span>
+        <h3>&ldquo;Faulty&rdquo; returns rose, but that does not prove defects</h3>
+        <p>Refunds recorded with the till reason &ldquo;Faulty&rdquo; rose by &euro;31,589 (+90%), concentrated in five stores. A till reason is not a verified defect; QA and batch data would be needed.</p>
+      </article>
+      <article class="finding">
+        <span class="tag assoc">Statistical association</span>
+        <h3>Home &amp; Kitchen promotions are associated with the decline, not proven to cause it</h3>
+        <p>The discount rate rose from about 2.4% to 11.9%. Four estimation methods disagree in sign, so they are reported separately and never added together.</p>
+      </article>
+    </div>
+    <p class="note" style="margin-top:14px">Financial size sets investigation priority; evidence strength sets what action is justified.</p>
+  </section>
+
+  <section id="dashboard" aria-labelledby="dashboard-title">
+    <h2 id="dashboard-title">The Power BI dashboard</h2>
+    <p>Nine report pages, generated from code and validated in Power BI Desktop. Select a page to enlarge it.</p>
+    <div class="gallery">
+      <figure><a href="#shot1"><img src="screenshots/page1.png" alt="Page 1: executive overview" loading="lazy"></a><figcaption>1 Executive overview</figcaption></figure>
+      <figure><a href="#shot2"><img src="screenshots/page2.png" alt="Page 2: store and customer diagnostics" loading="lazy"></a><figcaption>2 Store and customer diagnostics</figcaption></figure>
+      <figure><a href="#shot3"><img src="screenshots/page3.png" alt="Page 3: product, category and inventory" loading="lazy"></a><figcaption>3 Product, category and inventory</figcaption></figure>
+      <figure><a href="#shot4"><img src="screenshots/page4.png" alt="Page 4: returns and quality signals" loading="lazy"></a><figcaption>4 Returns and quality signals</figcaption></figure>
+      <figure><a href="#shot5"><img src="screenshots/page5.png" alt="Page 5: promotions and Home and Kitchen" loading="lazy"></a><figcaption>5 Promotions and Home &amp; Kitchen</figcaption></figure>
+      <figure><a href="#shot6"><img src="screenshots/page6.png" alt="Page 6: evidence matrix" loading="lazy"></a><figcaption>6 Evidence matrix</figcaption></figure>
+      <figure><a href="#shot7"><img src="screenshots/page7.png" alt="Page 7: investigation priorities" loading="lazy"></a><figcaption>7 Investigation priorities</figcaption></figure>
+      <figure><a href="#shot8"><img src="screenshots/page8.png" alt="Page 8: forecast" loading="lazy"></a><figcaption>8 Forecast</figcaption></figure>
+      <figure><a href="#shot9"><img src="screenshots/page9.png" alt="Page 9: data quality" loading="lazy"></a><figcaption>9 Data quality</figcaption></figure>
+    </div>
+  </section>
+
+  <section id="stack" aria-labelledby="stack-title">
+    <h2 id="stack-title">Tech stack</h2>
+    <ul class="stack">
+      <li>Python</li><li>pandas</li><li>DuckDB</li><li>SQL Server (T-SQL)</li>
+      <li>Power BI (DAX, Power Query, PBIP)</li><li>SciPy</li><li>pytest</li>
+    </ul>
+  </section>
+
+  <section id="about" aria-labelledby="about-title">
+    <h2 id="about-title">About the author</h2>
+    <div class="about">
+      <p>Data Analyst based in Dublin, open to Data Analyst and BI Analyst roles in Ireland.</p>
+      <div class="links">
+        <a class="btn primary" href="https://www.linkedin.com/in/waleedbinumer">LinkedIn</a>
+        <a class="btn" href="https://github.com/WaleedBinUmer11624">GitHub profile</a>
+      </div>
+    </div>
+  </section>
+
+</main>
+
+<!-- Lightbox targets: one per screenshot; "Close" returns to the gallery. -->
+<div class="lightbox" id="shot1"><a class="close" href="#dashboard">Close</a><img src="screenshots/page1.png" alt="Page 1: executive overview, enlarged"></div>
+<div class="lightbox" id="shot2"><a class="close" href="#dashboard">Close</a><img src="screenshots/page2.png" alt="Page 2: store and customer diagnostics, enlarged"></div>
+<div class="lightbox" id="shot3"><a class="close" href="#dashboard">Close</a><img src="screenshots/page3.png" alt="Page 3: product, category and inventory, enlarged"></div>
+<div class="lightbox" id="shot4"><a class="close" href="#dashboard">Close</a><img src="screenshots/page4.png" alt="Page 4: returns and quality signals, enlarged"></div>
+<div class="lightbox" id="shot5"><a class="close" href="#dashboard">Close</a><img src="screenshots/page5.png" alt="Page 5: promotions and Home and Kitchen, enlarged"></div>
+<div class="lightbox" id="shot6"><a class="close" href="#dashboard">Close</a><img src="screenshots/page6.png" alt="Page 6: evidence matrix, enlarged"></div>
+<div class="lightbox" id="shot7"><a class="close" href="#dashboard">Close</a><img src="screenshots/page7.png" alt="Page 7: investigation priorities, enlarged"></div>
+<div class="lightbox" id="shot8"><a class="close" href="#dashboard">Close</a><img src="screenshots/page8.png" alt="Page 8: forecast, enlarged"></div>
+<div class="lightbox" id="shot9"><a class="close" href="#dashboard">Close</a><img src="screenshots/page9.png" alt="Page 9: data quality, enlarged"></div>
+
+<footer>
+  <div class="wrap">
+    <p>Brightwater Retail Ltd is fictional. All data is synthetic and generated by the repository. No real company, customer or employee data is used.</p>
+    <p><a href="https://github.com/WaleedBinUmer11624/Retail-Performance-Root-Cause-Analytics">Repository</a> &middot;
+       <a href="https://github.com/WaleedBinUmer11624/Retail-Performance-Root-Cause-Analytics#readme">README</a> &middot;
+       <a href="https://www.linkedin.com/in/waleedbinumer">LinkedIn</a></p>
+  </div>
+</footer>
+
+</body>
+</html>
