@@ -1,0 +1,450 @@
+{
+ "meta": {
+  "label": "Guided answers generated offline by the project's evidence assistant (mock provider) from governed outputs. No live AI model.",
+  "generated_by": {
+   "provider": "mock",
+   "model": "deterministic_v1"
+  },
+  "refusal": "Insufficient evidence to determine this from the available project data.",
+  "method": "tmp/export_web_qa.py runs experimental/ai_layer on fixed questions; each answer passed the assistant's grounding check and every number traces to the governed files it cites."
+ },
+ "questions": [
+  {
+   "id": "revenue-fall",
+   "question": "Why did net revenue fall in H2 2025?",
+   "keywords": [
+    "2025",
+    "bridge",
+    "decline",
+    "down",
+    "drop",
+    "fall",
+    "fell",
+    "h2",
+    "net",
+    "revenue",
+    "sales",
+    "why"
+   ],
+   "answer": "Net revenue fell from EUR 10,188,728 in H2 2024 to EUR 9,457,457 in H2 2025, a fall of EUR 731,271 (-7.18%). The revenue bridge splits the change into fewer transactions EUR 614,363 (84.0% of the change), a lower average selling price EUR 68,077 (9.31% of the change), fewer units per transaction EUR 34,173 (4.67% of the change) and higher returns EUR 14,657 (2.0% of the change). The bridge is a measured split of the change: it shows where the fall sits, not why it happened.",
+   "governed_label": "Fact",
+   "evidence_strength": 1,
+   "strength": "LIMITED",
+   "sources": [
+    {
+     "file": "reports/phase5/revenue_bridge.csv",
+     "phase": "phase5"
+    },
+    {
+     "file": "reports/phase7/dashboard_number_register.csv",
+     "phase": "phase7"
+    }
+   ],
+   "limitations": []
+  },
+  {
+   "id": "transactions",
+   "question": "How much of the decline came from fewer transactions?",
+   "keywords": [
+    "baskets",
+    "customers",
+    "fewer",
+    "receipts",
+    "traffic",
+    "transaction",
+    "transactions"
+   ],
+   "answer": "Fewer transactions account for EUR 614,363 of the EUR 731,271 fall, 84.0% of the change. Net revenue fell from EUR 10,188,728 in H2 2024 to EUR 9,457,457 in H2 2025, a fall of EUR 731,271 (-7.18%). The revenue bridge splits the change into fewer transactions EUR 614,363 (84.0% of the change), a lower average selling price EUR 68,077 (9.31% of the change), fewer units per transaction EUR 34,173 (4.67% of the change) and higher returns EUR 14,657 (2.0% of the change). The bridge is a measured split of the change: it shows where the fall sits, not why it happened.",
+   "governed_label": "Fact",
+   "evidence_strength": 1,
+   "strength": "LIMITED",
+   "sources": [
+    {
+     "file": "reports/phase5/revenue_bridge.csv",
+     "phase": "phase5"
+    },
+    {
+     "file": "reports/phase7/dashboard_number_register.csv",
+     "phase": "phase7"
+    }
+   ],
+   "limitations": []
+  },
+  {
+   "id": "stores",
+   "question": "Which stores drove the decline?",
+   "keywords": [
+    "branches",
+    "cluster",
+    "s03",
+    "s04",
+    "s05",
+    "store",
+    "stores",
+    "where",
+    "which"
+   ],
+   "answer": "The decline is concentrated in 3 stores: S03, S04 and S05. Against matched control stores (S07, S09, S12, S16, S18), their transactions were 25.53% lower and their net revenue 27.07% lower (difference-in-differences). That gap is worth EUR 397,778 of net revenue, 54.4% of the total change (range EUR 377,245 to EUR 435,210). The drop began on 2025-07-15 as an abrupt step of -26.75% against the primary control stores, not a gradual slide. Evidence level: Observed change (D01). The cause is unresolved: it is not observable in the project data.",
+   "governed_label": "Observed change",
+   "evidence_strength": 1,
+   "strength": "LIMITED",
+   "sources": [
+    {
+     "file": "powerbi/data/p6_evidence_matrix.csv",
+     "phase": "project"
+    },
+    {
+     "file": "reports/phase6/cluster_control_groups.csv",
+     "phase": "phase6"
+    },
+    {
+     "file": "reports/phase6/cluster_did.csv",
+     "phase": "phase6"
+    },
+    {
+     "file": "reports/phase6/cluster_onset.csv",
+     "phase": "phase6"
+    },
+    {
+     "file": "reports/phase6/driver_attribution.csv",
+     "phase": "phase6"
+    }
+   ],
+   "limitations": [
+    "The cluster was selected in Phase 5 because it declined most, so the placebo p-value (the smallest attainable) overstates significance; no matched control store is in Dublin (the cluster's region), and the Dublin control group has a different format. The cause is not observable"
+   ]
+  },
+  {
+   "id": "drop-start",
+   "question": "When did the drop start?",
+   "keywords": [
+    "began",
+    "begin",
+    "date",
+    "drop",
+    "onset",
+    "start",
+    "started",
+    "step",
+    "when"
+   ],
+   "answer": "The drop began on 2025-07-15 as an abrupt step of -26.75% against the primary control stores, not a gradual slide. The decline is concentrated in 3 stores: S03, S04 and S05. Against matched control stores (S07, S09, S12, S16, S18), their transactions were 25.53% lower and their net revenue 27.07% lower (difference-in-differences). That gap is worth EUR 397,778 of net revenue, 54.4% of the total change (range EUR 377,245 to EUR 435,210). Evidence level: Observed change (D01). The cause is unresolved: it is not observable in the project data.",
+   "governed_label": "Observed change",
+   "evidence_strength": 1,
+   "strength": "LIMITED",
+   "sources": [
+    {
+     "file": "powerbi/data/p6_evidence_matrix.csv",
+     "phase": "project"
+    },
+    {
+     "file": "reports/phase6/cluster_control_groups.csv",
+     "phase": "phase6"
+    },
+    {
+     "file": "reports/phase6/cluster_did.csv",
+     "phase": "phase6"
+    },
+    {
+     "file": "reports/phase6/cluster_onset.csv",
+     "phase": "phase6"
+    },
+    {
+     "file": "reports/phase6/driver_attribution.csv",
+     "phase": "phase6"
+    }
+   ],
+   "limitations": [
+    "The cluster was selected in Phase 5 because it declined most, so the placebo p-value (the smallest attainable) overstates significance; no matched control store is in Dublin (the cluster's region), and the Dublin control group has a different format. The cause is not observable"
+   ]
+  },
+  {
+   "id": "stock-outs",
+   "question": "What did the Electronics stock-outs cost?",
+   "keywords": [
+    "availability",
+    "cost",
+    "electronics",
+    "lost",
+    "out-of-stock",
+    "outs",
+    "sales",
+    "stock",
+    "stockout",
+    "stockouts"
+   ],
+   "answer": "Electronics & Tech full-week stock-outs cost an estimated EUR 37,235 in lost sales gross (range EUR 23,963 to EUR 44,460 across 21 variants). Net of the demand that came back after restock, the loss is EUR 23,963. Observed: Full-week stock-out store-SKU-weeks 0 to 786; category availability 95.4% to 89.3%. Why the stock ran out (supplier delivery or Brightwater's own ordering) is not established: the data cannot say whether the supplier failed to deliver or Brightwater ordered less. Evidence level: Root-cause evidence (D03) for the stock-out loss itself; cause established.",
+   "governed_label": "Root-cause evidence",
+   "evidence_strength": 3,
+   "strength": "STRONG",
+   "sources": [
+    {
+     "file": "powerbi/data/p6_evidence_matrix.csv",
+     "phase": "project"
+    },
+    {
+     "file": "powerbi/data/p6_stockout_net_of_recovery.csv",
+     "phase": "project"
+    },
+    {
+     "file": "reports/phase6/sensitivity_summary.csv",
+     "phase": "phase6"
+    }
+   ],
+   "limitations": [
+    "After restock, Voltix Distribution Ltd SKUs sold above the expected rate (week 1 after: 1.06x expected, week 2 after: 1.38x expected). Allowing for the prior-year post-restock pattern, sales after episodes with a full-week stock-out ran EUR 13,272 above it: demand deferred rather than lost, which offsets 36% of the gross estimate. Substitution to other SKUs is not measured"
+   ]
+  },
+  {
+   "id": "faulty-returns",
+   "question": "Are the Faulty returns caused by product defects?",
+   "keywords": [
+    "defective",
+    "defects",
+    "faulty",
+    "refunds",
+    "return",
+    "returns"
+   ],
+   "answer": "Not established. Observed: 'Faulty' refunds EUR 31,589 higher; recorded faulty rate per 100 units sold up in 5 stores (conditional binomial test, p < 0.01). What is not known: Spread over many products (top 5 hold only 53%); the till reason is not a verified defect. Whether this is a product quality problem or a change in how stores record returns is a hypothesis only (D06); it would need QA inspection results, batch / lot or serial numbers and supplier defect and RMA reports. Evidence level: Observed change (D05); cause not established.",
+   "governed_label": "Observed change",
+   "evidence_strength": 1,
+   "strength": "LIMITED",
+   "sources": [
+    {
+     "file": "powerbi/data/p6_evidence_matrix.csv",
+     "phase": "project"
+    }
+   ],
+   "limitations": [
+    "Spread over many products (top 5 hold only 53%); the till reason is not a verified defect"
+   ]
+  },
+  {
+   "id": "hk-promotions",
+   "question": "Did promotions cause the Home & Kitchen decline?",
+   "keywords": [
+    "discount",
+    "discounts",
+    "h&k",
+    "hk",
+    "home",
+    "kitchen",
+    "promo",
+    "promos",
+    "promotion",
+    "promotions"
+   ],
+   "answer": "Not established: the data shows a statistical association, not a proven cause. Observed: Discount rate on gross sales 2.4% to 11.9%; H&K sales -7.1% vs control categories in the same store-weeks, units -1.7%. 4 methods estimate the H&K effect: M1 category difference-in-differences -EUR 186,146; M4 discount-rate accounting -EUR 265,003; M2 dose-response +EUR 97,505; M3 event-level +EUR 79,059. The methods disagree in sign, so the effect depends on the method; they are alternative estimates and are never added together. Evidence level: Statistical association (D07); cause not established.",
+   "governed_label": "Statistical association",
+   "evidence_strength": 2,
+   "strength": "MODERATE",
+   "sources": [
+    {
+     "file": "powerbi/data/p6_evidence_matrix.csv",
+     "phase": "project"
+    },
+    {
+     "file": "reports/phase6/hk_promotion_counterfactuals.csv",
+     "phase": "phase6"
+    }
+   ],
+   "limitations": [
+    "Event-level (M3 EUR 79,059) and dose-response (M2 EUR 97,505) methods say the extra promotions ADDED revenue. Their baselines are exposed to back-to-back promotions (64% of current-year events follow another promotion of the same store-SKU within the baseline window), but the disagreement is real"
+   ]
+  },
+  {
+   "id": "forecast",
+   "question": "What does the 13-week forecast show?",
+   "keywords": [
+    "13",
+    "2026",
+    "forecast",
+    "future",
+    "next",
+    "outlook",
+    "projection",
+    "weeks"
+   ],
+   "answer": "The selected model, B2_seasonal_naive (a baseline model), forecasts weekly net revenue for the 13 weeks starting 2025-12-29. The first week is forecast at EUR 453,333 (80% interval EUR 412,191 to EUR 494,474; 95% interval EUR 387,307 to EUR 519,358). Weekly values range from EUR 262,225 (week starting 2026-01-19) to EUR 453,333 (week starting 2025-12-29); the last week, starting 2026-03-23, is EUR 361,843. Backtest accuracy: mean WAPE 7.65%. These are forecasts, not actual results.",
+   "governed_label": "Forecast",
+   "evidence_strength": null,
+   "strength": "MODERATE",
+   "sources": [
+    {
+     "file": "reports/phase10/forecast_intervals.csv",
+     "phase": "phase10"
+    },
+    {
+     "file": "reports/phase10/forecast_model_comparison.csv",
+     "phase": "phase10"
+    },
+    {
+     "file": "reports/phase10/forecast_selected_model.csv",
+     "phase": "phase10"
+    },
+    {
+     "file": "reports/phase10/forecast_weekly.csv",
+     "phase": "phase10"
+    }
+   ],
+   "limitations": [
+    "Forecast, not an actual result. Phase 10 produced these values; they are not measured outcomes."
+   ]
+  },
+  {
+   "id": "forecast-model",
+   "question": "Which forecast model was selected and how accurate is it?",
+   "keywords": [
+    "accuracy",
+    "accurate",
+    "backtest",
+    "error",
+    "model",
+    "selected",
+    "wape"
+   ],
+   "answer": "B2_seasonal_naive was selected because it had the lowest backtest error: mean WAPE 7.65%, against 34.05% for the best challenger (holt_linear). A challenger replaces the baseline only when it beats it by more than the set margin. The selected model, B2_seasonal_naive (a baseline model), forecasts weekly net revenue for the 13 weeks starting 2025-12-29. The first week is forecast at EUR 453,333 (80% interval EUR 412,191 to EUR 494,474; 95% interval EUR 387,307 to EUR 519,358). These are forecasts, not actual results.",
+   "governed_label": "Forecast",
+   "evidence_strength": null,
+   "strength": "MODERATE",
+   "sources": [
+    {
+     "file": "reports/phase10/forecast_intervals.csv",
+     "phase": "phase10"
+    },
+    {
+     "file": "reports/phase10/forecast_model_comparison.csv",
+     "phase": "phase10"
+    },
+    {
+     "file": "reports/phase10/forecast_selected_model.csv",
+     "phase": "phase10"
+    },
+    {
+     "file": "reports/phase10/forecast_weekly.csv",
+     "phase": "phase10"
+    }
+   ],
+   "limitations": [
+    "Forecast, not an actual result. Phase 10 produced these values; they are not measured outcomes."
+   ]
+  },
+  {
+   "id": "early-warning",
+   "question": "Would early warning have caught the decline sooner?",
+   "keywords": [
+    "alert",
+    "alerts",
+    "caught",
+    "detect",
+    "detected",
+    "early",
+    "monitoring",
+    "signal",
+    "signals",
+    "sooner",
+    "warning"
+   ],
+   "answer": "The store signal (EW01, peer gap threshold) raised its first critical alerts for the cluster stores in 2025 as follows: S03 in 2025-W31; S04 and S05 in 2025-W33. The governed step change in these stores is dated 2025-07-15, so every critical alert came after it, not before. Earlier watch-level alerts were raised (S04 from 2025-W11, S03 from 2025-W14 and S05 from 2025-W19), but watch alerts are common: across 20 stores EW01 raised 174 watch, 18 warning and 57 critical store-weeks. An alert flags a change; it does not explain it.",
+   "governed_label": "Observed change",
+   "evidence_strength": 1,
+   "strength": "LIMITED",
+   "sources": [
+    {
+     "file": "powerbi/data/p6_evidence_matrix.csv",
+     "phase": "project"
+    },
+    {
+     "file": "reports/phase6/cluster_onset.csv",
+     "phase": "phase6"
+    },
+    {
+     "file": "reports/phase9/alert_summary.csv",
+     "phase": "phase9"
+    },
+    {
+     "file": "reports/phase9/weekly_alerts.csv",
+     "phase": "phase9"
+    }
+   ],
+   "limitations": [
+    "Whether an earlier alert would have changed the outcome is not something the governed data can show."
+   ]
+  },
+  {
+   "id": "data-quality",
+   "question": "How good is the data quality?",
+   "keywords": [
+    "checks",
+    "clean",
+    "cleaning",
+    "data",
+    "quality",
+    "quarantine",
+    "quarantined",
+    "reliable",
+    "rules",
+    "validation"
+   ],
+   "answer": "At load (Phase 3), 85 data-quality rules were evaluated: 30 passed, 46 found issues and 9 were informational. 2,380 rows were quarantined in total (fact_sales 2,005, fact_inventory 188, fact_returns 171, dim_product 10, fact_promotions 4, fact_targets 2). The curated tables then passed 51 of 53 validation checks, with 2 warnings. In monitoring (Phase 9), 12 checks (C1 to C12) run before alerts are issued; 4 of them (C1, C3, C8 and C12) hold back business alerts when they fail, and the data-quality gate (EW08) flagged 3 warning and 0 critical store-weeks.",
+   "governed_label": "Fact",
+   "evidence_strength": 1,
+   "strength": "LIMITED",
+   "sources": [
+    {
+     "file": "reports/phase3/curated_validation.csv",
+     "phase": "phase3"
+    },
+    {
+     "file": "reports/phase3/dq_rule_results.csv",
+     "phase": "phase3"
+    },
+    {
+     "file": "reports/phase3/lineage.json",
+     "phase": "phase3"
+    },
+    {
+     "file": "reports/phase9/alert_summary.csv",
+     "phase": "phase9"
+    },
+    {
+     "file": "reports/phase9/dq_check_catalogue.csv",
+     "phase": "phase9"
+    }
+   ],
+   "limitations": [
+    "The quarantine total is the sum of the six per-table counts in the Phase 3 run lineage."
+   ]
+  },
+  {
+   "id": "unknowns",
+   "question": "What is not known about the decline?",
+   "keywords": [
+    "gaps",
+    "hypotheses",
+    "hypothesis",
+    "known",
+    "open",
+    "still",
+    "uncertain",
+    "uncertainty",
+    "unexplained",
+    "unknown",
+    "unknowns",
+    "unresolved"
+   ],
+   "answer": "2 drivers are still only hypotheses with no direct evidence: D02 (External / local cause of the cluster loss) and D06 (Product quality vs recording practice). D02 would need footfall counters, competitor openings and promotions near the three stores and road / access works. D06 would need QA inspection results, batch / lot or serial numbers and supplier defect and RMA reports. For D01, D04, D05, D07 and D08 the change is measured but its cause is not established.",
+   "governed_label": "Hypothesis",
+   "evidence_strength": 0,
+   "strength": "INSUFFICIENT",
+   "sources": [
+    {
+     "file": "powerbi/data/p6_evidence_matrix.csv",
+     "phase": "project"
+    }
+   ],
+   "limitations": []
+  }
+ ]
+}

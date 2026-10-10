@@ -95,6 +95,11 @@
   .status { font-size: 12px; font-weight: 600; color: var(--muted); margin-left: 6px; }
   .notice { background: var(--card); border: 1px solid var(--line); border-left: 4px solid var(--accent);
             border-radius: 6px; padding: 10px 14px; font-size: 14px; color: var(--muted); margin: 0 0 12px; }
+  /* "Have a question?" line; the chat itself is styled by chatbot.css. */
+  .ask-hint { margin: 12px 0 0; font-size: 14px; }
+  .ask-hint-btn { padding: 0; border: 0; background: none; color: var(--muted); font: inherit; cursor: pointer;
+                  text-decoration: underline; text-underline-offset: 3px; }
+  .ask-hint-btn:hover { color: var(--accent); }
   footer { margin-top: 32px; border-top: 1px solid var(--line); background: var(--card); }
   footer .wrap { padding-top: 20px; padding-bottom: 28px; font-size: 14px; color: var(--muted); }
   @media (max-width: 560px) {
@@ -106,6 +111,7 @@
     .chart.tall { height: 560px; }
   }
 </style>
+<link rel="stylesheet" href="chatbot.css">
 </head>
 <body>
 
@@ -193,6 +199,8 @@
     <p class="cap" style="color:var(--muted);margin:0 0 12px">Financial size sets investigation priority; evidence
       strength sets what action is justified. Labels come from the Phase 6 evidence matrix.</p>
     <div class="findings" id="findings"></div>
+    <p class="ask-hint"><button type="button" class="ask-hint-btn" id="ask-hint-open" data-chat-open
+       aria-controls="cb-panel">Have a question? Ask the evidence</button></p>
   </section>
 
   <section aria-labelledby="dq-title">
@@ -213,6 +221,7 @@
     <p>visit counts via GoatCounter.</p>
   </div>
 </footer>
+
 
 <script src="https://cdnjs.cloudflare.com/ajax/libs/Chart.js/4.4.1/chart.umd.min.js"
         integrity="sha384-bs/nf9FbdNouRbMiFcrcZfLXYPKiPaGVGplVbv7dLGECccEXDW+S3zjqSKR5ZEaD"
@@ -525,6 +534,7 @@ start();
 <!-- Anonymous, cookie-free visit counts (GoatCounter); analytics.js adds custom events and is a
      no-op if GoatCounter is blocked. Neither script changes the page. -->
 <script data-goatcounter="https://waleedbinumer.goatcounter.com/count" async src="//gc.zgo.at/count.js"></script>
+<script defer src="chatbot.js"></script>
 <script async src="analytics.js"></script>
 </body>
 </html>

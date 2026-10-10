@@ -57,6 +57,9 @@ class ToolRegistry:
             "get_forecast_intervals": (self._forecast_intervals, set()),
             "get_forecast_model_comparison": (self._forecast_comparison, set()),
             "get_monitoring_signals": (self._monitoring_signals, set()),
+            "get_store_alerts": (self._store_alerts, {"store_id"}),
+            "get_stockout_net_of_recovery": (self._stockout_net_of_recovery, set()),
+            "get_load_data_quality": (self._load_data_quality, set()),
             "get_metric_definition": (self._metric_definition, {"measure"}),
         }
 
@@ -220,6 +223,42 @@ class ToolRegistry:
         return self._bundle("get_monitoring_signals", {
             "alerts": "phase9.alerts", "summary": "phase9.alert_summary", "data_quality": "phase9.data_quality",
         }, limit=500, evidence_type="FACT")
+
+    def _store_alerts(self, args: dict) -> ToolResult:
+        # get_monitoring_signals caps the alert log at its first 500 rows, which stops before the
+        # second-half alerts. Filtering on one store reads that store's full alert history.
+        store_id = args.get("store_id")
+        if not isinstance(store_id, str) or not re.fullmatch(r"S\d{2}", store_id):
+            raise ToolError("store_id must be a governed S01-S99 identifier")
+        return self._bundle("get_store_alerts", {"alerts": "phase9.alerts"},
+                            filters={"entity_type": "store", "entity_id": store_id}, limit=500)
+
+    def _stockout_net_of_recovery(self, _: dict) -> ToolResult:
+        return self._bundle("get_stockout_net_of_recovery",
+                            {"net_of_recovery": "phase6.stockout_net_of_recovery"},
+                            limit=50, evidence_type="ESTIMATE")
+
+    def _load_data_quality(self, _: dict) -> ToolResult:
+        """Phase 3 load-time data quality: rule results, curated validation and the run lineage.
+
+        The lineage is a JSON run record, so its governed counts are flattened into field/value
+        rows; nothing is recomputed.
+        """
+        result = self._bundle("get_load_data_quality", {
+            "rule_results": "phase3.dq_rule_results", "curated_validation": "phase3.curated_validation",
+        }, limit=500)
+        document, provenance = self.resolver.read_json_artifact("phase3.lineage")
+        if not isinstance(document, dict):
+            raise ToolError("The Phase 3 lineage is not a JSON object")
+        rows = [{"field": key, "value": str(document[key])}
+                for key in ("rules_evaluated", "rules_failed") if key in document]
+        rows += [{"field": f"validation_{status}", "value": str(count)}
+                 for status, count in (document.get("validation") or {}).items()]
+        rows += [{"field": f"quarantine_rows:{table}", "value": str(count)}
+                 for table, count in (document.get("quarantine_rows") or {}).items()]
+        data = dict(result.data, lineage=rows)
+        return ToolResult("get_load_data_quality", data,
+                          result.provenance + (provenance.to_dict(),), "FACT")
 
     def _metric_definition(self, args: dict) -> ToolResult:
         measure = args.get("measure")

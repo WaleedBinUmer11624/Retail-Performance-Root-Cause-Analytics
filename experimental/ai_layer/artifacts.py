@@ -8,6 +8,7 @@ from __future__ import annotations
 import csv
 import hashlib
 import io
+import json
 from dataclasses import dataclass
 from pathlib import Path
 from typing import Mapping
@@ -106,6 +107,28 @@ class ArtifactResolver:
             record_count=len(rows),
         )
         return ArtifactTable(tuple(rows), provenance)
+
+    def read_json_artifact(self, dotted_key: str) -> tuple[object, SourceProvenance]:
+        """Read the JSON document configured under evidence_artifacts.<dotted_key>.
+
+        Used for run records such as the Phase 3 lineage, whose governed counts are not in a CSV.
+        """
+        relative = _config_value(self.config, dotted_key)
+        path = self.resolve(relative)
+        raw = path.read_bytes()
+        try:
+            document = json.loads(raw.decode("utf-8-sig"))
+        except ValueError as error:
+            raise ArtifactError("Configured JSON artifact could not be parsed") from error
+        provenance = SourceProvenance(
+            source_file=path.relative_to(self.root).as_posix(),
+            phase=_phase_label(path.relative_to(self.root).as_posix()),
+            retrieval_method=f"configured_artifact:{dotted_key}",
+            content_sha256=hashlib.sha256(raw).hexdigest(),
+            filters={},
+            record_count=1,
+        )
+        return document, provenance
 
     def read_text_source(self, relative_path: str | Path) -> TextSource:
         """Read one document, only if it is on the configured retrieval allowlist."""

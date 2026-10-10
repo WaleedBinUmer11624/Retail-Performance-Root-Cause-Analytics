@@ -62,7 +62,15 @@ evidence_artifacts:
     promotion_weekly: reports/phase6/hk_promotion_weekly.csv
     promotion_events: reports/phase6/hk_promotion_events_by_year.csv
     sensitivity: reports/phase6/sensitivity_summary.csv
+    # Gross lost sales net of the demand that returned after restock; the dashboard's own extract.
+    stockout_net_of_recovery: powerbi/data/p6_stockout_net_of_recovery.csv
     headline: reports/phase7/dashboard_number_register.csv # The Phase 6 headline file is absent; use the governed Phase 7 register.
+  phase3:
+    # Load-time data quality: rule results, curated-table validation and the run lineage (JSON),
+    # which holds the governed rule, validation and quarantine counts.
+    dq_rule_results: reports/phase3/dq_rule_results.csv
+    curated_validation: reports/phase3/curated_validation.csv
+    lineage: reports/phase3/lineage.json
   phase7:
     data_dictionary: docs/07_power_bi_dashboard_design.md
     measure_dictionary: reports/phase7/measure_dictionary.csv
@@ -109,7 +117,11 @@ refused_path_fragments:
 # Terms that mean the answer is not analytical. Refused before any parsing happens.
 out_of_scope_patterns:
   - ignore (all )?(your|previous|prior) (rules|instructions)
-  - delete|drop|truncate|alter|wipe
+  # SQL statements, not the bare English words: "when did the drop start?" is an analytical question.
+  # Destructive requests in plain English ("delete the files") are refused by the injection rules.
+  - \b(drop|truncate|alter)\s+(table|database|schema|view|index|procedure|function)\b
+  - \bdelete\s+from\b|\binsert\s+into\b|\bupdate\s+\S+\s+set\b
+  - \b(drop|delete|truncate|wipe|purge)\s+(the\s+|all\s+|every\s+)?(tables?|database|schema|files?|records|data)\b
   - answer key|hidden scenario|planted issues
   - override|bypass|disregard
   - pretend .* exists

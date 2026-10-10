@@ -11,6 +11,9 @@
      link/<project|repository|readme|linkedin|github>                       never delays navigation
      section/<headline|explore|evidence|data-quality>                       once per page load
      chart-legend/<chart>                                                    Chart.js legend clicks
+
+   The chat assistant (chatbot.js) sends its own events with the same guards, prefixed with the page
+   (homepage/ or dashboard/): chat-open, ask/<id>, chip/<id>, followup/<id>, intent/<name>, no-match.
 */
 (function () {
   "use strict";

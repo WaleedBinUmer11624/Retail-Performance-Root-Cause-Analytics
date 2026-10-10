@@ -21,6 +21,7 @@ from src.analyst.intents import detect_intent
 from . import grounding
 from .assembly import EvidenceBundle
 from .artifacts import ArtifactError
+from .guided import GuidedIntent, guided_intent_for
 from .injection import (
     ArgumentRejected,
     RefusalRequired,
@@ -323,12 +324,22 @@ class GroundedAssistant:
 
     def ask(self, question: str, mode: str | None = None) -> GroundedResponse:
         """Answer one question; refusals and errors become structured responses, and every
-        request writes exactly one redacted trace line."""
-        tools, intent = self.resolve_mode(question, mode)
+        request writes exactly one redacted trace line.
+
+        With no explicit mode, a question that names one governed driver takes the guided path,
+        which answers from that driver's evidence only (see guided.py)."""
+        guided = guided_intent_for(question) if mode is None else None
+        if guided is not None:
+            tools, intent = (), guided.key
+        else:
+            tools, intent = self.resolve_mode(question, mode)
         trace = RequestTrace(request_id=new_request_id(), question_category=intent or "unclassified",
                              mode=mode or "auto", provider=self.provider_name, model=self.model)
         try:
-            response = self._answer(question, intent, tools, trace)
+            if guided is not None:
+                response = self._answer_guided(question, guided, trace)
+            else:
+                response = self._answer(question, intent, tools, trace)
         except RefusalRequired as refusal:
             trace.error = refusal.category
             response = self._refusal_response(refusal, refusal.limitations)
@@ -452,6 +463,61 @@ class GroundedAssistant:
             confidence=confidence,
             limitations=tuple(dict.fromkeys(limitations)),
             recommended_follow_up=self._follow_ups(claims, has_forecast),
+        )
+        payload.to_dict()
+        return payload
+
+    def _answer_guided(self, question: str, guided: GuidedIntent,
+                       trace: RequestTrace) -> GroundedResponse:
+        """Answer from one driver's evidence, with that driver's own governed badge.
+
+        The same refusals run first as on the general path. The builder reads only the tools it
+        needs, through the same argument validation, and every call is traced. Its deterministic
+        sentences must pass the section 6 gate before they are returned.
+        """
+        refuse_out_of_scope(question, self.config.get("out_of_scope_patterns", ()))
+        refuse_injected_question(question)
+        provenance: list[dict] = []
+
+        def fetch(name: str, arguments: Mapping[str, str]):
+            validated = validate_tool_arguments(dict(arguments), self._allowed_arguments(name))
+            result = self.tools.run(name, validated)
+            trace.tool_calls.append(name)
+            provenance.extend(result.provenance)
+            return result
+
+        built = guided.build(question, fetch)
+        claims = list(built.claims)
+        corpus = " ".join(claim.claim for claim in claims)
+        if not _period_in_evidence(question, corpus):
+            raise RefusalRequired(
+                f"the question names a period the governed evidence does not cover; "
+                f"it mentions {', '.join(str(year) for year in sorted(_years_in(corpus)))}",
+                "out_of_period")
+        report = grounding.check_grounding(built.answer, claims)
+        if not report.grounded:
+            # A builder defect, never a model one: fail loudly rather than publish the sentence.
+            raise ValueError("guided answer failed grounding: "
+                             + "; ".join(issue.detail for issue in report.issues))
+        cited = {source_id for claim in claims for source_id in claim.source_ids}
+        sources: dict[str, dict] = {}
+        for entry in provenance:
+            if str(entry["source_file"]) in cited:
+                sources.setdefault(str(entry["source_file"]), self._source_entry(entry))
+        limitations = list(built.limitations)
+        answer = self._admit_narrative(question, built.answer, claims, trace, limitations)
+        confidence, _rationale = built.confidence()
+        trace.source_ids.extend(sorted(sources))
+        payload = GroundedResponse(
+            answer=answer,
+            executive_summary=built.executive_summary(),
+            evidence=tuple(claims),
+            sources=tuple(sources[key] for key in sorted(sources)),
+            confidence=confidence,
+            limitations=tuple(dict.fromkeys(limitations)),
+            recommended_follow_up=built.follow_ups or ("Ask for the governed evidence level of a driver.",),
+            governed_label=built.governed_label,
+            evidence_strength=built.evidence_strength,
         )
         payload.to_dict()
         return payload

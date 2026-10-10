@@ -1,0 +1,105 @@
+/* Brightwater Retail Assistant: floating chat shared by index.html and dashboard.html.
+   Every colour comes from the host page's theme tokens (--ink, --muted, --line, --bg, --card,
+   --accent, --on-accent, --tag-ink and the evidence colours), so the widget follows the page's
+   light and dark mode. The one fallback, --hyp, is the dashboard's own value for pages that do
+   not define it. Class names are prefixed cb- so they never collide with page styles. */
+
+.cb-launcher { position: fixed; right: calc(24px + env(safe-area-inset-right)); bottom: calc(24px + env(safe-area-inset-bottom));
+  z-index: 60; width: 56px; height: 56px; border-radius: 50%; border: 0; padding: 0; cursor: pointer;
+  display: grid; place-items: center; background: var(--accent); color: var(--on-accent);
+  box-shadow: 0 6px 18px color-mix(in srgb, var(--ink) 30%, transparent); transition: transform .2s ease, box-shadow .2s ease; }
+.cb-launcher:hover { transform: translateY(-2px); box-shadow: 0 10px 24px color-mix(in srgb, var(--ink) 36%, transparent); }
+
+/* Homepage greeting next to the launcher. */
+.cb-teaser { position: fixed; right: calc(92px + env(safe-area-inset-right)); bottom: calc(30px + env(safe-area-inset-bottom));
+  z-index: 59; display: flex; align-items: flex-start; gap: 2px; max-width: min(270px, calc(100vw - 120px));
+  background: var(--card); color: var(--ink); border: 1px solid var(--line); border-radius: 14px 14px 4px 14px;
+  box-shadow: 0 8px 22px color-mix(in srgb, var(--ink) 22%, transparent);
+  opacity: 0; transform: translateY(6px); transition: opacity .2s ease, transform .2s ease; }
+.cb-teaser.cb-show { opacity: 1; transform: none; }
+.cb-teaser[hidden] { display: none; }
+.cb-teaser-open { padding: 10px 4px 10px 12px; border: 0; background: none; color: inherit; font: inherit; font-size: 14px;
+  line-height: 1.4; text-align: left; cursor: pointer; }
+.cb-teaser-close { flex: none; width: 28px; height: 28px; margin: 4px 4px 0 0; border: 0; border-radius: 50%; display: grid;
+  place-items: center; background: none; color: var(--muted); cursor: pointer; }
+.cb-teaser-close:hover { background: var(--bg); color: var(--ink); }
+
+.cb-panel { position: fixed; right: calc(24px + env(safe-area-inset-right)); bottom: calc(92px + env(safe-area-inset-bottom));
+  z-index: 60; width: 400px; max-width: calc(100vw - 48px); height: 560px;
+  max-height: calc(100dvh - 92px - 24px - env(safe-area-inset-bottom) - env(safe-area-inset-top));
+  display: flex; flex-direction: column; background: var(--card); color: var(--ink);
+  border: 1px solid var(--line); border-radius: 16px;
+  /* Shadow from --ink: dark in light mode, a soft light halo in dark mode, visible on both. */
+  box-shadow: 0 16px 40px color-mix(in srgb, var(--ink) 24%, transparent), 0 0 0 1px var(--line);
+  overflow: hidden; opacity: 0; transform: translateY(12px) scale(.98); transform-origin: bottom right;
+  transition: opacity .2s ease, transform .2s ease;
+  font: 16px/1.55 "Segoe UI", system-ui, -apple-system, Roboto, Helvetica, Arial, sans-serif; text-align: left; }
+.cb-panel.cb-open { opacity: 1; transform: none; }
+.cb-panel[hidden] { display: none; }
+
+.cb-head { flex: none; display: flex; align-items: flex-start; justify-content: space-between; gap: 12px;
+  padding: 14px 14px 12px 18px; border-bottom: 1px solid var(--line); }
+.cb-head h2 { margin: 0; font-size: 17px; line-height: 1.3; color: var(--ink); }
+.cb-head p { margin: 2px 0 0; font-size: 13px; color: var(--muted); }
+.cb-close { flex: none; width: 34px; height: 34px; border-radius: 50%; border: 0; display: grid; place-items: center;
+  background: transparent; color: var(--muted); cursor: pointer; transition: background .15s ease; }
+.cb-close:hover { background: var(--bg); color: var(--ink); }
+
+.cb-log { position: relative; flex: 1 1 auto; min-height: 0; overflow-x: hidden; overflow-y: auto; overscroll-behavior: contain; padding: 14px 14px 6px; }
+.cb-msg { max-width: 88%; margin: 0 0 10px; padding: 10px 12px; border-radius: 14px; font-size: 14px; line-height: 1.5;
+  overflow-wrap: anywhere; }
+.cb-msg p { margin: 0 0 6px; } .cb-msg p:last-child { margin-bottom: 0; }
+.cb-msg ul { margin: 4px 0 0; padding-left: 18px; }
+.cb-msg a { color: var(--accent); }
+.cb-bot { background: var(--bg); color: var(--ink); border: 1px solid var(--line); border-bottom-left-radius: 4px; }
+.cb-user { margin-left: auto; width: fit-content; background: var(--accent); color: var(--on-accent); border-bottom-right-radius: 4px; }
+.cb-muted { font-size: 12px; color: var(--muted); }
+.cb-match { font-size: 13px; color: var(--muted); }
+.cb-strength { font-size: 12px; color: var(--muted); margin-left: 6px; }
+.cb-src { font-size: 12px; color: var(--muted); }
+.cb-src code { font-size: 12px; }
+
+.cb-tag { display: inline-block; padding: 2px 9px; border-radius: 999px; font-size: 12px; font-weight: 700; color: var(--tag-ink); }
+.cb-tag.fact { background: var(--fact); } .cb-tag.root { background: var(--root); } .cb-tag.assoc { background: var(--assoc); }
+.cb-tag.est { background: var(--est); } .cb-tag.hyp { background: var(--hyp, #6b4fa0); }
+
+/* Chips: follow-ups under an answer, suggestions after a refusal, and the pinned row. */
+.cb-chip { flex: none; padding: 6px 12px; border-radius: 999px; border: 1px solid var(--line); background: var(--card);
+  color: var(--ink); font: inherit; font-size: 13px; line-height: 1.35; cursor: pointer; white-space: nowrap;
+  transition: border-color .15s ease, color .15s ease; }
+.cb-chip:hover { border-color: var(--accent); color: var(--accent); }
+.cb-followups { display: flex; flex-wrap: wrap; gap: 6px; margin: -2px 0 12px; }
+.cb-followups .cb-chip { white-space: normal; text-align: left; }
+.cb-followups-label { flex-basis: 100%; font-size: 12px; color: var(--muted); }
+
+.cb-suggest { flex: none; display: flex; align-items: center; gap: 4px; padding: 8px 8px 0; border-top: 1px solid var(--line); }
+.cb-row { flex: 1 1 auto; min-width: 0; display: flex; gap: 6px; overflow-x: auto; scroll-snap-type: x proximity;
+  scrollbar-width: none; padding: 2px; -webkit-overflow-scrolling: touch; }
+.cb-row::-webkit-scrollbar { display: none; }
+.cb-row .cb-chip { scroll-snap-align: start; }
+.cb-arrow { flex: none; display: none; width: 30px; height: 30px; border-radius: 50%; border: 1px solid var(--line);
+  place-items: center; background: var(--card); color: var(--ink); cursor: pointer; }
+.cb-arrow:disabled { opacity: .35; cursor: default; }
+@media (hover: hover) and (pointer: fine) { .cb-arrow { display: grid; } }
+
+.cb-form { flex: none; display: flex; gap: 8px; padding: 8px 12px calc(12px + env(safe-area-inset-bottom)); background: var(--card); }
+.cb-form input { flex: 1 1 auto; min-width: 0; padding: 9px 12px; border-radius: 999px; border: 1px solid var(--line);
+  background: var(--bg); color: var(--ink); font: inherit; font-size: 16px; }
+.cb-form input::placeholder { color: var(--muted); opacity: 1; }
+.cb-send { flex: none; padding: 8px 16px; border-radius: 999px; border: 0; background: var(--accent); color: var(--on-accent);
+  font: inherit; font-size: 14px; font-weight: 600; cursor: pointer; }
+
+.cb-launcher:focus-visible, .cb-close:focus-visible, .cb-chip:focus-visible, .cb-send:focus-visible, .cb-arrow:focus-visible,
+.cb-form input:focus-visible, .cb-teaser-open:focus-visible, .cb-teaser-close:focus-visible, .cb-msg a:focus-visible,
+[data-chat-open]:focus-visible { outline: 2px solid var(--accent); outline-offset: 2px; }
+.cb-launcher:focus-visible { outline-color: var(--ink); outline-offset: 3px; }
+.cb-sr { position: absolute; width: 1px; height: 1px; overflow: hidden; clip: rect(0 0 0 0); white-space: nowrap; }
+
+@media (max-width: 560px) {
+  .cb-panel { left: calc(12px + env(safe-area-inset-left)); right: calc(12px + env(safe-area-inset-right)); width: auto; max-width: none;
+    max-height: calc(100dvh - 92px - 12px - env(safe-area-inset-bottom) - env(safe-area-inset-top)); }
+}
+@media (prefers-reduced-motion: reduce) {
+  .cb-launcher, .cb-panel, .cb-chip, .cb-close, .cb-teaser { transition: none; }
+  .cb-log, .cb-row { scroll-behavior: auto; }
+}

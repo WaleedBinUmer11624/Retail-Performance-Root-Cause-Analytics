@@ -10,6 +10,11 @@ EvidenceType = Literal[
     "INFERENCE", "FORECAST", "LIMITATION",
 ]
 ConfidenceLabel = Literal["UNASSESSED", "STRONG", "MODERATE", "LIMITED", "INSUFFICIENT"]
+GovernedLabel = Literal["Root-cause evidence", "Statistical association", "Observed change",
+                        "Hypothesis", "Forecast", "Fact"]
+GOVERNED_LABELS: tuple[str, ...] = (
+    "Root-cause evidence", "Statistical association", "Observed change", "Hypothesis", "Forecast", "Fact",
+)
 
 EVIDENCE_TYPES: tuple[EvidenceType, ...] = (
     "FACT", "CALCULATED", "MODEL", "ATTRIBUTION", "ASSOCIATION", "INTERPRETATION",
@@ -72,6 +77,10 @@ class GroundedResponse:
     confidence: ConfidenceLabel
     limitations: tuple[str, ...]
     recommended_follow_up: tuple[str, ...]
+    # Set when an answer is about one driver or one kind of evidence: its governed label and the
+    # governed 0-3 strength that label carries (None for a forecast, which is not on the scale).
+    governed_label: GovernedLabel | None = None
+    evidence_strength: int | None = None
 
     def to_dict(self) -> dict:
         """Serialise and validate; a payload that breaks the schema is never returned."""
@@ -84,6 +93,9 @@ class GroundedResponse:
             "limitations": list(self.limitations),
             "recommended_follow_up": list(self.recommended_follow_up),
         }
+        if self.governed_label is not None:
+            payload["governed_label"] = self.governed_label
+            payload["evidence_strength"] = self.evidence_strength
         validate_response(payload)
         return payload
 
@@ -125,6 +137,8 @@ RESPONSE_JSON_SCHEMA = {
             },
         }},
         "confidence": {"enum": ["UNASSESSED", "STRONG", "MODERATE", "LIMITED", "INSUFFICIENT"]},
+        "governed_label": {"enum": list(GOVERNED_LABELS)},
+        "evidence_strength": {"type": ["integer", "null"], "minimum": 0, "maximum": 3},
         "limitations": {"type": "array", "items": {"type": "string"}},
         "recommended_follow_up": {"type": "array", "items": {"type": "string"}},
     },
@@ -140,7 +154,15 @@ def validate_response(payload: Mapping) -> None:
     """Validate response structure using only the standard library."""
     required = set(RESPONSE_JSON_SCHEMA["required"])
     _require(isinstance(payload, Mapping), "payload must be an object")
-    _require(set(payload) == required, "top-level keys differ from the response schema")
+    # The governed label and its strength travel together, or not at all.
+    labelled = required | {"governed_label", "evidence_strength"}
+    _require(set(payload) in (required, labelled), "top-level keys differ from the response schema")
+    if "governed_label" in payload:
+        _require(payload["governed_label"] in GOVERNED_LABELS, "governed_label is unsupported")
+        strength = payload["evidence_strength"]
+        _require(strength is None or (isinstance(strength, int) and not isinstance(strength, bool)
+                                      and 0 <= strength <= 3),
+                 "evidence_strength must be 0-3 or null")
     for key in ("answer", "executive_summary"):
         _require(isinstance(payload[key], str), f"{key} must be a string")
     _require(payload["confidence"] in {"UNASSESSED", "STRONG", "MODERATE", "LIMITED", "INSUFFICIENT"},

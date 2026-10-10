@@ -249,6 +249,19 @@ def _strength_from_claim(claim: EvidenceClaim) -> int:
     return GOVERNED_STRENGTH_BY_LEVEL["Hypothesis"]
 
 
+def confidence_for_level(evidence_level: str) -> tuple[str, str]:
+    """Confidence label and rationale for one governed evidence_level label.
+
+    Used when an answer is about a single driver, so its badge comes from that driver's own label
+    and never from the strongest record elsewhere in the bundle.
+    """
+    strength = strength_for_level(evidence_level)
+    if strength is None:
+        return "UNASSESSED", _CONFIDENCE_RATIONALE["UNASSESSED"]
+    label = _STRENGTH_TO_CONFIDENCE[strength]
+    return label, _CONFIDENCE_RATIONALE[label]
+
+
 def assess_confidence(evidence: Sequence[EvidenceClaim]) -> tuple[str, str]:
     """Derive the confidence label and its rationale from governed evidence only.
 
@@ -257,7 +270,10 @@ def assess_confidence(evidence: Sequence[EvidenceClaim]) -> tuple[str, str]:
     """
     if not evidence:
         return "INSUFFICIENT", _CONFIDENCE_RATIONALE["INSUFFICIENT"]
-    non_forecast = [claim for claim in evidence if claim.evidence_type != "FORECAST"]
+    # A limitation note (such as the forecast caveat) qualifies the answer; it is not evidence and
+    # must not be scored as a hypothesis that drags the label down.
+    non_forecast = [claim for claim in evidence
+                    if claim.evidence_type not in {"FORECAST", "LIMITATION"}]
     strengths = [_strength_from_claim(claim) for claim in non_forecast]
     if not strengths:
         return "MODERATE", "Only forecast evidence supports this answer; forecasts are capped at moderate."
