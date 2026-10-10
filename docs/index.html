@@ -3,12 +3,52 @@
 <head>
 <meta charset="utf-8">
 <meta name="viewport" content="width=device-width, initial-scale=1">
-<title>Retail Performance Root Cause Analytics</title>
+<meta name="color-scheme" content="light dark">
+<title>Retail Performance Root Cause Analytics | Waleed Bin Umer</title>
 <meta name="description" content="A &euro;731K revenue decline at a 20-store retailer, traced from raw data to root causes, management decisions, early warning and a 13-week forecast.">
+<meta name="author" content="Waleed Bin Umer">
+<meta name="theme-color" content="#f7f6f3" media="(prefers-color-scheme: light)">
+<meta name="theme-color" content="#0f1115" media="(prefers-color-scheme: dark)">
+<link rel="canonical" href="https://waleedbinumer11624.github.io/Retail-Performance-Root-Cause-Analytics/">
+<!-- Favicon: a three-bar chart as an inline SVG data URI, so the page needs no extra file. -->
+<link rel="icon" type="image/svg+xml" href="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 32 32'%3E%3Crect width='32' height='32' rx='6' fill='%231f6fcc'/%3E%3Crect x='7' y='17' width='4' height='9' rx='1' fill='%23ffffff'/%3E%3Crect x='14' y='11' width='4' height='15' rx='1' fill='%23ffffff'/%3E%3Crect x='21' y='6' width='4' height='20' rx='1' fill='%23ffffff'/%3E%3C/svg%3E">
+<!-- Link previews use the purpose-made cover image, docs/screenshots/og-cover.webp. -->
+<meta property="og:type" content="website">
+<meta property="og:site_name" content="Retail Performance Root Cause Analytics">
+<meta property="og:title" content="Retail Performance Root Cause Analytics | Waleed Bin Umer">
+<meta property="og:description" content="A &euro;731K revenue decline at a 20-store retailer, traced from raw data to root causes, management decisions, early warning and a 13-week forecast.">
+<meta property="og:url" content="https://waleedbinumer11624.github.io/Retail-Performance-Root-Cause-Analytics/">
+<meta property="og:image" content="https://waleedbinumer11624.github.io/Retail-Performance-Root-Cause-Analytics/screenshots/og-cover.webp">
+<meta property="og:image:type" content="image/webp">
+<meta property="og:image:width" content="1672">
+<meta property="og:image:height" content="941">
+<meta property="og:image:alt" content="Cover: sales fell 7.18 percent, why? A EUR 731K revenue decline at a fictional 20-store retailer, shown with the Power BI executive overview">
+<meta name="twitter:card" content="summary_large_image">
+<meta name="twitter:title" content="Retail Performance Root Cause Analytics | Waleed Bin Umer">
+<meta name="twitter:description" content="A &euro;731K revenue decline at a 20-store retailer, traced from raw data to root causes, management decisions, early warning and a 13-week forecast.">
+<meta name="twitter:image" content="https://waleedbinumer11624.github.io/Retail-Performance-Root-Cause-Analytics/screenshots/og-cover.webp">
+<meta name="twitter:image:alt" content="Cover: sales fell 7.18 percent, why? A EUR 731K revenue decline at a fictional 20-store retailer, shown with the Power BI executive overview">
 <style>
+  /* Every colour is a variable here; the dark block below overrides them. Text and tag pairs
+     meet WCAG AA (4.5:1) in both themes. */
   :root {
+    color-scheme: light;
     --ink: #1f2328; --muted: #5b6168; --line: #e1dfdb; --bg: #f7f6f3; --card: #ffffff;
-    --accent: #2a78d6; --fact: #5b6168; --root: #1a7f4b; --assoc: #b7791f; --est: #2a78d6;
+    --accent: #1f6fcc; --on-accent: #ffffff;
+    --tag-ink: #ffffff; --fact: #5b6168; --root: #1a7f4b; --assoc: #8a5a0f; --est: #1f6fcc;
+    --thumb-border: #e1dfdb; --thumb-pad: 0;
+    /* The lightbox is dark in both themes; the screenshots are light images on white. */
+    --overlay: rgba(14, 16, 19, .92); --overlay-ink: #ffffff; --shot-bg: #ffffff;
+  }
+  @media (prefers-color-scheme: dark) {
+    :root {
+      color-scheme: dark;
+      --ink: #e6e8eb; --muted: #a9b0b8; --line: #2c313a; --bg: #0f1115; --card: #181b21;
+      --accent: #6aa8f0; --on-accent: #0f1115;
+      --tag-ink: #ffffff; --fact: #5f6670; --root: #1d7a4a; --assoc: #8a5a0f; --est: #2563b0;
+      /* Light screenshots on a dark page: frame each thumbnail so it does not glare. */
+      --thumb-border: #3a404a; --thumb-pad: 6px;
+    }
   }
   * { box-sizing: border-box; }
   html { scroll-behavior: smooth; }
@@ -24,7 +64,7 @@
   .links { display: flex; flex-wrap: wrap; gap: 10px; }
   .btn { display: inline-block; padding: 9px 16px; border-radius: 6px; border: 1px solid var(--accent);
          color: var(--accent); text-decoration: none; font-weight: 600; font-size: 15px; }
-  .btn.primary { background: var(--accent); color: #fff; }
+  .btn.primary { background: var(--accent); color: var(--on-accent); }
   .btn:hover, .btn:focus { filter: brightness(.92); }
   main section { padding: 40px 0 8px; }
   h2 { margin: 0 0 16px; font-size: 24px; }
@@ -39,7 +79,7 @@
   .finding h3 { margin: 10px 0 8px; font-size: 17px; line-height: 1.35; }
   .finding p { margin: 0; font-size: 15px; color: var(--muted); }
   .tag { display: inline-block; padding: 2px 9px; border-radius: 999px; font-size: 12px; font-weight: 700;
-         color: #fff; letter-spacing: .02em; }
+         color: var(--tag-ink); letter-spacing: .02em; }
   .tag.est { background: var(--est); } .tag.root { background: var(--root); }
   .tag.fact { background: var(--fact); } .tag.assoc { background: var(--assoc); }
   .note { font-size: 15px; color: var(--muted); }
@@ -49,15 +89,16 @@
   .about p { margin: 0 0 14px; }
   .gallery { display: grid; grid-template-columns: repeat(auto-fill, minmax(300px, 1fr)); gap: 16px; }
   .gallery figure { margin: 0; background: var(--card); border: 1px solid var(--line); border-radius: 8px; overflow: hidden; }
-  .gallery a { display: block; }
-  .gallery img { display: block; width: 100%; height: auto; aspect-ratio: 16 / 9; object-fit: cover; object-position: top; }
+  .gallery a { display: block; padding: var(--thumb-pad) var(--thumb-pad) 0; }
+  .gallery img { display: block; width: 100%; height: auto; aspect-ratio: 16 / 9; object-fit: cover; object-position: top;
+                 border: 1px solid var(--thumb-border); border-radius: 4px; background: var(--shot-bg); }
   .gallery figcaption { padding: 10px 14px; font-size: 14px; font-weight: 600; }
   /* Click to enlarge: CSS-only lightbox through :target, so the page needs no script. */
-  .lightbox { display: none; position: fixed; inset: 0; z-index: 10; background: rgba(20, 22, 25, .88);
+  .lightbox { display: none; position: fixed; inset: 0; z-index: 10; background: var(--overlay);
               padding: 24px; align-items: center; justify-content: center; }
   .lightbox:target { display: flex; }
-  .lightbox img { max-width: 100%; max-height: calc(100vh - 80px); border-radius: 6px; background: #fff; }
-  .lightbox .close { position: absolute; top: 14px; right: 20px; color: #fff; font-size: 15px;
+  .lightbox img { max-width: 100%; max-height: calc(100vh - 80px); border-radius: 6px; background: var(--shot-bg); }
+  .lightbox .close { position: absolute; top: 14px; right: 20px; color: var(--overlay-ink); font-size: 15px;
                      text-decoration: none; font-weight: 600; }
   .stack { display: flex; flex-wrap: wrap; gap: 8px; padding: 0; margin: 0; list-style: none; }
   .stack li { background: var(--card); border: 1px solid var(--line); border-radius: 6px; padding: 6px 12px; font-size: 15px; }
