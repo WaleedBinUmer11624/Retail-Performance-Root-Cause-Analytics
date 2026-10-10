@@ -65,6 +65,7 @@
   .btn { display: inline-block; padding: 9px 16px; border-radius: 6px; border: 1px solid var(--accent);
          color: var(--accent); text-decoration: none; font-weight: 600; font-size: 15px; }
   .btn.primary { background: var(--accent); color: var(--on-accent); }
+  .btn.cta { padding: 12px 22px; font-size: 16px; }
   .btn:hover, .btn:focus { filter: brightness(.92); }
   main section { padding: 40px 0 8px; }
   h2 { margin: 0 0 16px; font-size: 24px; }
@@ -82,6 +83,7 @@
          color: var(--tag-ink); letter-spacing: .02em; }
   .tag.est { background: var(--est); } .tag.root { background: var(--root); }
   .tag.fact { background: var(--fact); } .tag.assoc { background: var(--assoc); }
+  .status { font-size: 12px; font-weight: 600; color: var(--muted); margin-left: 6px; }
   .note { font-size: 15px; color: var(--muted); }
   .byline { margin: -12px 0 24px; font-size: 15px; color: var(--muted); }
   .byline strong { color: var(--ink); }
@@ -118,7 +120,8 @@
       management decisions, early warning, a 13-week forecast and an evidence-grounded AI assistant.</p>
     <p class="byline">By <strong>Waleed Bin Umer</strong> &middot; MSc Data Analytics, National College of Ireland</p>
     <div class="links">
-      <a class="btn primary" href="https://github.com/WaleedBinUmer11624/Retail-Performance-Root-Cause-Analytics">View the repository</a>
+      <a class="btn primary cta" href="dashboard.html">Explore the interactive dashboard</a>
+      <a class="btn" href="https://github.com/WaleedBinUmer11624/Retail-Performance-Root-Cause-Analytics">View the repository</a>
       <a class="btn" href="https://github.com/WaleedBinUmer11624/Retail-Performance-Root-Cause-Analytics#readme">Read the README</a>
       <a class="btn" href="https://www.linkedin.com/in/waleedbinumer">LinkedIn</a>
     </div>
@@ -153,22 +156,22 @@
     <h2 id="findings-title">Key findings</h2>
     <div class="findings">
       <article class="finding">
-        <span class="tag est">Estimate &middot; cause not established</span>
+        <span class="tag fact">Observed change</span><span class="status">cause: unresolved</span>
         <h3>Three stores account for over half of the decline</h3>
         <p>Stores S03, S04 and S05 lost about 27.8% of their transactions, against 1.1% for matched controls. A difference-in-differences estimate puts the excess decline at &euro;397,778 (54% of the total), range &euro;377,245 to &euro;435,210. Footfall, competitor and store-operations data were not available, so the cause is not established.</p>
       </article>
       <article class="finding">
-        <span class="tag root">Root-cause evidence</span>
+        <span class="tag root">Root-cause evidence</span><span class="status">cause: established</span>
         <h3>Electronics stock-outs cost measurable sales</h3>
         <p>Electronics &amp; Tech availability fell from 95.4% to 89.3%, mostly on Voltix-supplied products. Estimated lost sales were about &euro;37,235 gross and &euro;23,963 net (range &euro;23,963 to &euro;44,460). Whether the supplier or the retailer's ordering is responsible is not established.</p>
       </article>
       <article class="finding">
-        <span class="tag fact">Observed change</span>
+        <span class="tag fact">Observed change</span><span class="status">cause: not established</span>
         <h3>&ldquo;Faulty&rdquo; returns rose, but that does not prove defects</h3>
         <p>Refunds recorded with the till reason &ldquo;Faulty&rdquo; rose by &euro;31,589 (+90%), concentrated in five stores. A till reason is not a verified defect; QA and batch data would be needed.</p>
       </article>
       <article class="finding">
-        <span class="tag assoc">Statistical association</span>
+        <span class="tag assoc">Statistical association</span><span class="status">cause: not established</span>
         <h3>Home &amp; Kitchen promotions are associated with the decline, not proven to cause it</h3>
         <p>The discount rate rose from about 2.4% to 11.9%. Four estimation methods disagree in sign, so they are reported separately and never added together.</p>
       </article>
@@ -179,6 +182,7 @@
   <section id="dashboard" aria-labelledby="dashboard-title">
     <h2 id="dashboard-title">The Power BI dashboard</h2>
     <p>Nine report pages, generated from code and validated in Power BI Desktop. Select a page to enlarge it.</p>
+    <p><a class="btn primary" href="dashboard.html">Explore the interactive dashboard</a></p>
     <div class="gallery">
       <figure><a href="#shot1"><img src="screenshots/page1.png" alt="Page 1: executive overview" loading="lazy"></a><figcaption>1 Executive overview</figcaption></figure>
       <figure><a href="#shot2"><img src="screenshots/page2.png" alt="Page 2: store and customer diagnostics" loading="lazy"></a><figcaption>2 Store and customer diagnostics</figcaption></figure>

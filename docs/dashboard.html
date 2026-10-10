@@ -1,0 +1,509 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<meta name="color-scheme" content="light dark">
+<title>Interactive dashboard | Retail Performance Root Cause Analytics</title>
+<meta name="description" content="Interactive dashboard: a &euro;731K H2 revenue decline at a 20-store retailer, explored by period, store and category.">
+<meta name="author" content="Waleed Bin Umer">
+<meta name="theme-color" content="#f7f6f3" media="(prefers-color-scheme: light)">
+<meta name="theme-color" content="#0f1115" media="(prefers-color-scheme: dark)">
+<link rel="canonical" href="https://waleedbinumer11624.github.io/Retail-Performance-Root-Cause-Analytics/dashboard.html">
+<link rel="icon" type="image/svg+xml" href="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 32 32'%3E%3Crect width='32' height='32' rx='6' fill='%231f6fcc'/%3E%3Crect x='7' y='17' width='4' height='9' rx='1' fill='%23ffffff'/%3E%3Crect x='14' y='11' width='4' height='15' rx='1' fill='%23ffffff'/%3E%3Crect x='21' y='6' width='4' height='20' rx='1' fill='%23ffffff'/%3E%3C/svg%3E">
+<style>
+  /* Same tokens as index.html; the dark block overrides them. Charts read these at draw time. */
+  :root {
+    color-scheme: light;
+    --ink: #1f2328; --muted: #5b6168; --line: #e1dfdb; --bg: #f7f6f3; --card: #ffffff;
+    --accent: #1f6fcc; --on-accent: #ffffff;
+    --tag-ink: #ffffff; --fact: #5b6168; --root: #1a7f4b; --assoc: #8a5a0f; --est: #1f6fcc; --hyp: #6b4fa0;
+    --series-cy: #1f6fcc; --series-py: #9aa7b6; --up: #1a7f4b; --down: #c23b3b; --cluster: #d9822b;
+    --grid: rgba(0, 0, 0, .08);
+  }
+  @media (prefers-color-scheme: dark) {
+    :root {
+      color-scheme: dark;
+      --ink: #e6e8eb; --muted: #a9b0b8; --line: #2c313a; --bg: #0f1115; --card: #181b21;
+      --accent: #6aa8f0; --on-accent: #0f1115;
+      --fact: #5f6670; --root: #1d7a4a; --assoc: #8a5a0f; --est: #2563b0; --hyp: #6b4fa0;
+      --series-cy: #6aa8f0; --series-py: #6b7480; --up: #3fb27f; --down: #ef6b6b; --cluster: #f0a14a;
+      --grid: rgba(255, 255, 255, .08);
+    }
+  }
+  * { box-sizing: border-box; }
+  body { margin: 0; background: var(--bg); color: var(--ink);
+         font: 16px/1.55 "Segoe UI", system-ui, -apple-system, Roboto, Helvetica, Arial, sans-serif; }
+  .wrap { max-width: 1200px; margin: 0 auto; padding: 0 20px; }
+  header { background: var(--card); border-bottom: 1px solid var(--line); }
+  header .wrap { padding-top: 28px; padding-bottom: 22px; }
+  .eyebrow { margin: 0 0 6px; color: var(--accent); font-weight: 600; font-size: 14px; letter-spacing: .04em; text-transform: uppercase; }
+  h1 { margin: 0 0 8px; font-size: clamp(24px, 3.4vw, 34px); line-height: 1.2; }
+  .lede { margin: 0 0 16px; color: var(--muted); max-width: 820px; }
+  a { color: var(--accent); }
+  .links { display: flex; flex-wrap: wrap; gap: 10px; }
+  .btn { display: inline-block; padding: 8px 14px; border-radius: 6px; border: 1px solid var(--accent);
+         color: var(--accent); text-decoration: none; font-weight: 600; font-size: 14px; }
+  .btn.primary { background: var(--accent); color: var(--on-accent); }
+  .filters { position: sticky; top: 0; z-index: 5; background: var(--bg); border-bottom: 1px solid var(--line); }
+  .filters .wrap { display: flex; flex-wrap: wrap; gap: 12px 18px; align-items: end; padding-top: 12px; padding-bottom: 12px; }
+  .filters label { display: flex; flex-direction: column; gap: 4px; font-size: 13px; font-weight: 600; color: var(--muted); }
+  select { min-width: 200px; padding: 7px 10px; border-radius: 6px; border: 1px solid var(--line);
+           background: var(--card); color: var(--ink); font: inherit; font-size: 15px; }
+  .reset { padding: 8px 14px; border-radius: 6px; border: 1px solid var(--line); background: var(--card);
+           color: var(--ink); font: inherit; font-size: 14px; cursor: pointer; }
+  .scope { flex-basis: 100%; margin: 0; font-size: 13px; color: var(--muted); }
+  main section { padding: 26px 0 4px; }
+  h2 { margin: 0 0 14px; font-size: 21px; }
+  .kpis { display: grid; grid-template-columns: repeat(auto-fit, minmax(190px, 1fr)); gap: 12px; }
+  .kpi { background: var(--card); border: 1px solid var(--line); border-radius: 8px; padding: 14px 16px; }
+  .kpi .value { font-size: 26px; font-weight: 700; line-height: 1.2; }
+  .kpi .label { color: var(--muted); font-size: 13px; }
+  .kpi .sub { font-size: 13px; margin-top: 4px; }
+  .neg { color: var(--down); } .pos { color: var(--up); }
+  .grid { display: grid; grid-template-columns: repeat(auto-fit, minmax(460px, 1fr)); gap: 14px; }
+  .panel { background: var(--card); border: 1px solid var(--line); border-radius: 8px; padding: 16px 16px 12px; min-width: 0; }
+  .panel h3 { margin: 0 0 4px; font-size: 16px; line-height: 1.35; }
+  .panel .cap { margin: 0 0 10px; font-size: 13px; color: var(--muted); }
+  .chart { position: relative; height: 290px; }
+  /* 20 store bars need about 26px each to keep every label readable. */
+  .chart.tall { height: 560px; }
+  .tag { display: inline-block; padding: 2px 9px; border-radius: 999px; font-size: 12px; font-weight: 700; color: var(--tag-ink); }
+  .tag.fact { background: var(--fact); } .tag.root { background: var(--root); } .tag.assoc { background: var(--assoc); }
+  .tag.est { background: var(--est); } .tag.hyp { background: var(--hyp); }
+  .findings { display: grid; grid-template-columns: repeat(auto-fit, minmax(260px, 1fr)); gap: 12px; }
+  .finding { background: var(--card); border: 1px solid var(--line); border-radius: 8px; padding: 16px; }
+  .finding h3 { margin: 8px 0 6px; font-size: 16px; line-height: 1.35; }
+  .finding .amount { font-size: 20px; font-weight: 700; margin: 0 0 6px; }
+  .finding p { margin: 0 0 6px; font-size: 14px; color: var(--muted); }
+  .status { font-size: 12px; font-weight: 600; color: var(--muted); margin-left: 6px; }
+  .notice { background: var(--card); border: 1px solid var(--line); border-left: 4px solid var(--accent);
+            border-radius: 6px; padding: 10px 14px; font-size: 14px; color: var(--muted); margin: 0 0 12px; }
+  footer { margin-top: 32px; border-top: 1px solid var(--line); background: var(--card); }
+  footer .wrap { padding-top: 20px; padding-bottom: 28px; font-size: 14px; color: var(--muted); }
+  @media (max-width: 560px) {
+    .grid { grid-template-columns: 1fr; }
+    select { min-width: 0; width: 100%; }
+    .filters label { flex: 1 1 100%; }
+    .filters { position: static; }
+    .chart { height: 250px; }
+    .chart.tall { height: 560px; }
+  }
+</style>
+</head>
+<body>
+
+<header>
+  <div class="wrap">
+    <p class="eyebrow">Interactive dashboard</p>
+    <h1>Why did H2 2025 net revenue fall by &euro;731K?</h1>
+    <p class="lede">Brightwater Retail, 20 stores, H2 2025 against H2 2024 (retail weeks 27 to 52). Every figure is
+      read from the project's governed outputs; nothing is recalculated in this page.</p>
+    <div class="links">
+      <a class="btn" href="index.html">Project page</a>
+      <a class="btn" href="https://github.com/WaleedBinUmer11624/Retail-Performance-Root-Cause-Analytics">Repository</a>
+      <a class="btn" href="https://github.com/WaleedBinUmer11624/Retail-Performance-Root-Cause-Analytics#readme">README</a>
+    </div>
+  </div>
+</header>
+
+<div class="filters" role="region" aria-label="Filters">
+  <div class="wrap">
+    <label>Period
+      <select id="f-period">
+        <option value="h2" selected>H2: weeks 27 to 52</option>
+        <option value="fy">Full year: weeks 1 to 52</option>
+      </select>
+    </label>
+    <label>Store
+      <select id="f-store"><option value="">All stores</option></select>
+    </label>
+    <label>Category
+      <select id="f-category"><option value="">All categories</option></select>
+    </label>
+    <button class="reset" id="f-reset" type="button">Reset filters</button>
+    <p class="scope" id="scope" aria-live="polite"></p>
+  </div>
+</div>
+
+<main class="wrap">
+  <p class="notice" id="load-error" hidden>The dashboard data could not be loaded. Open this page through a web
+    server (for example <code>python -m http.server</code> in the <code>docs</code> folder) rather than as a local file.</p>
+
+  <section aria-labelledby="kpi-title">
+    <h2 id="kpi-title">Headline, H2 2025 vs H2 2024</h2>
+    <div class="kpis" id="kpis"></div>
+  </section>
+
+  <section aria-labelledby="charts-title">
+    <h2 id="charts-title">Explore</h2>
+    <div class="grid">
+      <div class="panel">
+        <h3>Weekly net revenue, 2025 vs 2024</h3>
+        <p class="cap" id="cap-weekly"></p>
+        <div class="chart"><canvas id="c-weekly" aria-label="Weekly net revenue line chart" role="img"></canvas></div>
+      </div>
+      <div class="panel">
+        <h3>Revenue bridge: 84% of the fall is fewer transactions</h3>
+        <p class="cap">Exact Shapley bridge, estate, H2. <span class="tag fact">Observed change</span></p>
+        <div class="chart"><canvas id="c-bridge" aria-label="Revenue bridge waterfall chart" role="img"></canvas></div>
+      </div>
+      <div class="panel">
+        <h3>Net revenue change by store</h3>
+        <p class="cap" id="cap-stores"></p>
+        <div class="chart tall"><canvas id="c-stores" aria-label="Net revenue change by store bar chart" role="img"></canvas></div>
+      </div>
+      <div class="panel">
+        <h3>Net revenue change by category</h3>
+        <p class="cap" id="cap-categories"></p>
+        <div class="chart"><canvas id="c-categories" aria-label="Net revenue change by category bar chart" role="img"></canvas></div>
+      </div>
+      <div class="panel">
+        <h3>Stores S03, S04 and S05 against the rest of the estate</h3>
+        <p class="cap">Weekly net revenue YoY %, H2. The drop starts abruptly in mid-July 2025.
+          <span class="tag est">Estimate</span><span class="status">cause not established</span></p>
+        <div class="chart"><canvas id="c-cluster" aria-label="Store cluster versus rest weekly YoY line chart" role="img"></canvas></div>
+      </div>
+      <div class="panel">
+        <h3>13-week forecast with 80% and 95% intervals</h3>
+        <p class="cap" id="cap-forecast"></p>
+        <div class="chart"><canvas id="c-forecast" aria-label="Forecast line chart with intervals" role="img"></canvas></div>
+      </div>
+    </div>
+  </section>
+
+  <section aria-labelledby="findings-title">
+    <h2 id="findings-title">What the evidence says</h2>
+    <p class="cap" style="color:var(--muted);margin:0 0 12px">Financial size sets investigation priority; evidence
+      strength sets what action is justified. Labels come from the Phase 6 evidence matrix.</p>
+    <div class="findings" id="findings"></div>
+  </section>
+
+  <section aria-labelledby="dq-title">
+    <h2 id="dq-title">Data quality behind the numbers</h2>
+    <div class="kpis" id="dq"></div>
+  </section>
+</main>
+
+<footer>
+  <div class="wrap">
+    <p>Brightwater Retail Ltd is fictional. All data is synthetic and generated by the repository. No real company,
+      customer or employee data is used.</p>
+    <p>Data: <code>docs/data/dashboard.json</code>, exported from governed outputs by <code>tmp/export_web_data.py</code>,
+      which refuses to write unless H2 2025 reconciles to &euro;9,457,457.05 (-7.18%). Charts by Chart.js.</p>
+    <p><a href="index.html">Project page</a> &middot;
+       <a href="https://github.com/WaleedBinUmer11624/Retail-Performance-Root-Cause-Analytics">Repository</a> &middot;
+       <a href="https://www.linkedin.com/in/waleedbinumer">LinkedIn</a></p>
+  </div>
+</footer>
+
+<script src="https://cdnjs.cloudflare.com/ajax/libs/Chart.js/4.4.1/chart.umd.min.js"
+        integrity="sha384-bs/nf9FbdNouRbMiFcrcZfLXYPKiPaGVGplVbv7dLGECccEXDW+S3zjqSKR5ZEaD"
+        crossorigin="anonymous" referrerpolicy="no-referrer"></script>
+<script>
+"use strict";
+// Display only: every number below is read from docs/data/dashboard.json. Sign flips for
+// "lost sales" and rounding for display are the only transformations.
+const EUR = new Intl.NumberFormat("en-IE", { style: "currency", currency: "EUR", maximumFractionDigits: 0 });
+const EUR2 = new Intl.NumberFormat("en-IE", { style: "currency", currency: "EUR", minimumFractionDigits: 2, maximumFractionDigits: 2 });
+const NUM = new Intl.NumberFormat("en-IE", { maximumFractionDigits: 0 });
+const pct = (v, d = 2) => (v === null || v === undefined) ? "n/a" : `${v > 0 ? "+" : ""}${v.toFixed(d)}%`;
+const signed = v => `${v > 0 ? "+" : ""}${EUR.format(v)}`;
+const css = name => getComputedStyle(document.documentElement).getPropertyValue(name).trim();
+const $ = id => document.getElementById(id);
+const TAGS = { "Observed change": "fact", "Root-cause evidence": "root", "Statistical association": "assoc",
+               "Estimate": "est", "Hypothesis": "hyp" };
+let D = null;
+const charts = {};
+
+function filters() {
+  return { period: $("f-period").value, store: $("f-store").value, category: $("f-category").value };
+}
+
+// The governed "Unknown" category is the unassigned-product member; show it in plain words.
+const categoryLabel = c => c === "Unknown" ? "Unassigned products" : c;
+
+function storeName(id) {
+  const s = D.stores.find(r => r.store_id === id);
+  return s ? `${s.store_id} ${s.store_name}` : id;
+}
+
+// ---------------------------------------------------------------- KPI cards
+function renderKpis() {
+  const f = filters();
+  const h = D.headline;
+  let cards;
+  if (!f.store && !f.category) {
+    // Card: [label, value, sub, change that colours the value, change that colours the sub].
+    // Colour follows the sign of the change, never the text, so a decline is never green.
+    cards = [
+      ["Net revenue, H2 2025", EUR2.format(h.net_revenue.current), `H2 2024: ${EUR2.format(h.net_revenue.prior)}`],
+      ["Change", EUR2.format(h.net_revenue.change), pct(h.net_revenue.yoy_pct) + " year on year",
+       h.net_revenue.change, h.net_revenue.change],
+      ["Transactions, H2 2025", NUM.format(h.transactions.current), pct(h.transactions.yoy_pct) + " year on year",
+       null, h.transactions.change],
+      ["Store-cluster excess decline", EUR.format(D.cluster_excess_eur), "S03, S04, S05 vs matched controls (estimate)",
+       D.cluster_excess_eur, null],
+    ];
+  } else {
+    let row, label;
+    if (f.store && f.category) {
+      row = D.store_category.find(r => r.store_id === f.store && r.category === f.category);
+      label = `${storeName(f.store)}, ${categoryLabel(f.category)}`;
+    } else if (f.store) {
+      row = D.stores.find(r => r.store_id === f.store); label = storeName(f.store);
+    } else {
+      row = D.categories.find(r => r.category === f.category); label = categoryLabel(f.category);
+    }
+    cards = [
+      [`Net revenue, H2 2025`, EUR2.format(row.net_revenue_cy), label],
+      ["H2 2024", EUR2.format(row.net_revenue_py), label],
+      ["Change", EUR2.format(row.net_revenue_change),
+       row.net_revenue_yoy_pct !== undefined ? pct(row.net_revenue_yoy_pct) + " year on year"
+                                             : "YoY % not published at this grain",
+       row.net_revenue_change, row.net_revenue_change],
+    ];
+    // Governed share of the estate change exists for stores and categories, not for their combination.
+    if (row.share_of_change !== undefined) {
+      cards.push(["Share of estate change", `${(100 * row.share_of_change).toFixed(1)}%`, `of ${EUR2.format(h.net_revenue.change)}`]);
+    }
+    if (f.store && !f.category) {
+      cards.push(["Transactions, H2 2025", NUM.format(row.transactions_cy), pct(row.transactions_yoy_pct) + " year on year",
+                  null, row.transactions_yoy_pct]);
+    }
+  }
+  const tone = change => (change === null || change === undefined || change === 0) ? "" : (change < 0 ? "neg" : "pos");
+  $("kpis").innerHTML = cards.map(([label, value, sub, valueChange, subChange]) =>
+    `<div class="kpi"><div class="label">${label}</div><div class="value ${tone(valueChange)}">${value}</div>` +
+    `<div class="sub ${tone(subChange)}">${sub}</div></div>`).join("");
+}
+
+// ---------------------------------------------------------------- chart helpers
+function baseOptions(extra = {}) {
+  return Object.assign({
+    responsive: true, maintainAspectRatio: false, animation: { duration: 250 },
+    interaction: { mode: "index", intersect: false },
+    plugins: { legend: { labels: { color: css("--ink"), boxWidth: 12 } },
+               tooltip: { callbacks: {} } },
+    scales: {
+      x: { ticks: { color: css("--muted") }, grid: { color: css("--grid") } },
+      y: { ticks: { color: css("--muted") }, grid: { color: css("--grid") } },
+    },
+  }, extra);
+}
+
+function draw(id, config) {
+  if (charts[id]) charts[id].destroy();
+  charts[id] = new Chart($(id), config);
+}
+
+// ---------------------------------------------------------------- 1. weekly trend
+function renderWeekly() {
+  const f = filters();
+  const weeks = f.period === "h2" ? [27, 52] : [1, 52];
+  let source, note;
+  if (f.store) {
+    source = D.store_weekly.filter(r => r.store_id === f.store);
+    note = `${storeName(f.store)}. Store-level weekly figures are governed for H2 only`;
+    const gaps = D.store_weekly_gaps.filter(g => g.store_id === f.store);
+    if (gaps.length) note += `; 2024 week ${gaps.map(g => g.retail_week).join(", ")} has no governed row (missing target), shown as a gap`;
+    note += ".";
+  } else {
+    source = D.estate_weekly; note = "All 20 stores.";
+  }
+  if (f.category) note += " Weekly revenue by category is not a governed output, so the category filter does not change this chart.";
+  const lo = f.store ? 27 : weeks[0], hi = weeks[1];
+  const labels = [], cy = [], py = [];
+  for (let w = lo; w <= hi; w++) {
+    labels.push(`W${w}`);
+    const a = source.find(r => r.retail_year === 2025 && r.retail_week === w);
+    const b = source.find(r => r.retail_year === 2024 && r.retail_week === w);
+    cy.push(a ? a.net_revenue : null); py.push(b ? b.net_revenue : null);
+  }
+  $("cap-weekly").textContent = note;
+  const opts = baseOptions();
+  opts.plugins.tooltip.callbacks.label = c => `${c.dataset.label}: ${c.raw === null ? "no governed value" : EUR2.format(c.raw)}`;
+  opts.scales.y.ticks.callback = v => EUR.format(v);
+  draw("c-weekly", { type: "line", options: opts, data: { labels, datasets: [
+    { label: "2025", data: cy, borderColor: css("--series-cy"), backgroundColor: css("--series-cy"), tension: .25, pointRadius: 0, spanGaps: false },
+    { label: "2024", data: py, borderColor: css("--series-py"), backgroundColor: css("--series-py"), tension: .25, pointRadius: 0, spanGaps: false },
+  ] } });
+}
+
+// ---------------------------------------------------------------- 2. bridge
+function renderBridge() {
+  const rows = D.bridge.filter(r => Math.abs(r.value_eur) > 0.005);
+  const data = rows.map(r => r.kind === "total" ? [0, r.value_eur] : [r.running_total_eur - r.value_eur, r.running_total_eur]);
+  const colours = rows.map(r => r.kind === "total" ? css("--series-cy") : css("--down"));
+  const opts = baseOptions({ interaction: { mode: "nearest", intersect: true } });
+  opts.plugins.legend.display = false;
+  opts.plugins.tooltip.callbacks.label = c => {
+    const r = rows[c.dataIndex];
+    return r.kind === "total" ? EUR2.format(r.value_eur)
+      : `${EUR.format(r.value_eur)} (${(100 * r.share_of_change).toFixed(0)}% of the change)`;
+  };
+  const totals = rows.filter(r => r.kind === "total").map(r => r.value_eur);
+  const floor = Math.min(...rows.map(r => r.running_total_eur)) * 0.97;
+  opts.scales.y.min = Math.floor(floor / 100000) * 100000;
+  opts.scales.y.max = Math.ceil(Math.max(...totals) * 1.005 / 100000) * 100000;
+  opts.scales.y.ticks.callback = v => EUR.format(v);
+  draw("c-bridge", { type: "bar", options: opts, data: {
+    labels: rows.map(r => r.step.replace(" Net Revenue", "")), datasets: [{ data, backgroundColor: colours, borderRadius: 3 }] } });
+}
+
+// ---------------------------------------------------------------- 3 and 4. store and category bars
+function bar(id, labels, values, highlight, capId, cap, colourFor) {
+  $(capId).textContent = cap;
+  const opts = baseOptions({ indexAxis: "y", interaction: { mode: "nearest", intersect: true, axis: "y" } });
+  opts.plugins.legend.display = false;
+  opts.plugins.tooltip.callbacks.label = c => signed(c.raw);
+  opts.scales.x.ticks.callback = v => EUR.format(v);
+  opts.scales.y.ticks.autoSkip = false;
+  draw(id, { type: "bar", options: opts, data: { labels, datasets: [{
+    data: values, borderRadius: 3,
+    backgroundColor: labels.map((l, i) => colourFor(l, i, values[i], highlight)),
+  }] } });
+}
+
+function renderStores() {
+  const f = filters();
+  const rows = f.category ? D.store_category.filter(r => r.category === f.category) : D.stores;
+  const sorted = [...rows].sort((a, b) => a.net_revenue_change - b.net_revenue_change);
+  const cluster = new Set(["S03", "S04", "S05"]);
+  bar("c-stores", sorted.map(r => r.store_id), sorted.map(r => r.net_revenue_change), f.store, "cap-stores",
+      `H2 change, ${f.category ? categoryLabel(f.category) : "all categories"}. Orange: the S03, S04, S05 cluster.` + (f.store ? ` Highlighted: ${storeName(f.store)}.` : ""),
+      (label, i, v, hl) => {
+        const base = cluster.has(label) ? css("--cluster") : (v < 0 ? css("--down") : css("--up"));
+        return hl && label !== hl ? base + "55" : base;
+      });
+}
+
+function renderCategories() {
+  const f = filters();
+  const rows = f.store ? D.store_category.filter(r => r.store_id === f.store) : D.categories;
+  const sorted = [...rows].sort((a, b) => a.net_revenue_change - b.net_revenue_change);
+  // Bars and the highlight both use the display label, so "Unknown" reads "Unassigned products".
+  bar("c-categories", sorted.map(r => categoryLabel(r.category)), sorted.map(r => r.net_revenue_change),
+      f.category ? categoryLabel(f.category) : "", "cap-categories",
+      `H2 change, ${f.store ? storeName(f.store) : "all stores"}.` + (f.category ? ` Highlighted: ${categoryLabel(f.category)}.` : ""),
+      (label, i, v, hl) => {
+        const base = v < 0 ? css("--down") : css("--up");
+        return hl && label !== hl ? base + "55" : base;
+      });
+}
+
+// ---------------------------------------------------------------- 5. cluster vs rest
+function renderCluster() {
+  const rows = D.cluster_weekly;
+  const opts = baseOptions();
+  opts.plugins.tooltip.callbacks.label = c => `${c.dataset.label}: ${pct(c.raw, 1)}`;
+  opts.scales.y.ticks.callback = v => `${v}%`;
+  draw("c-cluster", { type: "line", options: opts, data: { labels: rows.map(r => `W${r.retail_week}`), datasets: [
+    { label: "S03, S04, S05", data: rows.map(r => r.cluster_net_revenue_yoy_pct), borderColor: css("--cluster"), backgroundColor: css("--cluster"), tension: .25, pointRadius: 0 },
+    { label: "Rest of estate", data: rows.map(r => r.rest_net_revenue_yoy_pct), borderColor: css("--series-py"), backgroundColor: css("--series-py"), tension: .25, pointRadius: 0 },
+  ] } });
+}
+
+// ---------------------------------------------------------------- 6. forecast
+function renderForecast() {
+  const hist = D.estate_weekly.filter(r => r.retail_year === 2025 && r.retail_week >= 40);
+  const pts = D.forecast.points;
+  const band = cov => pts.map(p => D.forecast.intervals.find(i => i.week_start_date === p.week_start_date && i.coverage === cov));
+  const b95 = band(0.95), b80 = band(0.8);
+  const labels = [...hist.map(r => r.week_start_date), ...pts.map(p => p.week_start_date)];
+  const pad = new Array(hist.length).fill(null);
+  const model = D.forecast.models.find(m => m.model === pts[0].model);
+  $("cap-forecast").textContent = `Selected model: seasonal naive (mean rolling-origin WAPE ${(100 * model.mean_wape).toFixed(1)}%). ` +
+    "Actuals are the last 13 weeks of 2025. Estate level; filters do not apply.";
+  const fill = css("--series-cy");
+  const opts = baseOptions();
+  opts.plugins.tooltip.callbacks.label = c => c.raw === null ? null : `${c.dataset.label}: ${EUR.format(c.raw)}`;
+  opts.plugins.legend.labels.filter = item => !item.text.startsWith("_");
+  opts.scales.y.ticks.callback = v => EUR.format(v);
+  opts.scales.x.ticks.maxRotation = 0; opts.scales.x.ticks.autoSkip = true; opts.scales.x.ticks.maxTicksLimit = 7;
+  draw("c-forecast", { type: "line", options: opts, data: { labels, datasets: [
+    { label: "_95low", data: [...pad, ...b95.map(b => b.lower)], borderWidth: 0, pointRadius: 0, fill: false },
+    { label: "95% interval", data: [...pad, ...b95.map(b => b.upper)], borderWidth: 0, pointRadius: 0, fill: "-1", backgroundColor: fill + "22" },
+    { label: "_80low", data: [...pad, ...b80.map(b => b.lower)], borderWidth: 0, pointRadius: 0, fill: false },
+    { label: "80% interval", data: [...pad, ...b80.map(b => b.upper)], borderWidth: 0, pointRadius: 0, fill: "-1", backgroundColor: fill + "44" },
+    { label: "Actual net revenue", data: [...hist.map(r => r.net_revenue), ...pts.map(() => null)], borderColor: css("--ink"), backgroundColor: css("--ink"), pointRadius: 0, tension: .2 },
+    { label: "Forecast", data: [...pad, ...pts.map(p => p.point_forecast)], borderColor: css("--series-cy"), backgroundColor: css("--series-cy"), borderDash: [6, 4], pointRadius: 0, tension: .2 },
+  ] } });
+}
+
+// ---------------------------------------------------------------- findings and data quality
+function renderFindings() {
+  const pick = ["D01", "D03", "D05", "D07"];
+  const extra = {
+    D01: `Transactions per store ${pct(D.cluster_mechanisms[0].cluster_change, 1)} in the cluster vs ${pct(D.cluster_mechanisms[0].control_change, 1)} for matched controls.`,
+    D03: `Estimated lost sales ${EUR.format(D.lost_sales.gross_eur)} gross, ${EUR.format(-D.lost_sales.net_of_deferred_demand_eur)} net of deferred demand (range ${EUR.format(-D.lost_sales.range_high_eur)} to ${EUR.format(-D.lost_sales.range_low_eur)}).`,
+    D07: `Four methods are reported separately and never added together. M1 category DiD ${EUR.format(D.evidence.find(e => e.driver_id === "D07").financial_impact_eur)}; M4, M2 and M3 below.`,
+  };
+  // H&K methods disagree in sign, so no single amount is shown as the headline.
+  const headline = e => e.driver_id === "D07"
+    ? `<p class="amount">Methods disagree in sign</p>`
+    : `<p class="amount neg">${EUR.format(e.financial_impact_eur)}</p>`;
+  $("findings").innerHTML = pick.map(id => D.evidence.find(e => e.driver_id === id)).map(e => `
+    <article class="finding">
+      <span class="tag ${TAGS[e.evidence_level] || "fact"}">${e.evidence_level}</span><span class="status">cause: ${e.cause_status.toLowerCase()}</span>
+      <h3>${e.driver}</h3>
+      ${headline(e)}
+      ${extra[e.driver_id] ? `<p>${extra[e.driver_id]}</p>` : ""}
+      <p>${e.what_we_know}</p>
+      <p><strong>Not known:</strong> ${e.what_we_do_not_know}</p>
+    </article>`).join("");
+}
+
+function renderDq() {
+  const count = (list, value) => list.filter(v => v === value).length;
+  const rules = D.dq.rules.map(r => r.status);
+  const quarantined = Object.values(D.dq.quarantine_rows).reduce((a, b) => a + b, 0);
+  const cards = [
+    ["Data-quality rules run", NUM.format(rules.length), `${count(rules, "PASS")} pass, ${count(rules, "FAIL")} found and treated an issue, ${count(rules, "INFO")} advisory`],
+    ["Curated validation checks", `${count(D.dq.validation_status, "PASS")} / ${count(D.dq.validation_status, "WARN")}`, "PASS / WARN after treatment"],
+    ["Rows quarantined", NUM.format(quarantined), "Held out of the analysis, never deleted"],
+  ];
+  $("dq").innerHTML = cards.map(([l, v, s]) => `<div class="kpi"><div class="label">${l}</div><div class="value">${v}</div><div class="sub">${s}</div></div>`).join("");
+}
+
+// ---------------------------------------------------------------- wiring
+function renderScope() {
+  const f = filters();
+  const parts = [f.store ? storeName(f.store) : "All stores", f.category ? categoryLabel(f.category) : "All categories",
+                 f.period === "h2" ? "H2" : "Full year (weekly trend only; totals are H2)"];
+  $("scope").textContent = `Showing: ${parts.join(" | ")}. The bridge, cluster and forecast charts are estate level.`;
+}
+
+function renderAll() {
+  renderScope(); renderKpis(); renderWeekly(); renderBridge(); renderStores(); renderCategories();
+  renderCluster(); renderForecast(); renderFindings(); renderDq();
+}
+
+async function start() {
+  try {
+    const res = await fetch("data/dashboard.json", { cache: "no-cache" });
+    if (!res.ok) throw new Error(res.status);
+    D = await res.json();
+  } catch (err) {
+    $("load-error").hidden = false;
+    return;
+  }
+  Chart.defaults.font.family = getComputedStyle(document.body).fontFamily;
+  for (const s of D.stores) $("f-store").insertAdjacentHTML("beforeend", `<option value="${s.store_id}">${s.store_id} ${s.store_name}</option>`);
+  // Every category is listed; the value stays the governed name, the text is the display label.
+  for (const c of D.categories) {
+    $("f-category").insertAdjacentHTML("beforeend", `<option value="${c.category}">${categoryLabel(c.category)}</option>`);
+  }
+  for (const id of ["f-period", "f-store", "f-category"]) $(id).addEventListener("change", renderAll);
+  $("f-reset").addEventListener("click", () => {
+    $("f-period").value = "h2"; $("f-store").value = ""; $("f-category").value = ""; renderAll();
+  });
+  // Redraw in the new palette when the browser switches between light and dark.
+  matchMedia("(prefers-color-scheme: dark)").addEventListener("change", renderAll);
+  renderAll();
+}
+
+start();
+</script>
+</body>
+</html>
