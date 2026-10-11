@@ -14,8 +14,8 @@
      5. if nothing matched: a one-typo correction against qa.json keywords offers "Did you mean
         ...?" chips (never an answer); "be" asks whether bye was meant; a real question about the
         figures gets "no verified figure" and a nearby topic; random text gets a friendly request
-        to rephrase. The assistant's own insufficient-evidence text is kept for clear factual
-        questions outside the project (for example the weather), never for small talk or typos.
+        to rephrase; a clear question outside the project (for example the weather) gets a plain
+        out-of-scope reply. No reply shows the raw insufficient-evidence text.
 
    Privacy: the conversation lives in this page only (no storage, nothing uploaded). User text is
    rendered with textContent. Usage events go through analytics.js, which prefixes the page
@@ -448,7 +448,7 @@
   }
 
   function askBye(word) {
-    botSays([`I'm not quite sure what you meant by '${word}'. \u{1F60A}`,
+    botSays([`I'm not quite sure what you meant by '${word}'.`,
              "Did you mean 'bye', or were you trying to ask something else?"]);
     chipGroup([], "", "chip", [actionChip("Yes, goodbye", "bye"), actionChip("No, something else", "rephrase")]);
     track("chatbot_clarification_requested/bye");
@@ -484,10 +484,11 @@
     track("chatbot_unsupported_question");
   }
 
-  // A clear, non-analytical factual question (for example the weather): the assistant's own
-  // insufficient-evidence answer and three suggestions, as before.
+  // A clear question outside the project (for example the weather): a plain out-of-scope reply and
+  // three suggestions. Internally it is still the insufficient-evidence outcome.
   function refuse() {
-    const b = botSays([QA.meta.refusal, node("p", "cb-match", "No stored answer covers this question. Try one of these:")]);
+    const b = botSays(["That's outside what I can help with. I only answer questions about the Brightwater Retail " +
+                       "analysis, like why revenue fell, which stores drove it, or the forecast."]);
     b.dataset.classification = "insufficient_evidence";
     chipGroup(REFUSAL_SUGGESTIONS);
     track("chatbot_unsupported_question");
