@@ -56,8 +56,20 @@
 .cb-muted { font-size: 12px; color: var(--muted); }
 .cb-match { font-size: 13px; color: var(--muted); }
 .cb-strength { font-size: 12px; color: var(--muted); margin-left: 6px; }
-.cb-src { font-size: 12px; color: var(--muted); }
-.cb-src code { font-size: 12px; }
+
+/* Evidence answers: evidence level first, then the answer in short paragraphs with the key figures
+   emphasised, then the sources in their own block. */
+.cb-answer { max-width: 94%; padding: 12px 14px; }
+.cb-evidence { display: flex; flex-wrap: wrap; align-items: center; gap: 4px 8px; margin: 0 0 10px; }
+.cb-evidence-label { font-size: 11px; font-weight: 700; letter-spacing: .04em; text-transform: uppercase; color: var(--muted); }
+.cb-evidence .cb-strength { margin-left: 0; }
+.cb-body p { margin: 0 0 8px; line-height: 1.55; }
+.cb-body p:last-child { margin-bottom: 0; }
+.cb-num { font-weight: 700; color: var(--ink); white-space: nowrap; }
+.cb-sources { margin-top: 10px; padding-top: 8px; border-top: 1px solid var(--line); }
+.cb-sources-label { margin: 0 0 2px; font-size: 11px; font-weight: 700; letter-spacing: .04em; text-transform: uppercase; color: var(--muted); }
+.cb-msg .cb-sources ul { margin: 0 0 6px; padding-left: 16px; font-size: 12px; color: var(--muted); }
+.cb-sources code { font-size: 12px; }
 
 .cb-tag { display: inline-block; padding: 2px 9px; border-radius: 999px; font-size: 12px; font-weight: 700; color: var(--tag-ink); }
 .cb-tag.fact { background: var(--fact); } .cb-tag.root { background: var(--root); } .cb-tag.assoc { background: var(--assoc); }
@@ -68,9 +80,11 @@
   color: var(--ink); font: inherit; font-size: 13px; line-height: 1.35; cursor: pointer; white-space: nowrap;
   transition: border-color .15s ease, color .15s ease; }
 .cb-chip:hover { border-color: var(--accent); color: var(--accent); }
-.cb-followups { display: flex; flex-wrap: wrap; gap: 6px; margin: -2px 0 12px; }
-.cb-followups .cb-chip { white-space: normal; text-align: left; }
-.cb-followups-label { flex-basis: 100%; font-size: 12px; color: var(--muted); }
+.cb-followups { display: flex; flex-wrap: wrap; gap: 6px; margin: -2px 0 14px; }
+/* Compact: one line each, shortened with an ellipsis if needed (the full question is the chip's title). */
+.cb-followups .cb-chip { max-width: 100%; padding: 4px 10px; font-size: 12px; text-align: left;
+  overflow: hidden; text-overflow: ellipsis; }
+.cb-followups-label { flex-basis: 100%; font-size: 11px; font-weight: 700; letter-spacing: .04em; text-transform: uppercase; color: var(--muted); }
 
 .cb-suggest { flex: none; display: flex; align-items: center; gap: 4px; padding: 8px 8px 0; border-top: 1px solid var(--line); }
 .cb-row { flex: 1 1 auto; min-width: 0; display: flex; gap: 6px; overflow-x: auto; scroll-snap-type: x proximity;

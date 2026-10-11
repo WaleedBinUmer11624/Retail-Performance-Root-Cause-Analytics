@@ -95,7 +95,7 @@
 
   // Two or three wordings per intent, used in turn so repeated small talk does not feel canned.
   const REPLIES = {
-    greeting: ["Hello! Ask me why H2 2025 net revenue fell, or pick a suggestion below.",
+    greeting: ["Hello! \u{1F44B} Ask me why H2 2025 net revenue fell, or pick a suggestion below.",
                "Hi there. I can walk you through the revenue evidence. What would you like to know?",
                "Hey! Try a suggestion below, or ask about revenue, stores or the forecast."],
     bye: ["Goodbye! \u{1F44B} Thanks for exploring Brightwater Retail Analytics. If you have more questions later, " +
@@ -155,27 +155,61 @@
     return null;
   }
 
-  // Single topic words get a choice of stored questions on that topic, never an answer picked for them.
+  // Topics: a short introduction (what the evidence covers, never a figure or a conclusion) and the
+  // stored questions on that topic, the first being the topic's main question. A topic word on its own
+  // or a broad request ("Tell me about stores") gets the introduction and the questions as chips.
   // Every id is checked against qa.json at load; a topic with none left is skipped.
-  const REVENUE_TOPIC = ["Sure! Would you like to look at the total revenue fall, transactions or store performance?",
+  const REVENUE_TOPIC = ["Sure! The revenue evidence covers the H2 2025 fall against H2 2024, how much came from " +
+                         "fewer transactions, and which stores were behind it. Where would you like to start?",
                          ["revenue-fall", "transactions", "stores"]];
+  const PERFORMANCE_TOPIC = ["Here is where to start with Brightwater's H2 2025 performance: the overall revenue " +
+                             "fall, the stores behind it, and the transactions effect.",
+                             ["revenue-fall", "stores", "transactions"]];
   const FORECAST_TOPIC = ["I can help you understand the 13-week revenue forecast. What would you like to know?",
                           ["forecast", "forecast-model"]];
-  const STORE_TOPIC = ["Happy to help with stores. Which of these would you like to explore?", ["stores", "drop-start", "early-warning"]];
-  const CATEGORY_TOPIC = ["The evidence covers two categories in detail. Which would you like to explore?",
+  const STORE_TOPIC = ["Happy to help with stores. The store evidence covers which stores drove the decline, when " +
+                       "the drop started and whether early warning picked it up.", ["stores", "drop-start", "early-warning"]];
+  const CATEGORY_TOPIC = ["The evidence looks at Electronics & Tech and Home & Kitchen in detail. Which would you like to explore?",
                           ["stock-outs", "faulty-returns", "hk-promotions"]];
+  const ELECTRONICS_TOPIC = ["The Electronics & Tech evidence covers full-week stock-outs and the rise in Faulty returns.",
+                             ["stock-outs", "faulty-returns"]];
   const TOPICS = {
-    sales: REVENUE_TOPIC, revenue: REVENUE_TOPIC,
+    sales: REVENUE_TOPIC, revenue: REVENUE_TOPIC, decline: REVENUE_TOPIC, "revenue fall": REVENUE_TOPIC,
+    "revenue decline": REVENUE_TOPIC, "sales performance": REVENUE_TOPIC, "revenue performance": REVENUE_TOPIC,
+    performance: PERFORMANCE_TOPIC, results: PERFORMANCE_TOPIC, numbers: PERFORMANCE_TOPIC,
     transactions: ["Sure. Would you like to see how much of the fall came from fewer transactions?", ["transactions", "revenue-fall"]],
-    forecast: FORECAST_TOPIC, forecasts: FORECAST_TOPIC,
-    store: STORE_TOPIC, stores: STORE_TOPIC,
-    category: CATEGORY_TOPIC, categories: CATEGORY_TOPIC,
+    forecast: FORECAST_TOPIC, forecasts: FORECAST_TOPIC, outlook: FORECAST_TOPIC,
+    store: STORE_TOPIC, stores: STORE_TOPIC, "store performance": STORE_TOPIC, "stores performance": STORE_TOPIC,
+    category: CATEGORY_TOPIC, categories: CATEGORY_TOPIC, "category performance": CATEGORY_TOPIC,
+    electronics: ELECTRONICS_TOPIC, "electronics and tech": ELECTRONICS_TOPIC, "electronics tech": ELECTRONICS_TOPIC,
     promotions: ["Here is what the evidence says about promotions:", ["hk-promotions"]],
+    "home and kitchen": ["Here is what the evidence says about Home & Kitchen:", ["hk-promotions"]],
     returns: ["Here is what the evidence says about returns:", ["faulty-returns"]],
     stockouts: ["Here is what the evidence says about stock-outs:", ["stock-outs"]],
+    "data quality": ["The data-quality evidence covers the checks run at load and during monitoring.", ["data-quality"]],
+    "early warning": ["The early-warning evidence covers which alerts fired and when.", ["early-warning", "drop-start"]],
   };
   TOPICS.transaction = TOPICS.transactions; TOPICS.promotion = TOPICS.promotions;
   TOPICS["stock outs"] = TOPICS.stockouts; TOPICS.return = TOPICS.returns;
+  TOPICS["home kitchen"] = TOPICS["home and kitchen"]; TOPICS.monitoring = TOPICS["early warning"];
+  TOPICS["faulty returns"] = TOPICS.returns; TOPICS["the decline"] = REVENUE_TOPIC;
+
+  // Natural requests about a topic: "Tell me about revenue", "Sure, tell me about the revenue",
+  // "Can you explain the sales?", "I want to know about stores", "Show me the performance". The
+  // request words are removed and what is left must be a known topic; anything else falls through
+  // to the normal evidence matching. "What happened to X" asks for the main finding, so it gets the
+  // topic's main stored answer; the other phrasings are broad and get the introduction and chips.
+  const LEAD_IN = /^(?:(?:sure|ok|okay|yes|yeah|yep|alright|right|great|cool|so|and|well|please|then|hmm)\s+)*/;
+  const REQUEST = /^(?:(?:can|could|would|will) you\s+)?(?:please\s+)?(tell me (?:more )?about|tell me more on|explain|walk me through|talk (?:me )?(?:through|about)|show me|give me (?:an overview of|a summary of|an update on)|i (?:want|would like|d like) to (?:know|learn|hear) (?:more )?about|what about|how about|info(?:rmation)? (?:on|about)|more (?:on|about)|overview of|summary of|summari[sz]e|what happened (?:to|with)|what s (?:going on|happening) with|what is (?:going on|happening) with)\s+/;
+  const FILLER = /^(?:(?:the|our|your|its|brightwater s|brightwater|overall|total|recent|current)\s+)*/;
+  function topicRequest(norm) {
+    const m = norm.replace(LEAD_IN, "").match(REQUEST);
+    if (!m) return null;
+    const what = norm.replace(LEAD_IN, "").slice(m[0].length).replace(FILLER, "").replace(/\s+(please|then|now|for me)$/, "").trim();
+    const topic = TOPICS[what];
+    if (!topic || !topic[1].length) return null;
+    return { topic, specific: /^what (happened|s|is)/.test(m[1]) };
+  }
   // Looks like a question about the figures, so it gets a friendly "no verified figure" reply.
   const ANALYTICAL = /\b(revenue|sales|profits?|margins?|stores?|s\d{2}|transactions?|forecasts?|customers?|footfall|prices?|costs?|categor(y|ies)|products?|returns?|promotions?|stock|turnover|why|how much|how many)\b/;
   const CLOSEST_TOPIC = [
@@ -346,6 +380,7 @@
   function chip(q, kind) {
     const c = node("button", "cb-chip", q.question);
     c.type = "button";
+    c.title = q.question;                    // full question on hover when a compact chip is shortened
     c.dataset.id = q.id;
     c.addEventListener("click", () => askStored(q, kind));
     return c;
@@ -370,19 +405,51 @@
     return g;
   }
 
+  // ---- answer presentation. Layout only: the stored answer's words, figures, labels and sources are
+  // shown exactly as qa.json holds them.
+  // EUR amounts and percentages, emphasised in place (text nodes, so the wording is unchanged).
+  const FIGURE = /[-+]?EUR\s?\d[\d,]*(?:\.\d+)?|[-+]?\d[\d,]*(?:\.\d+)?%/g;
+  function withFigures(text) {
+    const p = node("p");
+    let last = 0;
+    for (const m of text.matchAll(FIGURE)) {
+      if (m.index > last) p.append(text.slice(last, m.index));
+      p.append(node("strong", "cb-num", m[0]));
+      last = m.index + m[0].length;
+    }
+    if (last < text.length) p.append(text.slice(last));
+    return p;
+  }
+  // Short paragraphs: the opening sentence on its own, then two sentences at a time. The text is only
+  // split where a sentence ends, so joining the paragraphs with a space gives back the stored answer.
+  function paragraphs(text) {
+    const sentences = text.split(/(?<=[.!?]) (?=[A-Z])/);
+    const groups = [sentences.slice(0, 1)];
+    for (let i = 1; i < sentences.length; i += 2) groups.push(sentences.slice(i, i + 2));
+    return groups.map(g => g.join(" "));
+  }
+
   function answer(q, typed) {
-    const parts = [];
-    if (typed !== undefined) parts.push(node("p", "cb-match", `Closest stored question: ${q.question}`));
-    const badge = node("p");
-    badge.append(node("span", `cb-tag ${TAG[q.governed_label] || "fact"}`, q.governed_label));
-    badge.append(node("span", "cb-strength", q.evidence_strength === null
-      ? `Strength: ${q.strength} (forecasts are capped at moderate)`
-      : `Strength: ${q.strength} (governed score ${q.evidence_strength} of 3)`));
-    parts.push(badge, q.answer);
-    const src = node("p", "cb-src", "Sources: ");
-    q.sources.forEach((s, i) => { if (i) src.append(", "); src.append(node("code", "", s.file)); });
-    parts.push(src, node("p", "cb-muted", QA.meta.label));
-    botSays(parts);
+    const b = node("div", "cb-msg cb-bot cb-answer");
+    if (typed !== undefined) b.append(node("p", "cb-match", `Closest stored question: ${q.question}`));
+    const evidence = node("p", "cb-evidence");
+    evidence.append(node("span", "cb-evidence-label", "Evidence level"),
+                    node("span", `cb-tag ${TAG[q.governed_label] || "fact"}`, q.governed_label),
+                    node("span", "cb-strength", q.evidence_strength === null
+                      ? `Strength: ${q.strength} (forecasts are capped at moderate)`
+                      : `Strength: ${q.strength} (governed score ${q.evidence_strength} of 3)`));
+    const body = node("div", "cb-body");
+    for (const para of paragraphs(q.answer)) body.append(withFigures(para));
+    const sources = node("div", "cb-sources");
+    const list = node("ul");
+    for (const s of q.sources) {
+      const li = node("li");
+      li.append(node("code", "", s.file));
+      list.append(li);
+    }
+    sources.append(node("p", "cb-sources-label", "Sources"), list, node("p", "cb-muted", QA.meta.label));
+    b.append(evidence, body, sources);
+    log.append(b);
     const next = (FOLLOWUPS[q.id] || []).slice(0, 3);
     if (next.length) chipGroup(next, "Related questions", "followup");
   }
@@ -541,6 +608,14 @@
     // a topic word on its own: offer that topic's stored questions rather than picking one
     const topic = TOPICS[bodyNorm];
     if (topic && topic[1].length) return clarifyTopic(topic);
+    // a natural request about a topic: the main answer for "what happened to", otherwise the choices
+    const request = topicRequest(bodyNorm);
+    if (request && request.specific) {
+      const lead = QA.questions.find(x => x.id === request.topic[1][0]);
+      answer(lead, raw);
+      return track(`ask/${lead.id}`);
+    }
+    if (request) return clarifyTopic(request.topic);
     // the evidence match, unchanged
     const q = closest(body);
     if (q) { answer(q, raw); return track(`ask/${q.id}`); }
