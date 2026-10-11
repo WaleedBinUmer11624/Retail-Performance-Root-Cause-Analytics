@@ -12,8 +12,11 @@
      section/<headline|explore|evidence|data-quality>                       once per page load
      chart-legend/<chart>                                                    Chart.js legend clicks
 
-   The chat assistant (chatbot.js) sends its own events with the same guards, prefixed with the page
-   (homepage/ or dashboard/): chat-open, ask/<id>, chip/<id>, followup/<id>, intent/<name>, no-match.
+   The chat assistant (chatbot.js) hands its events to this file, which prefixes the page
+   (homepage/ or dashboard/): chat-open, ask/<id>, chip/<id>, followup/<id>,
+   chatbot_conversational_response/<intent>, chatbot_typo_recognised/<intent or id>,
+   chatbot_clarification_requested/<topic|bye|unclear>, chatbot_clarification_selected/<id or action>,
+   chatbot_unsupported_question.
 */
 (function () {
   "use strict";
@@ -92,6 +95,20 @@
       var el = document.getElementById(SECTIONS[name]);
       var target = el ? (el.closest("section") || el) : null;
       if (target) { watched.push([target, name]); observer.observe(target); }
+    });
+  });
+
+  // ---- chat assistant (chatbot.js): it dispatches "chatbot:track" with a fixed event name, an
+  // intent name or a stored question id; this adds the page prefix. Anything that is not a short
+  // lower-case name is dropped, so typed text can never be sent.
+  safely(function () {
+    var prefix = PAGE === "dashboard" ? "dashboard" : "homepage";
+    var SAFE = /^[a-z][a-z0-9_-]{0,40}(\/[a-z0-9-]{1,40})?$/;
+    document.addEventListener("chatbot:track", function (e) {
+      try {
+        var name = e && e.detail ? String(e.detail.name) : "";
+        if (SAFE.test(name)) send(prefix + "/" + name);
+      } catch (err) { /* ignore */ }
     });
   });
 
