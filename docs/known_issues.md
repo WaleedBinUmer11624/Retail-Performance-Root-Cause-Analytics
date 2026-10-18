@@ -228,3 +228,135 @@ project-data refusal in place. The Phase 5 and Phase 7 runners are frozen and ca
 
 Create the virtual environment outside the project folder (README section 8, Step 2), so no
 library read falls under the project root. The frozen runners are not edited.
+
+---
+
+## KI-05 SQL Server rejected the reconciliation script: a path in its header opened a nested comment
+
+**Status:** resolved; comment-only change to a frozen script, authorised by the project owner on
+2026-10-18, with the hash re-baselined in every manifest that pins it
+**Found:** read-only audit of `reports/phase4/run_summary_mssql.json`, 2026-10-18
+**Files:** `sql/validation/09_reconciliation.sql` (frozen, line 8 comment only), the ten Phase 5 to
+9 manifest and verification files listed below, `reports/phase4/*_mssql*`,
+`tmp/protected_hash_baseline.txt`
+
+This entry is the one recorded exception to the rule at the top of this file: a frozen script was
+edited because the owner authorised it. The change touches comment text only.
+
+### What happened
+
+The governed SQL Server run (`python -m src.sql_model.run_model --engine mssql`, 2026-09-29) loaded
+the schema, dimensions and facts, then stopped at script 09 with `Missing end comment mark` and
+recorded `passed: false`. Line 8 of the script header read `data/processed/curated/*.csv`. SQL
+Server nests block comments, so the `/*` inside that path opened a second comment level that the
+header's single `*/` never closed (8 openers, 7 closers). The DuckDB path was not affected: its
+runner strips comments with a non-nesting pattern before translation, which is why DuckDB passed.
+
+### Change
+
+Line 8 only, inside the header comment:
+
+| | Text | File SHA-256 | Bytes |
+| --- | --- | --- | --- |
+| Before | `data/processed/curated/*.csv` | `bf98055918ec9635aa3ff5f499594e48523fd78f26fd30e9c0538d4650cee575` | 13,700 |
+| After | `data/processed/curated (*.csv)` | `a0c7f3ed90d79d7db0a8e800491684c1ed668e1f5a1608755f8d11cffd3f1891` | 13,700 |
+
+The padding after the path was shortened by two spaces, so the file size and column alignment are
+unchanged. The file now has 7 openers and 7 closers. No statement, view or value changed.
+
+### Manifests re-baselined
+
+The new hash replaces the old one in all ten files that pin it. Each later manifest also records the
+hash of the earlier manifests, so the change cascades from Phase 5 to Phase 9; only hash strings
+were replaced, and every file keeps its size.
+
+- `reports/phase5/phase1_4_input_manifest.csv`, `reports/phase5/input_verification.csv`
+- `reports/phase6/phase1_5_input_manifest.csv`, `reports/phase6/input_verification.csv`
+- `reports/phase7/phase1_6_input_manifest.csv`, `reports/phase7/input_verification.csv`
+- `reports/phase8/phase1_7_input_manifest.csv`, `reports/phase8/input_verification.csv`
+- `reports/phase9/phase1_8_dependency_manifest.csv`, `reports/phase9/input_verification.csv`
+
+After the change every row of the five manifests matches the file on disk. The Phase 7, 8 and 9
+verification files carry 6, 11 and 14 older snapshot rows that do not match current files; the
+same rows mismatch in the committed state before this change, so they are historical and were
+left as recorded.
+
+`docs/appendix/phase9_archive_comparison.csv` is a dated record of the Phase 9 archive recovery
+and still shows the old hashes; it was not edited.
+
+### Proof that no output changed
+
+1. **DuckDB:** the model was rebuilt with the edited script into a scratch folder. Reconciliation
+   45/45 PASS and KPI validation 38/38 PASS; `object_inventory_duckdb.csv`, `generated/` and the
+   summary (apart from timings) are byte-identical to `reports/phase4`. The two result CSVs differ
+   from the committed copies only in line endings (CRLF written on Windows), the same cause as the
+   Windows note in KI-03. `reports/phase4` was not overwritten by this check.
+2. **SQL Server:** the governed run was repeated on 2026-10-18 on SQL Server 2025 (17.0.1145.4)
+   and passed in 361.5 s: reconciliation 45/45 PASS, KPI validation 38/38 PASS, the eight curated
+   inputs verified (`fact_sales` 1,339,510 rows). Its 45 reconciliation and 38 KPI results match the
+   DuckDB results check by check: same checks, same statuses, zero numeric difference. This is
+   the SQL Server run that `docs/04_data_model_design.md` section 2.3 names as the definitive proof.
+3. **Protected hashes:** `tmp/hash_check.py` passes 9/9 groups. Seven groups are unchanged. Two
+   changed, and only through the files named in this entry:
+
+| Group | Before | After | Cause |
+| --- | --- | --- | --- |
+| `freeze_manifests` | 5 files, `344c51d1...` | 5 files, `0b759401...` | the five manifests above |
+| `phase1_10_outputs` | 236 files, `41a89031...` | 238 files, `c84a045e...` | the ten manifest files, plus the SQL Server run outputs below |
+
+SQL Server run outputs in `reports/phase4` (replaced by the passing run):
+`run_summary_mssql.json` (`passed: false` to `passed: true`), `run_log_mssql.csv`,
+`object_inventory_mssql.csv`, `phase4_build_report_mssql.md`, and two files the failed run never
+reached: `reconciliation_results_mssql.csv` and `kpi_validation_mssql.csv` (236 to 238 files).
+`generated/recon_expected_values.sql` was rewritten by the run with identical bytes.
+
+4. **Tests:** the full suite was run on an isolated copy of the changed project (548 tests): 515 passed,
+   4 failed, 29 skipped, 0 errors, the same result and the same four failures as the run before this
+   change. The failures are unrelated: `test_assets_and_reports_are_reproducible` is the Windows
+   line-ending failure listed in the README (KI-03), and three `tests/test_phase9_monitoring.py`
+   tests expect the interpreter environment at `.venv/` under the project root, which the isolated
+   copy did not have. The 29 skips need the generated sample or evaluation-only data.
+
+---
+
+## KI-06 Three Phase 9 tests fail when the environment is outside the project root
+
+**Status:** open; no code changed, analysis unaffected
+**Found:** full test run on an isolated copy, 2026-10-18
+**Files:** `src/monitoring/access.py` (`is_environment_read`, line 74), `tests/test_phase9_monitoring.py`
+
+### What happens
+
+With the virtual environment outside the project folder, as README Step 2 recommends (see KI-04),
+three tests fail on Windows:
+
+| Test | Effect |
+| --- | --- |
+| `tests/test_phase9_monitoring.py::test_environment_import_reads_are_not_false_positives` | `.venv/Lib/site-packages/...` paths are not recognised as environment reads |
+| `tests/test_phase9_monitoring.py::test_a_pyc_suffix_alone_never_grants_exemption` | same cause |
+| `tests/test_phase9_monitoring.py::test_classify_opened_keeps_project_violations_and_splits_runtime_reads` | the `.venv` read stays in `refused` instead of moving to `runtime_reads` |
+
+### Cause
+
+`is_environment_read` resolves each path against the project root (`PROJECT_ROOT / rel`) and
+accepts it only if it falls inside the active interpreter environment (`sys.prefix`,
+`sys.base_prefix`, `sys.exec_prefix`). The tests use fixed paths such as
+`.venv/Lib/site-packages/duckdb/__pycache__/_version.cpython-314.pyc`, so they pass only when the
+active environment is `.venv/` inside the project. With the environment elsewhere, those paths are
+not inside it and the function correctly returns False.
+
+### Impact
+
+None on the analysis. The function is used by the Phase 6, 8 and 9 runners to move interpreter
+library reads out of the refused list. With the environment outside the project, no library read
+falls under the project root, so there is nothing to move, and every project-data refusal is kept
+as before. Only the tests' assumption about where the environment lives is affected. The
+environment location therefore trades KI-04 (environment inside: Phase 5 and Phase 7 open audits
+fail) against this entry (environment outside: these three tests fail).
+
+### Resolution
+
+None yet. A fix belongs in the tests (build the paths from the active `sys.prefix` instead of a
+fixed `.venv/`), not in the frozen runners. Until then, the expected Windows result with the
+environment outside the project is 515 passed, 29 skipped and 4 known failures (this entry and
+KI-03).

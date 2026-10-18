@@ -1,0 +1,39 @@
+check_name,expected_value,actual_value,abs_difference,tolerance,status
+base: gross_sales,39877276.35,39877276.35,0.0,0.010000,PASS
+base: discount_value,1665652.67,1665652.67,0.0,0.010000,PASS
+base: sales_revenue,38211623.68,38211623.68,0.0,0.010000,PASS
+base: returns_value,1288620.48,1288620.48,0.0,0.010000,PASS
+base: net_revenue,36923003.2,36923003.2,0.0,0.010000,PASS
+base: cogs,22948014.045,22948014.045,0.0,0.010000,PASS
+base: gross_margin,13974989.155,13974989.155,0.0,0.010000,PASS
+base: transactions,835568.0,835568.0,0.0,0.000000,PASS
+base: units,1768568.0,1768568.0,0.0,0.000000,PASS
+base: sales_lines,1339510.0,1339510.0,0.0,0.000000,PASS
+base: promo_revenue_share,0.15392985729309894,0.15392985729309894,0.0,0.000001,PASS
+estate H2 2024 net revenue,10188727.55,10188727.55,0.0,0.010000,PASS
+estate H2 2025 net revenue,9457457.05,9457457.05,0.0,0.010000,PASS
+estate H2 YoY % (mart.v_yoy_segment_period),-7.177250509559463,-7.177250509559463,0.0,0.000100,PASS
+estate stock availability 2024,0.9550318650063134,0.9550318650063134,0.0,0.000001,PASS
+estate FY rows sum to base net revenue,36923003.2,36923003.2,0.0,0.010000,PASS
+estate FY rows sum to base transactions,835568.0,835568.0,0.0,0.000000,PASS
+segment roll-up = estate: Store,0.0,0.0,0.0,0.000000,PASS
+segment roll-up = estate: Estate,0.0,0.0,0.0,0.000000,PASS
+segment roll-up = estate: Region,0.0,0.0,0.0,0.000000,PASS
+segment roll-up = estate: Format,0.0,0.0,0.0,0.000000,PASS
+category roll-up = estate (net and sales revenue),0.0,0.0,0.0,0.000000,PASS
+store-week view sums to base net revenue,36923003.2,36923003.2,0.0,0.010000,PASS
+store-week targets = all targets loaded,40150920.0,40150920.0,0.0,0.010000,PASS
+product-store-week view sums to units,1768568.0,1768568.0,0.0,0.000000,PASS
+product-store-week view sums to sales revenue,38211623.68,38211623.68,0.0,0.010000,PASS
+promotion view: promoted revenue = promo sales revenue,5881909.78,5881909.78,0.0,0.010000,PASS
+promotion view: all members sum to sales revenue,38211623.68,38211623.68,0.0,0.010000,PASS
+returns view sums to returns value,1288620.48,1288620.48,0.0,0.010000,PASS
+availability view 2024 = reconciled availability,0.9550318650063134,0.9550318650063134,0.0,0.000001,PASS
+category availability view = store availability view (cells),939249.0,939249.0,0.0,0.000000,PASS
+line-level view row count = fact_sales,1339510.0,1339510.0,0.0,0.000000,PASS
+identity: Sales Revenue = Gross Sales - Discount Value,0.0,0.0,0.0,0.000000,PASS
+identity: Net Revenue = Sales Revenue - Returns Value,0.0,0.0,0.0,0.000000,PASS
+identity: Gross Margin = Net Revenue - COGS,0.0,0.0,0.0,0.000000,PASS
+identity: Sales Revenue = Transactions x UPT x ASP,0.0,0.0,0.0,0.000000,PASS
+identity: AOV = UPT x ASP,0.0,0.0,0.0,0.000000,PASS
+identity: Gross Margin % x Net Revenue = Gross Margin,0.0,0.0,0.0,0.000000,PASS

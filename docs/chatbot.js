@@ -9,7 +9,8 @@
         one typo per word of four letters or more ("goodbey"), whole message only;
      3. a greeting in front of a question ("Hi, why did revenue fall?") is dropped, so the
         question reaches the evidence; a topic word on its own ("forecast") gets a choice of that
-        topic's stored questions;
+        topic's stored questions; a request for the printable report ("pdf", "download excel")
+        gets a short description and links to the PDF and Excel exports in docs/paginated/;
      4. evidence matching, unchanged: the closest stored question by shared keywords;
      5. if nothing matched: a one-typo correction against qa.json keywords offers "Did you mean
         ...?" chips (never an answer); "be" asks whether bye was meant; a real question about the
@@ -109,15 +110,18 @@
            "Just ask, for example which stores drove the decline, or pick one of the suggestions below."],
     capabilities: ["I can explain the H2 2025 revenue fall: the revenue bridge, which stores drove it, Electronics " +
                    "stock-outs, Faulty returns, Home & Kitchen promotions, the 13-week forecast, early warning, data " +
-                   "quality and what is still unknown.",
+                   "quality and what is still unknown. I can also point you to the printable PDF and Excel report.",
                    "I cover the revenue evidence in this project: what changed, where, the likely drivers, the " +
-                   "forecast and the data quality behind it. Pick a suggestion below to start."],
+                   "forecast and the data quality behind it. There's also a printable PDF and Excel report; just ask. " +
+                   "Pick a suggestion below to start."],
     identity: [`I'm the ${NAME}, a guided demo in this portfolio project. I answer from stored, pre-checked answers ` +
                "built from the project's governed evidence, not from a live AI.",
                `I'm the ${NAME}. I only answer from this project's verified evidence about the revenue fall; ` +
                "I'm not a general AI."],
     shopping: [SHOPPING_REPLY],
     navigation: ["Here is where to find things:"],
+    paginated: ["There's a printable Executive KPI report built in Power BI Report Builder on SQL Server views, with " +
+                "store, year and half parameters. It only exports when reconciliation (45/45) and KPI checks (38/38) pass."],
   };
   const turns = {};
   function wording(intent) {
@@ -236,6 +240,21 @@
   const SHOPPING = /\b(how much (did|have|do) i (buy|bought|spend|spent|order|ordered)|my (orders?|purchases?|receipts?|account|delivery|refund|basket|loyalty)|did i (buy|order|purchase)|i (bought|ordered|purchased)|do you (sell|stock|deliver|ship)|do you have .* in stock|can i (buy|order|purchase)|where can i buy|(store|shop) (address|addresses|opening hours)|your (address|addresses|shop|opening hours|phone number|email)|addresses|address of|opening hours|price of)\b/i;
   const NAVIGATION = /\b(where (is|are|can i (find|see)|do i find)\b.*\b(charts?|graphs?|dashboard|code|source|repo|repository|readme|github|notebooks?|sql|power ?bi)|(open|show me|take me to|link to|go to)\b.*\b(dashboard|charts|code|repo|repository|readme|github))\b|^\s*(github|repo|repository|readme|source code|dashboard)\s*\??\s*$/i;
   const IDENTITY = /\b(who are you|what are you|what is this (bot|assistant|chat)|are you (a |an )?(bot|robot|ai|human|real|person|chatgpt|gpt|llm|live)|your name|who (made|built|created|wrote) (you|this))\b/i;
+  // Requests for the printable report in docs/paginated/. The links are relative because both pages
+  // sit in docs/. Questions about the code or the repository stay with the navigation reply.
+  const REPORT_FILES = [["Open PDF report", "paginated/Executive_KPI_Summary_H2_2025.pdf", false],
+                        ["Download Excel", "paginated/Executive_KPI_Summary_H2_2025.xlsx", true]];
+  const REPORT_WORDS = ["paginated", "pdf", "excel", "xlsx", "export", "download"];
+  const REPORT_PHRASES = [["report", "builder"], ["printable", "report"]];
+  // Real words one edit from a trigger ("expert" from "export") are not report requests.
+  const REPORT_LOOKALIKES = new Set(["expert", "experts"]);
+  const NOT_REPORT = /\b(code|repo|repository|github|readme|source|notebooks?)\b/;
+  function wantsReport(norm) {
+    if (NOT_REPORT.test(norm)) return false;
+    const words = norm.split(" ").filter(w => !REPORT_LOOKALIKES.has(w));
+    return words.some(w => REPORT_WORDS.some(t => near(w, t))) ||
+      REPORT_PHRASES.some(([a, b]) => words.some((w, i) => i + 1 < words.length && near(w, a) && near(words[i + 1], b)));
+  }
   const HELP = /^\s*(help|help me|menu|options)\s*[?!.]*\s*$|\bwhat can (you|i) (do|ask)\b|\bhow (does|do) (this|you) work\b|\bwhat do you (know|cover|do)\b|\bwhat (questions|topics) can\b|\bcapabilit|\bhow do i use\b/i;
 
   function peel(text) {
@@ -478,6 +497,16 @@
         list.append(li);
       }
       botSays([text, list]);
+    } else if (intent === "paginated") {
+      // Links styled as chips, so the files open or download directly instead of starting another turn.
+      botSays([text]);
+      chipGroup([], "", "chip", REPORT_FILES.map(([label, href, download]) => {
+        const a = node("a", "cb-chip", label);
+        a.href = href;
+        if (download) a.setAttribute("download", "");
+        a.style.textDecoration = "none";
+        return a;
+      }));
     } else {
       botSays([text]);
     }
@@ -601,6 +630,7 @@
     if (SHOPPING.test(body)) return converse("shopping");
     if (NAVIGATION.test(body)) return converse("navigation");
     if (IDENTITY.test(body)) return converse("identity");
+    if (wantsReport(bodyNorm)) return converse("paginated");
     if (!QA) {
       botSays(["The stored answers could not be loaded, so I can't answer evidence questions right now."]);
       return track("chatbot_unsupported_question");

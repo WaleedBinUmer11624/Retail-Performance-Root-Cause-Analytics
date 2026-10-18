@@ -5,7 +5,7 @@
                    script, from Phase 3's own outputs:
                      reports/phase3/lineage.json          curated row counts
                      reports/phase3/kpi_reconciliation.csv  "clean_complete" KPIs
-                     data/processed/curated/*.csv         UNKNOWN-member counts
+                     data/processed/curated (*.csv)       UNKNOWN-member counts
                    Each metric carries an explicit absolute tolerance.
    recon.actual    is computed here, independently, from stg and dw tables.
    recon.v_reconciliation compares the two; any FAIL (difference above

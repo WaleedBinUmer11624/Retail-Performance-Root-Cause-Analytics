@@ -1,10 +1,10 @@
 {
-  "run_at": "2026-09-29T18:47:10",
+  "run_at": "2026-10-18T17:38:50",
   "engine": "mssql",
   "engine_note": "SQL Server",
-  "runtime_seconds": 451.8,
-  "passed": false,
-  "error": "09_reconciliation.sql batch 0: ('42000', \"[42000] [Microsoft][ODBC Driver 18 for SQL Server][SQL Server]Missing end comment mark '*/'. (113) (SQLExecDirectW)\")",
+  "runtime_seconds": 361.5,
+  "passed": true,
+  "error": null,
   "curated_inputs_verified": {
     "dim_date": {
       "rows": 731,
@@ -39,6 +39,10 @@
       "sha256": "3d37b1b814e797e710b5dc1ebb986c6f3bc86ff3433200902420970f48a70050"
     }
   },
-  "reconciliation": null,
-  "kpi_validation": null
+  "reconciliation": {
+    "PASS": 45
+  },
+  "kpi_validation": {
+    "PASS": 38
+  }
 }

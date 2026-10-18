@@ -158,6 +158,16 @@ Plus two tooltip pages (KPI definitions, evidence details) and two drill-through
 | ![Evidence matrix](docs/screenshots/page6.png)<br>**6 Evidence matrix** | ![Investigation priorities](docs/screenshots/page7.png)<br>**7 Investigation priorities** |
 | ![Forecast](docs/screenshots/page8.png)<br>**8 Forecast** | ![Data quality](docs/screenshots/page9.png)<br>**9 Data quality** |
 
+### Paginated report
+
+A print-ready Executive KPI Summary built in Power BI Report Builder on the SQL Server warehouse ([PDF, 2 pages](docs/paginated/Executive_KPI_Summary_H2_2025.pdf), [Excel](docs/paginated/Executive_KPI_Summary_H2_2025.xlsx)). It reads thin views over the governed KPI layer, takes store, year and half parameters, and opens with a validation gate (reconciliation 45/45, KPI validation 38/38). The H2 2025 export reconciles to €9,457,457.05 (-7.18%), and the store rows sum to the estate total.
+
+![Paginated report: estate summary and validation gate](docs/paginated/executive_kpi_summary_1a.png)
+
+- Report: `powerbi/paginated/Executive_KPI_Summary.rdl` (localhost, Windows authentication).
+- Views: `sql/reporting/01_rpt_views.sql` (schema `rpt`). It is not part of the governed build; run it after each SQL Server build: `sqlcmd -S localhost -d BrightwaterRetail -E -C -b -i sql\reporting\01_rpt_views.sql`.
+- Tests: `tests/test_paginated_reports.py` checks the report definition and, when SQL Server is available, runs every report query against the governed figures.
+
 ## 6. Forecasting and early warning
 
 **Forecast (Phase 10).** Several models were compared with rolling-origin back-testing over 104 weeks. The seasonal-naive baseline was selected because the challenger did not beat it (WAPE 7.65% vs 34.05% for the best challenger). The output is a 13-week forecast with empirical 80% and 95% intervals. Forecasts are always labelled as forecasts, not targets.
@@ -197,7 +207,7 @@ Path A uses DuckDB, a small embedded database installed automatically with the P
 | Git (latest) | Downloading the project | https://git-scm.com/downloads |
 | Power BI Desktop, September 2026 (2.158) or newer | The dashboard (Windows only) | Microsoft Store, or https://powerbi.microsoft.com/desktop |
 | VS Code (optional) | Reading and editing the code | https://code.visualstudio.com |
-| SQL Server 2022 Developer | **Path B only** | https://www.microsoft.com/sql-server |
+| SQL Server 2022 or later, Developer edition | **Path B only** | https://www.microsoft.com/sql-server |
 | SQL Server Management Studio (SSMS) | **Path B only** | https://learn.microsoft.com/sql/ssms |
 | ODBC Driver 18 for SQL Server | **Path B only** | https://learn.microsoft.com/sql/connect/odbc |
 
@@ -282,7 +292,7 @@ Results are written to `reports/phase3` to `reports/phase10`. Start with the exe
 python -m pytest
 ```
 
-All tests should pass, with one known failure on Windows: `test_assets_and_reports_are_reproducible`, because the frozen Phase 7 runner writes CRLF line endings on Windows. It passes on Linux and macOS. See KI-03 in [docs/known_issues.md](docs/known_issues.md).
+Expected result on Windows: 515 passed, 29 skipped, 4 known failures: the Phase 7 line-ending test (KI-03) and three Phase 9 tests that expect the environment at `.venv/` inside the project (KI-06). See [docs/known_issues.md](docs/known_issues.md).
 
 **Step 7. Open the Power BI dashboard (manual steps, Windows only).**
 
@@ -332,13 +342,14 @@ You now have the full project running.
 
 Do Path A first, then:
 
-1. Install **SQL Server 2022 Developer** (free), **SQL Server Management Studio (SSMS)** and **ODBC Driver 18 for SQL Server**.
+1. Install **SQL Server 2022 or later, Developer edition** (free; the build was verified on SQL Server 2025), **SQL Server Management Studio (SSMS)** and **ODBC Driver 18 for SQL Server**.
 2. Make sure you can sign in to `localhost` with **Windows Authentication**. No username or password is used.
 3. Create an empty database called `BrightwaterRetail` (in SQL Server Management Studio: right-click **Databases > New Database**).
 4. Build the warehouse:
    ```powershell
    python -m src.sql_model.run_model
    ```
+   The build takes about 6 minutes. It is complete when `reports/phase4/run_summary_mssql.json` shows `"passed": true`, with 45/45 reconciliation and 38/38 KPI checks (see KI-05 in [docs/known_issues.md](docs/known_issues.md)).
 5. Run Phase 5 against SQL Server instead of DuckDB:
    ```powershell
    python -m src.analytics.run_phase5
