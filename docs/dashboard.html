@@ -81,6 +81,8 @@
   .panel { background: var(--card); border: 1px solid var(--line); border-radius: 8px; padding: 16px 16px 12px; min-width: 0; }
   .panel h3 { margin: 0 0 4px; font-size: 16px; line-height: 1.35; }
   .panel .cap { margin: 0 0 10px; font-size: 13px; color: var(--muted); }
+  /* The odd panel out spans the full row, so the two-column grid ends without an empty cell. */
+  .panel.wide { grid-column: 1 / -1; }
   .chart { position: relative; height: 290px; }
   /* 20 store bars need about 26px each to keep every label readable. */
   .chart.tall { height: 560px; }
@@ -208,8 +210,8 @@
       <div class="panel">
         <h3>Store net revenue change, H1 vs H2 2025</h3>
         <p class="cap">S03, S04 and S05 grew or held steady in H1, then fell 27 to 31% in H2. Year-on-year %, each
-          half of 2025 against the same half of 2024; orange: the S03, S04, S05 cluster. All stores and categories;
-          the store and category filters do not apply to this chart.</p>
+          half of 2025 against the same half of 2024; orange: the S03, S04, S05 cluster. For S03 to S05, lighter orange is H1 and darker orange is H2. All
+          stores and categories; the store and category filters do not apply to this chart.</p>
         <div class="chart tall"><canvas id="c-halves" aria-label="Store net revenue year-on-year change, H1 and H2 2025, grouped bar chart" role="img"></canvas></div>
       </div>
       <div class="panel">
@@ -223,7 +225,7 @@
           <span class="tag est">Estimate</span><span class="status">cause not established</span></p>
         <div class="chart"><canvas id="c-cluster" aria-label="Store cluster versus rest weekly YoY line chart" role="img"></canvas></div>
       </div>
-      <div class="panel">
+      <div class="panel wide">
         <h3>13-week forecast with 80% and 95% intervals</h3>
         <p class="cap" id="cap-forecast"></p>
         <div class="chart"><canvas id="c-forecast" aria-label="Forecast line chart with intervals" role="img"></canvas></div>
