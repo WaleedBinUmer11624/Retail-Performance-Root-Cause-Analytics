@@ -121,7 +121,8 @@
     shopping: [SHOPPING_REPLY],
     navigation: ["Here is where to find things:"],
     paginated: ["There's a printable Executive KPI report built in Power BI Report Builder on SQL Server views, with " +
-                "store, year and half parameters. It only exports when reconciliation (45/45) and KPI checks (38/38) pass."],
+                "cascading Year/Half parameters and a store parameter. It only exports when reconciliation (45/45) " +
+                "and KPI checks (38/38) pass."],
   };
   const turns = {};
   function wording(intent) {
@@ -241,9 +242,12 @@
   const NAVIGATION = /\b(where (is|are|can i (find|see)|do i find)\b.*\b(charts?|graphs?|dashboard|code|source|repo|repository|readme|github|notebooks?|sql|power ?bi)|(open|show me|take me to|link to|go to)\b.*\b(dashboard|charts|code|repo|repository|readme|github))\b|^\s*(github|repo|repository|readme|source code|dashboard)\s*\??\s*$/i;
   const IDENTITY = /\b(who are you|what are you|what is this (bot|assistant|chat)|are you (a |an )?(bot|robot|ai|human|real|person|chatgpt|gpt|llm|live)|your name|who (made|built|created|wrote) (you|this))\b/i;
   // Requests for the printable report in docs/paginated/. The links are relative because both pages
-  // sit in docs/. Questions about the code or the repository stay with the navigation reply.
+  // sit in docs/. Questions about the code or the repository stay with the navigation reply. H2 2025,
+  // the headline period, comes first; H1 2025 shows the same report run with other parameters.
   const REPORT_FILES = [["Open PDF report", "paginated/Executive_KPI_Summary_H2_2025.pdf", false],
-                        ["Download Excel", "paginated/Executive_KPI_Summary_H2_2025.xlsx", true]];
+                        ["Download Excel", "paginated/Executive_KPI_Summary_H2_2025.xlsx", true],
+                        ["H1 2025 PDF", "paginated/Executive_KPI_Summary_H1_2025.pdf", false],
+                        ["H1 2025 Excel", "paginated/Executive_KPI_Summary_H1_2025.xlsx", true]];
   const REPORT_WORDS = ["paginated", "pdf", "excel", "xlsx", "export", "download"];
   const REPORT_PHRASES = [["report", "builder"], ["printable", "report"]];
   // Real words one edit from a trigger ("expert" from "export") are not report requests.

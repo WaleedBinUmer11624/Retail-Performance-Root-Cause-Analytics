@@ -206,6 +206,13 @@
         <div class="chart tall"><canvas id="c-stores" aria-label="Net revenue change by store bar chart" role="img"></canvas></div>
       </div>
       <div class="panel">
+        <h3>Store net revenue change, H1 vs H2 2025</h3>
+        <p class="cap">S03, S04 and S05 grew or held steady in H1, then fell 27 to 31% in H2. Year-on-year %, each
+          half of 2025 against the same half of 2024; orange: the S03, S04, S05 cluster. All stores and categories;
+          the store and category filters do not apply to this chart.</p>
+        <div class="chart tall"><canvas id="c-halves" aria-label="Store net revenue year-on-year change, H1 and H2 2025, grouped bar chart" role="img"></canvas></div>
+      </div>
+      <div class="panel">
         <h3>Net revenue change by category</h3>
         <p class="cap" id="cap-categories"></p>
         <div class="chart"><canvas id="c-categories" aria-label="Net revenue change by category bar chart" role="img"></canvas></div>
@@ -247,6 +254,7 @@
       which refuses to write unless H2 2025 reconciles to &euro;9,457,457.05 (-7.18%). Charts by Chart.js.</p>
     <p><a href="index.html">Project page</a> &middot;
        <a href="paginated/Executive_KPI_Summary_H2_2025.pdf">Printable report: H2 2025, all stores (PDF)</a> &middot;
+       <a href="paginated/Executive_KPI_Summary_H1_2025.pdf">H1 2025 (PDF)</a> &middot;
        <a href="https://github.com/WaleedBinUmer11624/Retail-Performance-Root-Cause-Analytics">Repository</a> &middot;
        <a href="https://www.linkedin.com/in/waleedbinumer">LinkedIn</a></p>
     <p>Anonymous, cookie-free visit counts via GoatCounter.</p>
@@ -449,6 +457,30 @@ function renderCategories() {
       });
 }
 
+// ---------------------------------------------------------------- store change by half
+// Fixed to all stores and categories: the governed half results are store totals, so filters do not apply.
+function renderHalves() {
+  const rows = D.store_halves_2025;
+  const yoy = (id, half) => rows.find(r => r.store_id === id && r.period === half).net_revenue_yoy_pct;
+  const ids = [...new Set(rows.map(r => r.store_id))].sort((a, b) => yoy(a, "H2") - yoy(b, "H2"));
+  const cluster = new Set(["S03", "S04", "S05"]);
+  // The cluster keeps its colour in both halves (lighter for H1), so it stands out from the H1 and H2 series colours.
+  const colours = (half, series) => ids.map(id => cluster.has(id) ? css("--cluster") + (half === "H1" ? "88" : "") : css(series));
+  const opts = baseOptions({ indexAxis: "y", interaction: { mode: "index", intersect: false, axis: "y" } });
+  opts.plugins.tooltip.callbacks.label = c => `${c.dataset.label}: ${pct(c.raw, 1)}`;
+  opts.plugins.legend.labels.generateLabels = chart => chart.data.datasets.map((d, i) => ({
+    text: d.label, fillStyle: d.legendColour, strokeStyle: d.legendColour, fontColor: css("--ink"), datasetIndex: i,
+    hidden: !chart.isDatasetVisible(i) }));
+  opts.scales.x.ticks.callback = v => `${v}%`;
+  opts.scales.y.ticks.autoSkip = false;
+  draw("c-halves", { type: "bar", options: opts, data: { labels: ids, datasets: [
+    { label: "H1 2025 YoY", data: ids.map(id => yoy(id, "H1")), backgroundColor: colours("H1", "--series-py"),
+      legendColour: css("--series-py"), borderRadius: 3 },
+    { label: "H2 2025 YoY", data: ids.map(id => yoy(id, "H2")), backgroundColor: colours("H2", "--series-cy"),
+      legendColour: css("--series-cy"), borderRadius: 3 },
+  ] } });
+}
+
 // ---------------------------------------------------------------- 5. cluster vs rest
 function renderCluster() {
   const rows = D.cluster_weekly;
@@ -532,7 +564,7 @@ function renderScope() {
 }
 
 function renderAll() {
-  renderScope(); renderKpis(); renderWeekly(); renderBridge(); renderStores(); renderCategories();
+  renderScope(); renderKpis(); renderWeekly(); renderBridge(); renderStores(); renderHalves(); renderCategories();
   renderCluster(); renderForecast(); renderFindings(); renderDq();
 }
 
