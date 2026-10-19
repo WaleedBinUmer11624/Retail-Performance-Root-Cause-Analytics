@@ -466,7 +466,7 @@ function renderHalves() {
   const yoy = (id, half) => rows.find(r => r.store_id === id && r.period === half).net_revenue_yoy_pct;
   const ids = [...new Set(rows.map(r => r.store_id))].sort((a, b) => yoy(a, "H2") - yoy(b, "H2"));
   const cluster = new Set(["S03", "S04", "S05"]);
-  // The cluster keeps its colour in both halves (lighter for H1), so it stands out from the H1 and H2 series colours.
+  // The cluster keeps its colour in both halves (faded for H1), so it stands out from the H1 and H2 series colours.
   const colours = (half, series) => ids.map(id => cluster.has(id) ? css("--cluster") + (half === "H1" ? "88" : "") : css(series));
   const opts = baseOptions({ indexAxis: "y", interaction: { mode: "index", intersect: false, axis: "y" } });
   opts.plugins.tooltip.callbacks.label = c => `${c.dataset.label}: ${pct(c.raw, 1)}`;
