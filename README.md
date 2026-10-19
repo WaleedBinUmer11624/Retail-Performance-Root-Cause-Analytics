@@ -160,7 +160,9 @@ Plus two tooltip pages (KPI definitions, evidence details) and two drill-through
 
 ### Paginated report
 
-A print-ready Executive KPI Summary built in Power BI Report Builder on the SQL Server warehouse ([PDF, 2 pages](docs/paginated/Executive_KPI_Summary_H2_2025.pdf), [Excel](docs/paginated/Executive_KPI_Summary_H2_2025.xlsx)). It reads thin views over the governed KPI layer, takes store, year and half parameters, and opens with a validation gate (reconciliation 45/45, KPI validation 38/38). The H2 2025 export reconciles to €9,457,457.05 (-7.18%), and the store rows sum to the estate total.
+A print-ready Executive KPI Summary built in Power BI Report Builder on the SQL Server warehouse ([PDF, 2 pages](docs/paginated/Executive_KPI_Summary_H2_2025.pdf), [Excel](docs/paginated/Executive_KPI_Summary_H2_2025.xlsx)). It reads thin views over the governed KPI layer, takes cascading Year/Half parameters and a store parameter, and opens with a validation gate (reconciliation 45/45, KPI validation 38/38). The H2 2025 export reconciles to €9,457,457.05 (-7.18%), and the store rows sum to the estate total.
+
+Other period: H1 2025 ([PDF](docs/paginated/Executive_KPI_Summary_H1_2025.pdf), [Excel](docs/paginated/Executive_KPI_Summary_H1_2025.xlsx)), net revenue €8,629,984.78 (+1.438% vs H1 2024).
 
 ![Paginated report: estate summary and validation gate](docs/paginated/executive_kpi_summary_1a.png)
 

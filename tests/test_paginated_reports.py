@@ -59,15 +59,74 @@ def test_data_source_is_local_windows_auth_without_credentials():
 def test_parameters_are_year_half_and_store_with_governed_defaults():
     params = {p.get("Name"): p for p in _report().iterfind(".//r:ReportParameter", NS)}
     assert list(params) == ["Year", "Half", "Store"]
-    default = {n: p.find("r:DefaultValue/r:Values/r:Value", NS).text for n, p in params.items()}
-    assert default == {"Year": "2025", "Half": "H2", "Store": "ALL"}
-    halves = [v.text for v in params["Half"].iterfind(".//r:ParameterValue/r:Value", NS)]
-    assert halves == ["H1", "H2"]
+    default = {n: params[n].find("r:DefaultValue/r:Values/r:Value", NS).text for n in ("Year", "Store")}
+    assert default == {"Year": "2025", "Store": "ALL"}
+
+
+def test_half_parameter_cascades_from_the_selected_year():
+    """Half lists only the halves with data for the chosen Year, so 2026 cannot offer an empty H2."""
+    half = _report().find(".//r:ReportParameter[@Name='Half']", NS)
+    assert half.find("r:ValidValues/r:DataSetReference/r:DataSetName", NS).text == "HalfList"
+    assert half.find("r:DefaultValue/r:DataSetReference/r:DataSetName", NS).text == "HalfDefault"
+    queries = _queries()
+    for name in ("HalfList", "HalfDefault"):
+        assert re.findall(r"@(\w+)", queries[name]) == ["Year"], name
+        assert _sources(queries[name]) == ["rpt.v_half_parameter"], name
+    order = [p.get("Name") for p in _report().iterfind(".//r:ReportParameter", NS)]
+    assert order.index("Year") < order.index("Half")            # a cascading parameter follows its parent
+
+
+def test_partial_half_note_is_driven_by_data_and_parameters():
+    note = _report().find(".//r:Textbox[@Name='PartialNote']", NS)
+    text = note.find(".//r:TextRun/r:Value", NS).text
+    assert "Parameters!Half.Value" in text and "Parameters!Year.Value" in text
+    assert '"PeriodStatus"' in text
+    assert not re.search(r"\bH[12]\b|\b20\d\d\b", text), text
+    assert "Fields!is_partial.Value" in note.find("r:Visibility/r:Hidden", NS).text
+
+
+def test_estate_section_shows_a_message_when_there_is_no_row():
+    root = _report()
+    grid = root.find(".//r:Rectangle[@Name='EstateGrid']", NS)
+    assert grid.find("r:Visibility/r:Hidden", NS).text == '=CountRows("Estate") = 0'
+    inside = {tb.get("Name") for tb in grid.iterfind(".//r:Textbox", NS)}
+    estate = {tb.get("Name") for tb in root.iterfind(".//r:Textbox", NS) if "\"Estate\")" in "".join(
+        v.text or "" for v in tb.iterfind(".//r:TextRun/r:Value", NS))}
+    assert estate and estate <= inside
+    message = root.find(".//r:Textbox[@Name='EstateNoData']", NS)
+    assert message.find(".//r:TextRun/r:Value", NS).text == "No data for this year and half."
+    assert message.find("r:Visibility/r:Hidden", NS).text == '=CountRows("Estate") > 0'
+
+
+def test_every_query_parameter_is_bound_to_a_report_parameter():
+    """A query parameter left unbound, or bound to a constant, would ignore the Year, Half or Store choice."""
+    report_params = {p.get("Name") for p in _report().iterfind(".//r:ReportParameter", NS)}
+    for ds in _report().iterfind(".//r:DataSet", NS):
+        query = ds.find("r:Query", NS)
+        used = set(re.findall(r"@(\w+)", query.find("r:CommandText", NS).text))
+        bound = {qp.get("Name").lstrip("@"): qp.find("r:Value", NS).text
+                 for qp in query.iterfind("r:QueryParameters/r:QueryParameter", NS)}
+        assert set(bound) == used, (ds.get("Name"), used, bound)
+        for name, value in bound.items():
+            assert name in report_params and value == f"=Parameters!{name}.Value", (ds.get("Name"), name, value)
+    queries = _queries()
+    assert {"Year", "Half"} <= set(re.findall(r"@(\w+)", queries["Estate"]))
+    assert {"Year", "Half", "Store"} <= set(re.findall(r"@(\w+)", queries["Stores"]))
+
+
+def test_period_labels_come_from_the_parameters():
+    values = {tb.get("Name"): "".join(v.text or "" for v in tb.iterfind(".//r:TextRun/r:Value", NS))
+              for tb in _report().iterfind(".//r:Textbox", NS)}
+    assert "Parameters!Half.Value" in values["Subtitle"] and "Parameters!Year.Value" in values["Subtitle"]
+    for name in ("EstateHdr_2", "EstateHdr_3"):
+        assert "Parameters!Half.Value" in values[name] and "Parameters!Year.Value" in values[name], name
+    fixed = {n: v for n, v in values.items() if re.search(r"\bH[12] 20\d\d\b", v)}
+    assert not fixed, fixed
 
 
 def test_every_report_query_reads_only_rpt_views():
     queries = _queries()
-    assert set(queries) == {"Gate", "Estate", "Stores", "YearList", "StoreList"}
+    assert set(queries) == {"Gate", "Estate", "Stores", "YearList", "HalfList", "HalfDefault", "PeriodStatus", "StoreList"}
     for name, sql in queries.items():
         assert not re.search(r"\b(INSERT|UPDATE|DELETE|DROP|ALTER|CREATE|EXEC|MERGE|TRUNCATE)\b", sql, re.I), name
         sources = _sources(sql)
@@ -139,6 +198,16 @@ def test_estate_h2_2025_matches_the_governed_headline(cursor):
     assert round(row["net_revenue_yoy_pct"], 3) == H2_YOY_PCT
 
 
+def test_estate_h1_2025_follows_the_half_parameter(cursor):
+    [row] = _run(cursor, "Estate", Year=2025, Half="H1")
+    assert row["period"] == "H1"
+    assert row["net_revenue_cy"] == Decimal("8629984.78")
+    assert row["net_revenue_py"] == Decimal("8507614.03")
+    assert round(row["net_revenue_yoy_pct"], 3) == 1.438
+    stores = _run(cursor, "Stores", Year=2025, Half="H1", Store="ALL")
+    assert sum(r["net_revenue_cy"] for r in stores) == row["net_revenue_cy"]
+
+
 def test_all_stores_sum_to_the_estate(cursor):
     [estate] = _run(cursor, "Estate", Year=2025, Half="H2")
     stores = _run(cursor, "Stores", Year=2025, Half="H2", Store="ALL")
@@ -157,6 +226,21 @@ def test_store_parameter_filters_to_one_store(cursor):
 def test_period_without_data_returns_no_rows(cursor):
     assert _run(cursor, "Estate", Year=2026, Half="H2") == []
     assert _run(cursor, "Stores", Year=2026, Half="H2", Store="ALL") == []
+
+
+def test_half_list_offers_only_halves_with_data(cursor):
+    assert [r["period"] for r in _run(cursor, "HalfList", Year=2025)] == ["H1", "H2"]
+    assert [r["period"] for r in _run(cursor, "HalfList", Year=2026)] == ["H1"]
+    assert [r["period"] for r in _run(cursor, "HalfDefault", Year=2025)] == ["H2"]
+    assert [r["period"] for r in _run(cursor, "HalfDefault", Year=2026)] == ["H1"]
+
+
+def test_period_status_flags_only_the_partial_half(cursor):
+    [partial] = _run(cursor, "PeriodStatus", Year=2026, Half="H1")
+    assert (partial["weeks_with_data"], partial["prior_year_weeks_with_data"], partial["is_partial"]) == (1, 26, 1)
+    for half in ("H1", "H2"):
+        [full] = _run(cursor, "PeriodStatus", Year=2025, Half=half)
+        assert full["is_partial"] == 0, half
 
 
 def test_parameter_lists(cursor):

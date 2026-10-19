@@ -5,9 +5,11 @@
    Each view selects existing columns from the governed mart and recon
    views and filters rows; none computes a KPI. Revenue, change and YoY %
    come from mart.v_yoy_segment_period exactly as Phase 4 defines them.
-   The one addition is the validation gate, which counts the PASS rows of
-   recon.v_reconciliation (45) and recon.v_kpi_validation (38): the report
-   must show PASS on both before it is exported.
+   Two views add counts, neither of them a KPI. The validation gate counts
+   the PASS rows of recon.v_reconciliation (45) and recon.v_kpi_validation
+   (38): the report must show PASS on both before it is exported. The half
+   parameter view counts the retail weeks with data in each half, so the
+   report can flag a half that is shorter than its prior-year comparison.
 
    Not part of the governed build: this script is not listed in
    config/sql_model_config.yaml and the Phase 4 runner never runs it.
@@ -46,6 +48,29 @@ CREATE OR ALTER VIEW rpt.v_period_parameter AS
 SELECT DISTINCT y.retail_year, y.period
 FROM mart.v_yoy_segment_period AS y
 WHERE y.period IN (N'H1', N'H2');
+GO
+
+-- Halves with year on year data, for the cascading Half parameter. A half is partial when it has
+-- fewer retail weeks with data than the same half a year earlier (for example 2026 H1, where the
+-- data ends in its first week), so its change is not comparable.
+CREATE OR ALTER VIEW rpt.v_half_parameter AS
+SELECT p.retail_year, p.period, cy.weeks_with_data, py.weeks_with_data AS prior_year_weeks_with_data,
+       CASE WHEN cy.weeks_with_data < py.weeks_with_data THEN 1 ELSE 0 END AS is_partial
+FROM (
+    SELECT DISTINCT y.retail_year, y.period
+    FROM mart.v_yoy_segment_period AS y
+    WHERE y.period IN (N'H1', N'H2')
+) AS p
+JOIN (
+    SELECT w.retail_year, w.retail_half, COUNT(DISTINCT w.retail_week) AS weeks_with_data
+    FROM mart.v_performance_store_week AS w
+    GROUP BY w.retail_year, w.retail_half
+) AS cy ON cy.retail_year = p.retail_year AND cy.retail_half = p.period
+LEFT JOIN (
+    SELECT w.retail_year, w.retail_half, COUNT(DISTINCT w.retail_week) AS weeks_with_data
+    FROM mart.v_performance_store_week AS w
+    GROUP BY w.retail_year, w.retail_half
+) AS py ON py.retail_year = p.retail_year - 1 AND py.retail_half = p.period;
 GO
 
 -- Available values for the Store parameter
