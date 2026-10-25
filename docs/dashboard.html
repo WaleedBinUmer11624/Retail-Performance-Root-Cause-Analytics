@@ -181,8 +181,11 @@
 </div>
 
 <main class="wrap">
-  <p class="notice" id="load-error" hidden>The dashboard data could not be loaded. Open this page through a web
+  <p class="notice" id="load-error" role="alert" hidden>The dashboard data could not be loaded. Open this page through a web
     server (for example <code>python -m http.server</code> in the <code>docs</code> folder) rather than as a local file.</p>
+  <p class="notice" id="charts-error" role="status" hidden>The chart library (Chart.js, loaded from cdnjs.cloudflare.com)
+    could not be loaded, for example because it is blocked on this network or you are offline. The headline figures,
+    findings and data-quality cards are still shown; refresh the page to try the charts again.</p>
 
   <section aria-labelledby="kpi-title">
     <h2 id="kpi-title">Headline, H2 2025 vs H2 2024</h2>
@@ -360,6 +363,7 @@ function baseOptions(extra = {}) {
 }
 
 function draw(id, config) {
+  if (typeof window.Chart === "undefined") return;       // library blocked or offline: see #charts-error
   if (charts[id]) charts[id].destroy();
   charts[id] = new Chart($(id), config);
 }
@@ -566,9 +570,28 @@ function renderScope() {
 }
 
 function renderAll() {
-  renderScope(); renderKpis(); renderWeekly(); renderBridge(); renderStores(); renderHalves(); renderCategories();
-  renderCluster(); renderForecast(); renderFindings(); renderDq();
+  for (const render of [renderScope, renderKpis, renderWeekly, renderBridge, renderStores, renderHalves, renderCategories,
+                        renderCluster, renderForecast, renderFindings, renderDq]) {
+    try { render(); } catch (err) { showLoadError("shape"); }
+  }
 }
+
+// One message per cause, so a visitor knows what to do rather than seeing an empty page.
+const LOAD_MESSAGES = {
+  file: "This page reads its data with a web request, which browsers block for pages opened directly from disk. " +
+        "Open the live page, or run python -m http.server in the docs folder and visit http://localhost:8000/dashboard.html.",
+  load: "The dashboard data (data/dashboard.json) could not be loaded. Check your connection and refresh the page.",
+  shape: "The dashboard data was loaded but is incomplete or in an unexpected format, so some figures are not shown " +
+         "rather than shown wrongly. Re-export it with python tmp/export_web_data.py.",
+};
+function showLoadError(reason) {
+  $("load-error").textContent = LOAD_MESSAGES[reason];
+  $("load-error").hidden = false;
+}
+// Keys the page reads; a file without them is rejected before anything is drawn.
+const REQUIRED_KEYS = ["headline", "estate_weekly", "store_weekly", "store_weekly_gaps", "stores", "categories",
+                       "store_category", "store_halves_2025", "bridge", "cluster_weekly", "cluster_mechanisms",
+                       "cluster_excess_eur", "lost_sales", "evidence", "dq", "forecast"];
 
 async function start() {
   try {
@@ -576,10 +599,16 @@ async function start() {
     if (!res.ok) throw new Error(res.status);
     D = await res.json();
   } catch (err) {
-    $("load-error").hidden = false;
+    showLoadError(location.protocol === "file:" ? "file" : "load");
     return;
   }
-  Chart.defaults.font.family = getComputedStyle(document.body).fontFamily;
+  if (!D || typeof D !== "object" || !REQUIRED_KEYS.every(k => k in D) || !Array.isArray(D.stores)
+      || !Array.isArray(D.categories)) {
+    showLoadError("shape");
+    return;
+  }
+  if (typeof window.Chart === "undefined") $("charts-error").hidden = false;
+  else Chart.defaults.font.family = getComputedStyle(document.body).fontFamily;
   for (const s of D.stores) $("f-store").insertAdjacentHTML("beforeend", `<option value="${s.store_id}">${s.store_id} ${s.store_name}</option>`);
   // Every category is listed; the value stays the governed name, the text is the display label.
   for (const c of D.categories) {

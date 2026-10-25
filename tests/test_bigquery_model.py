@@ -12,8 +12,8 @@ import pandas as pd
 import pytest
 import yaml
 
-from src.bigquery_model.engine import RULES, SCHEMAS, BigQueryEngine
-from src.bigquery_model.settings import credentials_available, load_bq_config, resolve_project
+from src.bigquery_model.engine import RULES, BigQueryEngine
+from src.bigquery_model.settings import build_problem, credentials_available, load_bq_config, resolve_project
 from src.sql_model.scripts import split_batches
 
 ROOT = Path(__file__).resolve().parents[1]
@@ -167,12 +167,10 @@ def live():
     if not project:
         pytest.skip(f"no BigQuery project ID ({BQ_CFG['project_id_env']} or {BQ_CFG['local_config']})")
     eng = BigQueryEngine(project, BQ_CFG["dataset_prefix"], BQ_CFG["location"], BQ_CFG["maximum_bytes_billed"])
-    try:
-        for s in SCHEMAS:
-            eng.client.get_dataset(f"{project}.{eng.dataset(s)}")
-    except Exception:  # noqa: BLE001
+    problem = build_problem(eng)                      # also catches sandbox tables that expired after 60 days
+    if problem:
         eng.close()
-        pytest.skip("BigQuery datasets not built; run python -m src.bigquery_model.run_bigquery")
+        pytest.skip(problem)
     yield eng
     eng.close()
 

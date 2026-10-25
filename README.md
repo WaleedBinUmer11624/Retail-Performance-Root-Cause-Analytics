@@ -384,6 +384,12 @@ Optional: the same star schema also builds in Google BigQuery (free sandbox), so
 | A phase stops with a checksum or freeze error | Phases must run in order. Rerun from the phase named in the error. |
 | `test_assets_and_reports_are_reproducible` fails on Windows | Known failure: the frozen Phase 7 runner writes CRLF line endings on Windows. It passes on Linux and macOS. See KI-03 in [docs/known_issues.md](docs/known_issues.md). |
 | Three tests in `tests/test_phase9_monitoring.py` fail | Known: they expect the environment at `.venv/` inside the project, which Step 2 avoids. See KI-06. |
+| `FileNotFoundError` for `data\processed\curated\...csv` when running Phase 4 | The data has not been generated or Phase 3 has not run. Run Steps 4 and 5 in order. See KI-08 in [docs/known_issues.md](docs/known_issues.md). |
+| The web dashboard says browsers block pages opened directly from disk | Use the live page, or run `python -m http.server` in the `docs` folder and open http://localhost:8000/dashboard.html. |
+| The web dashboard shows cards but no charts | The chart library (Chart.js) could not load, for example because a network blocks cdnjs.cloudflare.com or you are offline. Refresh, or try another network. |
+| `pip install -r requirements.txt` fails | Use Python 3.14, the version the project is tested on. |
+| BigQuery tests skip with "sandbox tables expire after 60 days" | Rebuild with `python -m src.bigquery_model.run_bigquery` (see [docs/bigquery_engine.md](docs/bigquery_engine.md)). |
+| Report Builder cannot find an `rpt` view | Run `sql/reporting/01_rpt_views.sql` again: each SQL Server build recreates the database. |
 | Power BI says a file was not found | The four folder parameters in Step 7 still point to the original author's drive. Set them to your clone folder. |
 | Power BI cards show (Blank) | Click **Refresh**, then select a period in the slicer. Some Availability cards are intentionally blank when a category filter is applied; the page subtitle explains why. |
 | "Pending changes in your queries" banner | Click **Apply changes**. |
@@ -420,6 +426,7 @@ requirements-bigquery.txt  Optional BigQuery dependency
 - Every phase re-checks earlier outputs against recorded checksums and reconciles the headline before running.
 - KPIs are defined once and reused everywhere, from SQL to DAX to the AI assistant.
 - The data generator plants known business events and data problems for evaluation. Those answer-key files are never read by the analysis; the code refuses to open them, and tests verify it.
+- `tmp/hash_check.py` is an author-machine governance check: on a fresh clone it reports FAIL, because it hashes git-ignored generated files (the .pbix and the generated `data/powerbi` files) that a clone does not have.
 
 **Limitations.**
 - The retailer and all data are synthetic; results do not describe real-world performance.

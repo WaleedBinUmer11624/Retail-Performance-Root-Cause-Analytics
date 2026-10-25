@@ -27,7 +27,7 @@ from src.sql_model.run_model import write_report
 from src.sql_model.scripts import split_batches
 
 from .engine import RULES, SCHEMAS, BigQueryEngine
-from .settings import credentials_available, load_bq_config, redact, resolve_project
+from .settings import credentials_problem, load_bq_config, redact, resolve_project
 
 # Governed estate results (reports/phase3/kpi_reconciliation.csv and the Phase 4 mart), checked to the cent.
 HEADLINES = {
@@ -87,10 +87,7 @@ def run(out_dir: Path | None = None) -> dict:
     cfg, _ = load_config()
     bq_cfg = load_bq_config()
     project = resolve_project(bq_cfg)
-    if not project:
-        raise SystemExit(f"Set {bq_cfg['project_id_env']} or create {bq_cfg['local_config']} (project_id: ...)")
-    if not credentials_available():
-        raise SystemExit("No Application Default Credentials: run gcloud auth application-default login")
+    _require_project_and_credentials(bq_cfg, project)
     out_dir = Path(out_dir) if out_dir else PROJECT_ROOT / bq_cfg["outputs"]["reports"]
     out_dir.mkdir(parents=True, exist_ok=True)
     t_start = time.time()
@@ -162,9 +159,20 @@ def run(out_dir: Path | None = None) -> dict:
     return res
 
 
+def _require_project_and_credentials(bq_cfg: dict, project: str | None):
+    """Stop with one plain instruction instead of a stack trace when BigQuery cannot be used."""
+    if not project:
+        raise SystemExit(f"No BigQuery project ID: set {bq_cfg['project_id_env']} or create "
+                         f"{bq_cfg['local_config']} (project_id: ...). See docs/bigquery_engine.md.")
+    problem = credentials_problem()
+    if problem:
+        raise SystemExit(problem)
+
+
 def teardown():
     bq_cfg = load_bq_config()
     project = resolve_project(bq_cfg)
+    _require_project_and_credentials(bq_cfg, project)
     engine = BigQueryEngine(project, bq_cfg["dataset_prefix"], bq_cfg["location"], bq_cfg["maximum_bytes_billed"])
     for s in SCHEMAS:
         engine.client.delete_dataset(f"{project}.{engine.dataset(s)}", delete_contents=True, not_found_ok=True)

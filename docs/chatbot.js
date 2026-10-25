@@ -4,7 +4,8 @@
    them up. Nothing is generated or calculated in the browser and there is no live AI model.
 
    Each message is routed deterministically, one reply and one usage event per message:
-     1. normalise (lower case, no punctuation); an empty message is ignored;
+     1. normalise (lower case, no punctuation); an empty message is ignored, and emoji or punctuation
+        alone gets the friendly request to rephrase;
      2. conversational intents: exact phrases and abbreviations ("hii", "thx", "who r u"), then
         one typo per word of four letters or more ("goodbey"), whole message only;
      3. a greeting in front of a question ("Hi, why did revenue fall?") is dropped, so the
@@ -688,9 +689,11 @@
 
   function handle(text) {
     const raw = String(text).trim();
-    if (!normalise(raw)) return;             // empty or punctuation only: no message, no event
+    if (!raw) return;                        // empty or whitespace only: no message, no event
     const u = userSays(raw);
-    respond(raw, normalise(raw));
+    // Emoji or punctuation alone ("?", a thumbs-up) has no words to match; answer it instead of staying silent.
+    if (!normalise(raw)) unclear();
+    else respond(raw, normalise(raw));
     scrollToMessage(u);
   }
 
@@ -765,7 +768,13 @@
     try {
       const res = await fetch("data/qa.json", { cache: "no-cache" });
       if (!res.ok) throw new Error(res.status);
-      QA = await res.json();
+      const data = await res.json();
+      // A file of the wrong shape is treated like a missing one, so one bad entry cannot break every later message.
+      const valid = data && Array.isArray(data.questions) && data.questions.length && data.meta &&
+        data.questions.every(q => q && typeof q.id === "string" && typeof q.question === "string" &&
+                             typeof q.answer === "string" && Array.isArray(q.keywords) && Array.isArray(q.sources));
+      if (!valid) throw new Error("unexpected qa.json format");
+      QA = data;
     } catch (err) {
       row.append(node("span", "cb-muted", "Suggestions unavailable: the stored answers could not be loaded."));
       return;

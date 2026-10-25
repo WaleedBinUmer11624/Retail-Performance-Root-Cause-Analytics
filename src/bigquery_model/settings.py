@@ -32,15 +32,39 @@ def resolve_project(bq_cfg: dict | None = None) -> str | None:
     return None
 
 
-def credentials_available() -> bool:
-    """True when the BigQuery client is installed and Application Default Credentials resolve."""
+def credentials_problem() -> str | None:
+    """None when the BigQuery client is installed and Application Default Credentials resolve; otherwise what to do."""
     try:
         import google.auth
         from google.cloud import bigquery  # noqa: F401
+    except ImportError:
+        return "The BigQuery client is not installed: python -m pip install -r requirements-bigquery.txt"
+    try:
         google.auth.default(scopes=["https://www.googleapis.com/auth/bigquery"])
-        return True
     except Exception:  # noqa: BLE001
-        return False
+        return "No Application Default Credentials: run gcloud auth application-default login"
+    return None
+
+
+def credentials_available() -> bool:
+    return credentials_problem() is None
+
+
+# Objects a finished build always has. Sandbox tables expire after 60 days while the datasets remain, so
+# the datasets alone do not show that a build is usable.
+READY_TABLES = ("recon.kpi_validation_result", "recon.actual", "dw.fact_sales")
+
+
+def build_problem(engine) -> str | None:
+    """None when the BigQuery build can be queried; otherwise why not and how to rebuild."""
+    rebuild = "run python -m src.bigquery_model.run_bigquery"
+    for table in READY_TABLES:
+        try:
+            engine.client.get_table(engine.table_id(table))
+        except Exception:  # noqa: BLE001 - not found, expired or not readable
+            return (f"BigQuery build not available ({table} is missing; sandbox tables expire after 60 days): "
+                    f"{rebuild}")
+    return None
 
 
 def redact(text: str, project: str | None) -> str:

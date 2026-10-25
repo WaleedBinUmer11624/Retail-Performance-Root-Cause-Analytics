@@ -3,6 +3,8 @@
 Inputs: tmp/protected_hash_baseline.txt and the files in each protected group (Power BI data,
 Power Query, governed measures, model definition, freeze manifests, phase 1 to 10 reports, PBIX).
 Output: a PASS/FAIL line per group and an overall result; exit code 0 only when every group passes.
+This is an author-machine governance check: on a fresh clone it reports FAIL, because it hashes git-ignored
+generated files (the .pbix and the generated data/powerbi files) that a clone does not have.
 """
 import hashlib
 import json
@@ -10,7 +12,8 @@ import re
 import sys
 from pathlib import Path
 
-ROOT = Path(r"E:\Retail_Performance_Root_Cause_Analytics")
+# The project root is this file's parent folder, so the check works wherever the repository is cloned.
+ROOT = Path(__file__).resolve().parents[1]
 BASELINE = ROOT / "tmp" / "protected_hash_baseline.txt"
 
 # Evaluation-only material is excluded so the check never opens it and its regeneration

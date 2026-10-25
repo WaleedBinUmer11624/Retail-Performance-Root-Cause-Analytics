@@ -399,3 +399,25 @@ The curated `transaction_time` values are text in `HH:MM` form. SQL Server and D
 `TIME`; BigQuery's cast requires seconds and returned NULL for every sales line, so the
 `conversion_failures` check reported 1,339,510 on the first complete build. Rule R11 now reads `HH:MM`
 explicitly, and the check returns 0. The Phase 4 scripts were not changed.
+
+---
+
+## KI-08 Phase 4 run before the data exists stops with a raw Python traceback
+
+**Status:** open; documented, frozen code not changed
+**Found:** robustness audit, 2026-10-25
+**Files:** `src/sql_model/inputs.py` (`verify_curated`, frozen), `README.md` (section 9),
+`tests/test_robustness.py::test_phase4_without_generated_data_names_the_missing_file`
+
+### What happens
+
+If `python -m src.sql_model.run_model` runs before the data is generated and Phase 3 has run, the
+first curated file it verifies is missing, and the run stops with a `FileNotFoundError` traceback that
+ends with the missing path, for example `data\processed\curated\dim_date.csv`. Nothing is written
+or changed; the message is only less friendly than the later phases' own checks.
+
+### Resolution
+
+The friendly message belongs in `verify_curated`, which is frozen, so it is not changed. README
+section 9 lists the error with the fix (run Steps 4 and 5 in order), and the test above reproduces it
+in a fresh copy whose path contains spaces, which also confirms that such paths work.
