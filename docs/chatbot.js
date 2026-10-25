@@ -10,7 +10,8 @@
      3. a greeting in front of a question ("Hi, why did revenue fall?") is dropped, so the
         question reaches the evidence; a topic word on its own ("forecast") gets a choice of that
         topic's stored questions; a request for the printable report ("pdf", "download excel")
-        gets a short description and links to the PDF and Excel exports in docs/paginated/;
+        gets a short description and links to the PDF and Excel exports in docs/paginated/; a question
+        about the database engines ("bigquery", "which database") gets the three-engine summary;
      4. evidence matching, unchanged: the closest stored question by shared keywords;
      5. if nothing matched: a one-typo correction against qa.json keywords offers "Did you mean
         ...?" chips (never an answer); "be" asks whether bye was meant; a real question about the
@@ -110,10 +111,11 @@
            "Just ask, for example which stores drove the decline, or pick one of the suggestions below."],
     capabilities: ["I can explain the H2 2025 revenue fall: the revenue bridge, which stores drove it, Electronics " +
                    "stock-outs, Faulty returns, Home & Kitchen promotions, the 13-week forecast, early warning, data " +
-                   "quality and what is still unknown. I can also point you to the printable PDF and Excel report.",
+                   "quality and what is still unknown. I can also point you to the printable PDF and Excel report, " +
+                   "and explain how the same model runs on SQL Server, DuckDB and BigQuery.",
                    "I cover the revenue evidence in this project: what changed, where, the likely drivers, the " +
-                   "forecast and the data quality behind it. There's also a printable PDF and Excel report; just ask. " +
-                   "Pick a suggestion below to start."],
+                   "forecast and the data quality behind it. There's also a printable PDF and Excel report, and a " +
+                   "note on the three database engines; just ask. Pick a suggestion below to start."],
     identity: [`I'm the ${NAME}, a guided demo in this portfolio project. I answer from stored, pre-checked answers ` +
                "built from the project's governed evidence, not from a live AI.",
                `I'm the ${NAME}. I only answer from this project's verified evidence about the revenue fall; ` +
@@ -123,6 +125,9 @@
     paginated: ["There's a printable Executive KPI report built in Power BI Report Builder on SQL Server views, with " +
                 "cascading Year/Half parameters and a store parameter. It only exports when reconciliation (45/45) " +
                 "and KPI checks (38/38) pass."],
+    engines: ["The same star schema builds on three engines: SQL Server, DuckDB and Google BigQuery. All three pass " +
+              "45/45 reconciliation and 38/38 KPI checks, with every money total identical. The T-SQL was translated " +
+              "to BigQuery with sqlglot plus 15 documented dialect rules."],
   };
   const turns = {};
   function wording(intent) {
@@ -258,6 +263,16 @@
     const words = norm.split(" ").filter(w => !REPORT_LOOKALIKES.has(w));
     return words.some(w => REPORT_WORDS.some(t => near(w, t))) ||
       REPORT_PHRASES.some(([a, b]) => words.some((w, i) => i + 1 < words.length && near(w, a) && near(words[i + 1], b)));
+  }
+  // Questions about where the model runs: SQL Server, DuckDB and BigQuery. Same whole-word, one-typo
+  // matching as the report request; the guide is on GitHub because the site serves .md files as plain text.
+  const ENGINES_DOC = "https://github.com/WaleedBinUmer11624/Retail-Performance-Root-Cause-Analytics/blob/main/docs/bigquery_engine.md";
+  const ENGINE_WORDS = ["bigquery", "duckdb", "engine", "engines", "database", "databases", "warehouse", "gcp"];
+  const ENGINE_PHRASES = [["big", "query"], ["sql", "server"], ["google", "cloud"]];
+  function wantsEngines(norm) {
+    const words = norm.split(" ");
+    return words.some(w => ENGINE_WORDS.some(t => near(w, t))) ||
+      ENGINE_PHRASES.some(([a, b]) => words.some((w, i) => i + 1 < words.length && near(w, a) && near(words[i + 1], b)));
   }
   const HELP = /^\s*(help|help me|menu|options)\s*[?!.]*\s*$|\bwhat can (you|i) (do|ask)\b|\bhow (does|do) (this|you) work\b|\bwhat do you (know|cover|do)\b|\bwhat (questions|topics) can\b|\bcapabilit|\bhow do i use\b/i;
 
@@ -511,6 +526,14 @@
         a.style.textDecoration = "none";
         return a;
       }));
+    } else if (intent === "engines") {
+      botSays([text]);
+      const a = node("a", "cb-chip", "How it was ported");
+      a.href = ENGINES_DOC;
+      a.target = "_blank";
+      a.rel = "noopener";                    // the new tab gets no handle back to this page
+      a.style.textDecoration = "none";
+      chipGroup([], "", "chip", [a]);
     } else {
       botSays([text]);
     }
@@ -635,6 +658,7 @@
     if (NAVIGATION.test(body)) return converse("navigation");
     if (IDENTITY.test(body)) return converse("identity");
     if (wantsReport(bodyNorm)) return converse("paginated");
+    if (wantsEngines(bodyNorm)) return converse("engines");
     if (!QA) {
       botSays(["The stored answers could not be loaded, so I can't answer evidence questions right now."]);
       return track("chatbot_unsupported_question");
