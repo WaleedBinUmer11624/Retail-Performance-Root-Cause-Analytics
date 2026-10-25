@@ -1,0 +1,5 @@
+check,expected,actual,status
+estate H2 2025 net_revenue_cy,9457457.05,9457457.05,PASS
+estate H2 2025 yoy_pct_2dp,-7.18,-7.18,PASS
+estate H1 2025 net_revenue_cy,8629984.78,8629984.78,PASS
+estate H1 2025 yoy_pct_3dp,1.438,1.438,PASS

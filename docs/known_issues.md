@@ -360,3 +360,42 @@ None yet. A fix belongs in the tests (build the paths from the active `sys.prefi
 fixed `.venv/`), not in the frozen runners. Until then, the expected Windows result with the
 environment outside the project is 515 passed, 29 skipped and 4 known failures (this entry and
 KI-03).
+
+---
+
+## KI-07 BigQuery build: what differs from the SQL Server and DuckDB builds
+
+**Status:** open, by design; the BigQuery build passes every check (45/45, 38/38, H1 and H2 2025)
+**Found:** first BigQuery build, 2026-10-25
+**Files:** `src/bigquery_model/` (new), `config/bigquery_config.yaml`, `docs/bigquery_engine.md`,
+`reports/bigquery/` (no Phase 1 to 10 file, manifest or frozen script changed)
+
+The optional BigQuery engine builds the same star schema from the same verified curated files and
+reconciles it with the same criteria. Its results match the other two engines, with the differences
+below.
+
+### Values that are not bit-identical
+
+Of 166 reconciliation and KPI validation values compared with the committed DuckDB and SQL Server
+results, 160 are identical and 6 differ by floating-point rounding only: `asp` by 3.6e-15 and
+`promo_revenue_share` (in the reconciliation and the KPI validation) by 2.8e-17, against each engine.
+Both are ratios computed in FLOAT; the tolerance is 0.000001, so every check passes on every engine.
+Every money total, row count, the H2 2025 figure EUR 9,457,457.05 (-7.18%) and the H1 2025 figure
+EUR 8,629,984.78 (+1.438%) are identical across the three engines.
+
+### SQL Server behaviour not reproduced
+
+- Keys, constraints and columnstore indexes (scripts 05 and 06) and the `THROW` that stops a failed
+  SQL Server build are not executed, as on DuckDB. BigQuery does not enforce keys; the runner applies
+  the pass criteria from the same reconciliation views instead.
+- No DML: the project is a BigQuery sandbox (no billing account), so every `INSERT` is rebuilt as
+  `CREATE OR REPLACE TABLE ... AS SELECT` and data arrives by load jobs. Rules R5, R6 and R14 in
+  `docs/bigquery_engine.md` keep the T-SQL meaning, including the UNKNOWN-member guard.
+- Sandbox tables expire after 60 days; rebuild or tear down with `src.bigquery_model.run_bigquery`.
+
+### Dialect difference found during the build (fixed in the translation, not in the scripts)
+
+The curated `transaction_time` values are text in `HH:MM` form. SQL Server and DuckDB convert them to
+`TIME`; BigQuery's cast requires seconds and returned NULL for every sales line, so the
+`conversion_failures` check reported 1,339,510 on the first complete build. Rule R11 now reads `HH:MM`
+explicitly, and the check returns 0. The Phase 4 scripts were not changed.

@@ -106,6 +106,8 @@
                      text-decoration: none; font-weight: 600; }
   .stack { display: flex; flex-wrap: wrap; gap: 8px; padding: 0; margin: 0; list-style: none; }
   .stack li { background: var(--card); border: 1px solid var(--line); border-radius: 6px; padding: 6px 12px; font-size: 15px; }
+  /* A chip that links to more detail uses the theme accent, so it reads as a link in both colour schemes. */
+  .stack a { color: var(--accent); text-underline-offset: 3px; }
   footer { margin-top: 40px; border-top: 1px solid var(--line); background: var(--card); }
   footer .wrap { padding-top: 24px; padding-bottom: 32px; font-size: 14px; color: var(--muted); }
   footer a { color: var(--accent); }
@@ -259,6 +261,7 @@
     <h2 id="stack-title">Tech stack</h2>
     <ul class="stack">
       <li>Python</li><li>pandas</li><li>DuckDB</li><li>SQL Server (T-SQL)</li>
+      <li><a href="https://github.com/WaleedBinUmer11624/Retail-Performance-Root-Cause-Analytics/blob/main/docs/bigquery_engine.md" title="Three engines (SQL Server, DuckDB, BigQuery), each reconciling 45/45 and 38/38">BigQuery</a></li>
       <li>Power BI (DAX, Power Query, PBIP)</li><li>Power BI Report Builder (paginated)</li><li>SciPy</li><li>pytest</li>
     </ul>
   </section>

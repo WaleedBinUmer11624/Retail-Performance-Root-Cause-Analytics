@@ -1,0 +1,4 @@
+# Optional: the BigQuery build of the Phase 4 model (src/bigquery_model, docs/bigquery_engine.md).
+# Install on top of requirements.txt only if you use BigQuery:
+#   python -m pip install -r requirements-bigquery.txt
+google-cloud-bigquery>=3.25

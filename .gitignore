@@ -52,3 +52,6 @@ Thumbs.db
 
 # Agent and assistant local state
 .kilo/
+
+# BigQuery build: local project ID (never tracked; see config/bigquery_config.yaml)
+config/bigquery_local.yaml

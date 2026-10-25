@@ -1,0 +1,167 @@
+check_set,name,other_engine,bigquery,other,abs_difference
+reconciliation,aov,duckdb,45.73131532083565,45.73131532083565,0.0
+reconciliation,asp,duckdb,21.605968037417842,21.60596803741784,3.552713678800501e-15
+reconciliation,cogs,duckdb,22948014.045,22948014.045,0.0
+reconciliation,conversion_failures,duckdb,0.0,0.0,0.0
+reconciliation,discount_value,duckdb,1665652.67,1665652.67,0.0
+reconciliation,gross_margin,duckdb,13974989.155,13974989.155,0.0
+reconciliation,gross_margin_pct,duckdb,0.3784900453330405,0.3784900453330405,0.0
+reconciliation,gross_sales,duckdb,39877276.35,39877276.35,0.0
+reconciliation,h2_2024_net_revenue,duckdb,10188727.55,10188727.55,0.0
+reconciliation,h2_2025_net_revenue,duckdb,9457457.05,9457457.05,0.0
+reconciliation,h2_yoy_pct,duckdb,-7.177250509559463,-7.177250509559463,0.0
+reconciliation,net_revenue,duckdb,36923003.2,36923003.2,0.0
+reconciliation,not_promoted_sales_lines,duckdb,1077994.0,1077994.0,0.0
+reconciliation,promo_revenue_share,duckdb,0.15392985729309894,0.1539298572930989,2.7755575615628914e-17
+reconciliation,return_rate_value,duckdb,0.0337232589431803,0.0337232589431803,0.0
+reconciliation,returns_rows,duckdb,34562.0,34562.0,0.0
+reconciliation,returns_value,duckdb,1288620.48,1288620.48,0.0
+reconciliation,rows_dw_dim_date,duckdb,731.0,731.0,0.0
+reconciliation,rows_dw_dim_product,duckdb,601.0,601.0,0.0
+reconciliation,rows_dw_dim_promotion,duckdb,136.0,136.0,0.0
+reconciliation,rows_dw_dim_store,duckdb,20.0,20.0,0.0
+reconciliation,rows_dw_fact_inventory,duckdb,939249.0,939249.0,0.0
+reconciliation,rows_dw_fact_promotion_coverage,duckdb,49430.0,49430.0,0.0
+reconciliation,rows_dw_fact_returns,duckdb,34562.0,34562.0,0.0
+reconciliation,rows_dw_fact_sales,duckdb,1339510.0,1339510.0,0.0
+reconciliation,rows_dw_fact_targets,duckdb,2077.0,2077.0,0.0
+reconciliation,rows_stg_dim_date,duckdb,731.0,731.0,0.0
+reconciliation,rows_stg_dim_product,duckdb,601.0,601.0,0.0
+reconciliation,rows_stg_dim_store,duckdb,20.0,20.0,0.0
+reconciliation,rows_stg_fact_inventory,duckdb,939249.0,939249.0,0.0
+reconciliation,rows_stg_fact_promotions,duckdb,49430.0,49430.0,0.0
+reconciliation,rows_stg_fact_returns,duckdb,34562.0,34562.0,0.0
+reconciliation,rows_stg_fact_sales,duckdb,1339510.0,1339510.0,0.0
+reconciliation,rows_stg_fact_targets,duckdb,2077.0,2077.0,0.0
+reconciliation,sales_lines,duckdb,1339510.0,1339510.0,0.0
+reconciliation,sales_revenue,duckdb,38211623.68,38211623.68,0.0
+reconciliation,stock_availability_2024,duckdb,0.9550318650063134,0.9550318650063134,0.0
+reconciliation,transactions,duckdb,835568.0,835568.0,0.0
+reconciliation,units,duckdb,1768568.0,1768568.0,0.0
+reconciliation,unknown_date_fact_rows,duckdb,0.0,0.0,0.0
+reconciliation,unknown_product_other_fact_rows,duckdb,0.0,0.0,0.0
+reconciliation,unknown_product_sales_lines,duckdb,1293.0,1293.0,0.0
+reconciliation,unknown_promotion_sales_lines,duckdb,1.0,1.0,0.0
+reconciliation,unknown_store_fact_rows,duckdb,0.0,0.0,0.0
+reconciliation,upt,duckdb,2.1166057101277214,2.1166057101277214,0.0
+reconciliation,aov,mssql,45.73131532083565,45.73131532083565,0.0
+reconciliation,asp,mssql,21.605968037417842,21.60596803741784,3.552713678800501e-15
+reconciliation,cogs,mssql,22948014.045,22948014.045,0.0
+reconciliation,conversion_failures,mssql,0.0,0.0,0.0
+reconciliation,discount_value,mssql,1665652.67,1665652.67,0.0
+reconciliation,gross_margin,mssql,13974989.155,13974989.155,0.0
+reconciliation,gross_margin_pct,mssql,0.3784900453330405,0.3784900453330405,0.0
+reconciliation,gross_sales,mssql,39877276.35,39877276.35,0.0
+reconciliation,h2_2024_net_revenue,mssql,10188727.55,10188727.55,0.0
+reconciliation,h2_2025_net_revenue,mssql,9457457.05,9457457.05,0.0
+reconciliation,h2_yoy_pct,mssql,-7.177250509559463,-7.177250509559463,0.0
+reconciliation,net_revenue,mssql,36923003.2,36923003.2,0.0
+reconciliation,not_promoted_sales_lines,mssql,1077994.0,1077994.0,0.0
+reconciliation,promo_revenue_share,mssql,0.15392985729309894,0.1539298572930989,2.7755575615628914e-17
+reconciliation,return_rate_value,mssql,0.0337232589431803,0.0337232589431803,0.0
+reconciliation,returns_rows,mssql,34562.0,34562.0,0.0
+reconciliation,returns_value,mssql,1288620.48,1288620.48,0.0
+reconciliation,rows_dw_dim_date,mssql,731.0,731.0,0.0
+reconciliation,rows_dw_dim_product,mssql,601.0,601.0,0.0
+reconciliation,rows_dw_dim_promotion,mssql,136.0,136.0,0.0
+reconciliation,rows_dw_dim_store,mssql,20.0,20.0,0.0
+reconciliation,rows_dw_fact_inventory,mssql,939249.0,939249.0,0.0
+reconciliation,rows_dw_fact_promotion_coverage,mssql,49430.0,49430.0,0.0
+reconciliation,rows_dw_fact_returns,mssql,34562.0,34562.0,0.0
+reconciliation,rows_dw_fact_sales,mssql,1339510.0,1339510.0,0.0
+reconciliation,rows_dw_fact_targets,mssql,2077.0,2077.0,0.0
+reconciliation,rows_stg_dim_date,mssql,731.0,731.0,0.0
+reconciliation,rows_stg_dim_product,mssql,601.0,601.0,0.0
+reconciliation,rows_stg_dim_store,mssql,20.0,20.0,0.0
+reconciliation,rows_stg_fact_inventory,mssql,939249.0,939249.0,0.0
+reconciliation,rows_stg_fact_promotions,mssql,49430.0,49430.0,0.0
+reconciliation,rows_stg_fact_returns,mssql,34562.0,34562.0,0.0
+reconciliation,rows_stg_fact_sales,mssql,1339510.0,1339510.0,0.0
+reconciliation,rows_stg_fact_targets,mssql,2077.0,2077.0,0.0
+reconciliation,sales_lines,mssql,1339510.0,1339510.0,0.0
+reconciliation,sales_revenue,mssql,38211623.68,38211623.68,0.0
+reconciliation,stock_availability_2024,mssql,0.9550318650063134,0.9550318650063134,0.0
+reconciliation,transactions,mssql,835568.0,835568.0,0.0
+reconciliation,units,mssql,1768568.0,1768568.0,0.0
+reconciliation,unknown_date_fact_rows,mssql,0.0,0.0,0.0
+reconciliation,unknown_product_other_fact_rows,mssql,0.0,0.0,0.0
+reconciliation,unknown_product_sales_lines,mssql,1293.0,1293.0,0.0
+reconciliation,unknown_promotion_sales_lines,mssql,1.0,1.0,0.0
+reconciliation,unknown_store_fact_rows,mssql,0.0,0.0,0.0
+reconciliation,upt,mssql,2.1166057101277214,2.1166057101277214,0.0
+kpi_validation,availability view 2024 = reconciled availability,duckdb,0.9550318650063134,0.9550318650063134,0.0
+kpi_validation,base: cogs,duckdb,22948014.045,22948014.045,0.0
+kpi_validation,base: discount_value,duckdb,1665652.67,1665652.67,0.0
+kpi_validation,base: gross_margin,duckdb,13974989.155,13974989.155,0.0
+kpi_validation,base: gross_sales,duckdb,39877276.35,39877276.35,0.0
+kpi_validation,base: net_revenue,duckdb,36923003.2,36923003.2,0.0
+kpi_validation,base: promo_revenue_share,duckdb,0.15392985729309894,0.1539298572930989,2.7755575615628914e-17
+kpi_validation,base: returns_value,duckdb,1288620.48,1288620.48,0.0
+kpi_validation,base: sales_lines,duckdb,1339510.0,1339510.0,0.0
+kpi_validation,base: sales_revenue,duckdb,38211623.68,38211623.68,0.0
+kpi_validation,base: transactions,duckdb,835568.0,835568.0,0.0
+kpi_validation,base: units,duckdb,1768568.0,1768568.0,0.0
+kpi_validation,category availability view = store availability view (cells),duckdb,939249.0,939249.0,0.0
+kpi_validation,category roll-up = estate (net and sales revenue),duckdb,0.0,0.0,0.0
+kpi_validation,estate FY rows sum to base net revenue,duckdb,36923003.2,36923003.2,0.0
+kpi_validation,estate FY rows sum to base transactions,duckdb,835568.0,835568.0,0.0
+kpi_validation,estate H2 2024 net revenue,duckdb,10188727.55,10188727.55,0.0
+kpi_validation,estate H2 2025 net revenue,duckdb,9457457.05,9457457.05,0.0
+kpi_validation,estate H2 YoY % (mart.v_yoy_segment_period),duckdb,-7.177250509559463,-7.177250509559463,0.0
+kpi_validation,estate stock availability 2024,duckdb,0.9550318650063134,0.9550318650063134,0.0
+kpi_validation,identity: AOV = UPT x ASP,duckdb,0.0,0.0,0.0
+kpi_validation,identity: Gross Margin % x Net Revenue = Gross Margin,duckdb,0.0,0.0,0.0
+kpi_validation,identity: Gross Margin = Net Revenue - COGS,duckdb,0.0,0.0,0.0
+kpi_validation,identity: Net Revenue = Sales Revenue - Returns Value,duckdb,0.0,0.0,0.0
+kpi_validation,identity: Sales Revenue = Gross Sales - Discount Value,duckdb,0.0,0.0,0.0
+kpi_validation,identity: Sales Revenue = Transactions x UPT x ASP,duckdb,0.0,0.0,0.0
+kpi_validation,line-level view row count = fact_sales,duckdb,1339510.0,1339510.0,0.0
+kpi_validation,product-store-week view sums to sales revenue,duckdb,38211623.68,38211623.68,0.0
+kpi_validation,product-store-week view sums to units,duckdb,1768568.0,1768568.0,0.0
+kpi_validation,promotion view: all members sum to sales revenue,duckdb,38211623.68,38211623.68,0.0
+kpi_validation,promotion view: promoted revenue = promo sales revenue,duckdb,5881909.78,5881909.78,0.0
+kpi_validation,returns view sums to returns value,duckdb,1288620.48,1288620.48,0.0
+kpi_validation,segment roll-up = estate: Estate,duckdb,0.0,0.0,0.0
+kpi_validation,segment roll-up = estate: Format,duckdb,0.0,0.0,0.0
+kpi_validation,segment roll-up = estate: Region,duckdb,0.0,0.0,0.0
+kpi_validation,segment roll-up = estate: Store,duckdb,0.0,0.0,0.0
+kpi_validation,store-week targets = all targets loaded,duckdb,40150920.0,40150920.0,0.0
+kpi_validation,store-week view sums to base net revenue,duckdb,36923003.2,36923003.2,0.0
+kpi_validation,availability view 2024 = reconciled availability,mssql,0.9550318650063134,0.9550318650063134,0.0
+kpi_validation,base: cogs,mssql,22948014.045,22948014.045,0.0
+kpi_validation,base: discount_value,mssql,1665652.67,1665652.67,0.0
+kpi_validation,base: gross_margin,mssql,13974989.155,13974989.155,0.0
+kpi_validation,base: gross_sales,mssql,39877276.35,39877276.35,0.0
+kpi_validation,base: net_revenue,mssql,36923003.2,36923003.2,0.0
+kpi_validation,base: promo_revenue_share,mssql,0.15392985729309894,0.1539298572930989,2.7755575615628914e-17
+kpi_validation,base: returns_value,mssql,1288620.48,1288620.48,0.0
+kpi_validation,base: sales_lines,mssql,1339510.0,1339510.0,0.0
+kpi_validation,base: sales_revenue,mssql,38211623.68,38211623.68,0.0
+kpi_validation,base: transactions,mssql,835568.0,835568.0,0.0
+kpi_validation,base: units,mssql,1768568.0,1768568.0,0.0
+kpi_validation,category availability view = store availability view (cells),mssql,939249.0,939249.0,0.0
+kpi_validation,category roll-up = estate (net and sales revenue),mssql,0.0,0.0,0.0
+kpi_validation,estate FY rows sum to base net revenue,mssql,36923003.2,36923003.2,0.0
+kpi_validation,estate FY rows sum to base transactions,mssql,835568.0,835568.0,0.0
+kpi_validation,estate H2 2024 net revenue,mssql,10188727.55,10188727.55,0.0
+kpi_validation,estate H2 2025 net revenue,mssql,9457457.05,9457457.05,0.0
+kpi_validation,estate H2 YoY % (mart.v_yoy_segment_period),mssql,-7.177250509559463,-7.177250509559463,0.0
+kpi_validation,estate stock availability 2024,mssql,0.9550318650063134,0.9550318650063134,0.0
+kpi_validation,identity: AOV = UPT x ASP,mssql,0.0,0.0,0.0
+kpi_validation,identity: Gross Margin % x Net Revenue = Gross Margin,mssql,0.0,0.0,0.0
+kpi_validation,identity: Gross Margin = Net Revenue - COGS,mssql,0.0,0.0,0.0
+kpi_validation,identity: Net Revenue = Sales Revenue - Returns Value,mssql,0.0,0.0,0.0
+kpi_validation,identity: Sales Revenue = Gross Sales - Discount Value,mssql,0.0,0.0,0.0
+kpi_validation,identity: Sales Revenue = Transactions x UPT x ASP,mssql,0.0,0.0,0.0
+kpi_validation,line-level view row count = fact_sales,mssql,1339510.0,1339510.0,0.0
+kpi_validation,product-store-week view sums to sales revenue,mssql,38211623.68,38211623.68,0.0
+kpi_validation,product-store-week view sums to units,mssql,1768568.0,1768568.0,0.0
+kpi_validation,promotion view: all members sum to sales revenue,mssql,38211623.68,38211623.68,0.0
+kpi_validation,promotion view: promoted revenue = promo sales revenue,mssql,5881909.78,5881909.78,0.0
+kpi_validation,returns view sums to returns value,mssql,1288620.48,1288620.48,0.0
+kpi_validation,segment roll-up = estate: Estate,mssql,0.0,0.0,0.0
+kpi_validation,segment roll-up = estate: Format,mssql,0.0,0.0,0.0
+kpi_validation,segment roll-up = estate: Region,mssql,0.0,0.0,0.0
+kpi_validation,segment roll-up = estate: Store,mssql,0.0,0.0,0.0
+kpi_validation,store-week targets = all targets loaded,mssql,40150920.0,40150920.0,0.0
+kpi_validation,store-week view sums to base net revenue,mssql,36923003.2,36923003.2,0.0

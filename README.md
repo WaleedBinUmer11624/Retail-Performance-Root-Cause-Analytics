@@ -359,6 +359,8 @@ Do Path A first, then:
 
 The connection settings (server, database, driver) are in `config/project_config.yaml`. If your server is not `localhost`, change `server` there.
 
+Optional: the same star schema also builds in Google BigQuery (free sandbox), so it runs on three engines (SQL Server, DuckDB and BigQuery), each reconciling 45/45 and 38/38. See [docs/bigquery_engine.md](docs/bigquery_engine.md).
+
 ### Setup checklist
 
 - [ ] Python and Git installed

@@ -1,0 +1,30 @@
+# BigQuery build of the Phase 4 star schema (used by src/bigquery_model). Optional third engine,
+# alongside SQL Server (the target) and DuckDB (the local verification engine). It reads the same
+# Phase 4 configuration (config/sql_model_config.yaml): scripts, curated inputs and tolerances.
+#
+# The project ID is never stored in a tracked file. It is read, in this order, from the environment
+# variable named below or from the untracked local file below (listed in .gitignore), for example:
+#   project_id: your-project-id
+# Authentication is Application Default Credentials only (gcloud auth application-default login).
+project_id_env: BQ_PROJECT_ID
+local_config: config/bigquery_local.yaml
+
+# One dataset per Phase 4 schema: stg, dw, mart and recon become <prefix>stg, <prefix>dw and so on.
+dataset_prefix: brightwater_
+location: EU
+
+# Free-tier guard: every query job carries this cap, so a query that would scan more fails instead
+# of running. The largest build query reads the staged sales lines (about 0.3 GB).
+maximum_bytes_billed: 2147483648      # 2 GiB per query
+
+# Phase 4 batches that do not apply to BigQuery. Script 01 creates the SQL Server database, 05 adds
+# enforced keys and constraints, and 06 adds columnstore indexes; BigQuery has datasets instead of
+# databases and does not enforce keys. These are marked @tsql-only in the scripts, so they are skipped
+# automatically; listed here so the decision is explicit.
+not_applicable:
+  - sql/schema/01_create_database_and_schemas.sql
+  - sql/schema/05_create_keys_and_constraints.sql
+  - sql/schema/06_create_indexes.sql
+
+outputs:
+  reports: reports/bigquery

@@ -1,0 +1,170 @@
+batch,rule,note,why
+02_create_staging_tables.sql batch 0,R9_skip_session,SET,SET statements (SET NOCOUNT ON) have no BigQuery equivalent and are skipped.
+02_create_staging_tables.sql batch 0,R15_keep_staging,DROP TABLE IF EXISTS stg.dim_date,"DROP TABLE of a staging table is skipped and it is created only if missing: its rows are always replaced by the load job (WRITE_TRUNCATE), or kept only when its recorded SHA-256 and row count match the verified curated file, so the result equals T-SQL's drop and reload."
+02_create_staging_tables.sql batch 0,R8_table_ddl,,"CREATE TABLE keeps column names and types; PRIMARY KEY, NOT NULL and other constraints are dropped (BigQuery does not enforce keys)."
+02_create_staging_tables.sql batch 1,R9_skip_session,SET,SET statements (SET NOCOUNT ON) have no BigQuery equivalent and are skipped.
+02_create_staging_tables.sql batch 1,R15_keep_staging,DROP TABLE IF EXISTS stg.dim_store,"DROP TABLE of a staging table is skipped and it is created only if missing: its rows are always replaced by the load job (WRITE_TRUNCATE), or kept only when its recorded SHA-256 and row count match the verified curated file, so the result equals T-SQL's drop and reload."
+02_create_staging_tables.sql batch 1,R8_table_ddl,,"CREATE TABLE keeps column names and types; PRIMARY KEY, NOT NULL and other constraints are dropped (BigQuery does not enforce keys)."
+02_create_staging_tables.sql batch 2,R9_skip_session,SET,SET statements (SET NOCOUNT ON) have no BigQuery equivalent and are skipped.
+02_create_staging_tables.sql batch 2,R15_keep_staging,DROP TABLE IF EXISTS stg.dim_product,"DROP TABLE of a staging table is skipped and it is created only if missing: its rows are always replaced by the load job (WRITE_TRUNCATE), or kept only when its recorded SHA-256 and row count match the verified curated file, so the result equals T-SQL's drop and reload."
+02_create_staging_tables.sql batch 2,R8_table_ddl,,"CREATE TABLE keeps column names and types; PRIMARY KEY, NOT NULL and other constraints are dropped (BigQuery does not enforce keys)."
+02_create_staging_tables.sql batch 3,R9_skip_session,SET,SET statements (SET NOCOUNT ON) have no BigQuery equivalent and are skipped.
+02_create_staging_tables.sql batch 3,R15_keep_staging,DROP TABLE IF EXISTS stg.fact_sales,"DROP TABLE of a staging table is skipped and it is created only if missing: its rows are always replaced by the load job (WRITE_TRUNCATE), or kept only when its recorded SHA-256 and row count match the verified curated file, so the result equals T-SQL's drop and reload."
+02_create_staging_tables.sql batch 3,R8_table_ddl,,"CREATE TABLE keeps column names and types; PRIMARY KEY, NOT NULL and other constraints are dropped (BigQuery does not enforce keys)."
+02_create_staging_tables.sql batch 4,R9_skip_session,SET,SET statements (SET NOCOUNT ON) have no BigQuery equivalent and are skipped.
+02_create_staging_tables.sql batch 4,R15_keep_staging,DROP TABLE IF EXISTS stg.fact_returns,"DROP TABLE of a staging table is skipped and it is created only if missing: its rows are always replaced by the load job (WRITE_TRUNCATE), or kept only when its recorded SHA-256 and row count match the verified curated file, so the result equals T-SQL's drop and reload."
+02_create_staging_tables.sql batch 4,R8_table_ddl,,"CREATE TABLE keeps column names and types; PRIMARY KEY, NOT NULL and other constraints are dropped (BigQuery does not enforce keys)."
+02_create_staging_tables.sql batch 5,R9_skip_session,SET,SET statements (SET NOCOUNT ON) have no BigQuery equivalent and are skipped.
+02_create_staging_tables.sql batch 5,R15_keep_staging,DROP TABLE IF EXISTS stg.fact_inventory,"DROP TABLE of a staging table is skipped and it is created only if missing: its rows are always replaced by the load job (WRITE_TRUNCATE), or kept only when its recorded SHA-256 and row count match the verified curated file, so the result equals T-SQL's drop and reload."
+02_create_staging_tables.sql batch 5,R8_table_ddl,,"CREATE TABLE keeps column names and types; PRIMARY KEY, NOT NULL and other constraints are dropped (BigQuery does not enforce keys)."
+02_create_staging_tables.sql batch 6,R9_skip_session,SET,SET statements (SET NOCOUNT ON) have no BigQuery equivalent and are skipped.
+02_create_staging_tables.sql batch 6,R15_keep_staging,DROP TABLE IF EXISTS stg.fact_promotions,"DROP TABLE of a staging table is skipped and it is created only if missing: its rows are always replaced by the load job (WRITE_TRUNCATE), or kept only when its recorded SHA-256 and row count match the verified curated file, so the result equals T-SQL's drop and reload."
+02_create_staging_tables.sql batch 6,R8_table_ddl,,"CREATE TABLE keeps column names and types; PRIMARY KEY, NOT NULL and other constraints are dropped (BigQuery does not enforce keys)."
+02_create_staging_tables.sql batch 7,R9_skip_session,SET,SET statements (SET NOCOUNT ON) have no BigQuery equivalent and are skipped.
+02_create_staging_tables.sql batch 7,R15_keep_staging,DROP TABLE IF EXISTS stg.fact_targets,"DROP TABLE of a staging table is skipped and it is created only if missing: its rows are always replaced by the load job (WRITE_TRUNCATE), or kept only when its recorded SHA-256 and row count match the verified curated file, so the result equals T-SQL's drop and reload."
+02_create_staging_tables.sql batch 7,R8_table_ddl,,"CREATE TABLE keeps column names and types; PRIMARY KEY, NOT NULL and other constraints are dropped (BigQuery does not enforce keys)."
+02_create_staging_tables.sql batch 8,R9_skip_session,SET,SET statements (SET NOCOUNT ON) have no BigQuery equivalent and are skipped.
+02_create_staging_tables.sql batch 8,R8_table_ddl,,"CREATE TABLE keeps column names and types; PRIMARY KEY, NOT NULL and other constraints are dropped (BigQuery does not enforce keys)."
+02_create_staging_tables.sql batch 8,R8_table_ddl,,"CREATE TABLE keeps column names and types; PRIMARY KEY, NOT NULL and other constraints are dropped (BigQuery does not enforce keys)."
+03_create_dimension_tables.sql batch 0,R9_skip_session,SET,SET statements (SET NOCOUNT ON) have no BigQuery equivalent and are skipped.
+03_create_dimension_tables.sql batch 1,R8_table_ddl,,"CREATE TABLE keeps column names and types; PRIMARY KEY, NOT NULL and other constraints are dropped (BigQuery does not enforce keys)."
+03_create_dimension_tables.sql batch 2,R8_table_ddl,,"CREATE TABLE keeps column names and types; PRIMARY KEY, NOT NULL and other constraints are dropped (BigQuery does not enforce keys)."
+03_create_dimension_tables.sql batch 3,R8_table_ddl,,"CREATE TABLE keeps column names and types; PRIMARY KEY, NOT NULL and other constraints are dropped (BigQuery does not enforce keys)."
+03_create_dimension_tables.sql batch 4,R8_table_ddl,,"CREATE TABLE keeps column names and types; PRIMARY KEY, NOT NULL and other constraints are dropped (BigQuery does not enforce keys)."
+03_create_dimension_tables.sql batch 5,R8_table_ddl,,"CREATE TABLE keeps column names and types; PRIMARY KEY, NOT NULL and other constraints are dropped (BigQuery does not enforce keys)."
+04_create_fact_tables.sql batch 0,R9_skip_session,SET,SET statements (SET NOCOUNT ON) have no BigQuery equivalent and are skipped.
+04_create_fact_tables.sql batch 1,R8_table_ddl,,"CREATE TABLE keeps column names and types; PRIMARY KEY, NOT NULL and other constraints are dropped (BigQuery does not enforce keys)."
+04_create_fact_tables.sql batch 2,R8_table_ddl,,"CREATE TABLE keeps column names and types; PRIMARY KEY, NOT NULL and other constraints are dropped (BigQuery does not enforce keys)."
+04_create_fact_tables.sql batch 3,R8_table_ddl,,"CREATE TABLE keeps column names and types; PRIMARY KEY, NOT NULL and other constraints are dropped (BigQuery does not enforce keys)."
+04_create_fact_tables.sql batch 4,R8_table_ddl,,"CREATE TABLE keeps column names and types; PRIMARY KEY, NOT NULL and other constraints are dropped (BigQuery does not enforce keys)."
+04_create_fact_tables.sql batch 5,R8_table_ddl,,"CREATE TABLE keeps column names and types; PRIMARY KEY, NOT NULL and other constraints are dropped (BigQuery does not enforce keys)."
+07_load_dimensions.sql batch 0,R9_skip_session,SET,SET statements (SET NOCOUNT ON) have no BigQuery equivalent and are skipped.
+07_load_dimensions.sql batch 0,R6_skip_clear,TRUNCATE TABLE dw.fact_sales,DELETE and TRUNCATE before a reload are not needed (and not allowed): the reload replaces the table.
+07_load_dimensions.sql batch 0,R6_skip_clear,TRUNCATE TABLE dw.fact_returns,DELETE and TRUNCATE before a reload are not needed (and not allowed): the reload replaces the table.
+07_load_dimensions.sql batch 0,R6_skip_clear,TRUNCATE TABLE dw.fact_inventory,DELETE and TRUNCATE before a reload are not needed (and not allowed): the reload replaces the table.
+07_load_dimensions.sql batch 0,R6_skip_clear,TRUNCATE TABLE dw.fact_targets,DELETE and TRUNCATE before a reload are not needed (and not allowed): the reload replaces the table.
+07_load_dimensions.sql batch 0,R6_skip_clear,TRUNCATE TABLE dw.fact_promotion_coverage,DELETE and TRUNCATE before a reload are not needed (and not allowed): the reload replaces the table.
+07_load_dimensions.sql batch 0,R6_skip_clear,DELETE FROM dw.dim_date,DELETE and TRUNCATE before a reload are not needed (and not allowed): the reload replaces the table.
+07_load_dimensions.sql batch 0,R6_skip_clear,DELETE FROM dw.dim_retail_week,DELETE and TRUNCATE before a reload are not needed (and not allowed): the reload replaces the table.
+07_load_dimensions.sql batch 0,R6_skip_clear,DELETE FROM dw.dim_store,DELETE and TRUNCATE before a reload are not needed (and not allowed): the reload replaces the table.
+07_load_dimensions.sql batch 0,R6_skip_clear,DELETE FROM dw.dim_product,DELETE and TRUNCATE before a reload are not needed (and not allowed): the reload replaces the table.
+07_load_dimensions.sql batch 0,R6_skip_clear,DELETE FROM dw.dim_promotion,DELETE and TRUNCATE before a reload are not needed (and not allowed): the reload replaces the table.
+07_load_dimensions.sql batch 1,R9_skip_session,SET,SET statements (SET NOCOUNT ON) have no BigQuery equivalent and are skipped.
+07_load_dimensions.sql batch 1,R12_concat_to_string,2 INSERT(s) into dw.dim_retail_week,"T-SQL CONCAT converts numbers to text implicitly; BigQuery CONCAT needs STRING arguments, so non-string arguments are cast to STRING (NULLs still become empty text, as in T-SQL)."
+07_load_dimensions.sql batch 1,R13_integer_types,2 INSERT(s) into dw.dim_retail_week,"CAST/TRY_CONVERT to TINYINT, SMALLINT, INT or BIT becomes INT64; sqlglot keeps TINYINT as UTINYINT, which BigQuery does not have."
+07_load_dimensions.sql batch 1,R1_national_literal,2 INSERT(s) into dw.dim_retail_week,T-SQL N'...' literals are generated unchanged; BigQuery has no N prefix (syntax error).
+07_load_dimensions.sql batch 1,R5_insert_to_ctas,2 INSERT(s) into dw.dim_retail_week,"The sandbox (no billing account) does not allow DML. Each table's INSERT statements are combined with UNION ALL into CREATE OR REPLACE TABLE ... AS SELECT, every value cast to the column type declared by the Phase 4 DDL, in DDL column order."
+07_load_dimensions.sql batch 2,R9_skip_session,SET,SET statements (SET NOCOUNT ON) have no BigQuery equivalent and are skipped.
+07_load_dimensions.sql batch 2,R13_integer_types,2 INSERT(s) into dw.dim_date,"CAST/TRY_CONVERT to TINYINT, SMALLINT, INT or BIT becomes INT64; sqlglot keeps TINYINT as UTINYINT, which BigQuery does not have."
+07_load_dimensions.sql batch 2,R1_national_literal,2 INSERT(s) into dw.dim_date,T-SQL N'...' literals are generated unchanged; BigQuery has no N prefix (syntax error).
+07_load_dimensions.sql batch 2,R5_insert_to_ctas,2 INSERT(s) into dw.dim_date,"The sandbox (no billing account) does not allow DML. Each table's INSERT statements are combined with UNION ALL into CREATE OR REPLACE TABLE ... AS SELECT, every value cast to the column type declared by the Phase 4 DDL, in DDL column order."
+07_load_dimensions.sql batch 3,R9_skip_session,SET,SET statements (SET NOCOUNT ON) have no BigQuery equivalent and are skipped.
+07_load_dimensions.sql batch 3,R13_integer_types,2 INSERT(s) into dw.dim_store,"CAST/TRY_CONVERT to TINYINT, SMALLINT, INT or BIT becomes INT64; sqlglot keeps TINYINT as UTINYINT, which BigQuery does not have."
+07_load_dimensions.sql batch 3,R1_national_literal,2 INSERT(s) into dw.dim_store,T-SQL N'...' literals are generated unchanged; BigQuery has no N prefix (syntax error).
+07_load_dimensions.sql batch 3,R2_decimal_cast,2 INSERT(s) into dw.dim_store,"BigQuery rejects parameterized types in CAST. CAST(x AS DECIMAL(p,s)) rounds to s places in T-SQL, so it becomes ROUND(CAST(x AS NUMERIC), s)."
+07_load_dimensions.sql batch 3,R5_insert_to_ctas,2 INSERT(s) into dw.dim_store,"The sandbox (no billing account) does not allow DML. Each table's INSERT statements are combined with UNION ALL into CREATE OR REPLACE TABLE ... AS SELECT, every value cast to the column type declared by the Phase 4 DDL, in DDL column order."
+07_load_dimensions.sql batch 4,R9_skip_session,SET,SET statements (SET NOCOUNT ON) have no BigQuery equivalent and are skipped.
+07_load_dimensions.sql batch 4,R13_integer_types,2 INSERT(s) into dw.dim_product,"CAST/TRY_CONVERT to TINYINT, SMALLINT, INT or BIT becomes INT64; sqlglot keeps TINYINT as UTINYINT, which BigQuery does not have."
+07_load_dimensions.sql batch 4,R14_self_reference_guard,2 INSERT(s) into dw.dim_product,"An INSERT guarded by WHERE NOT EXISTS (SELECT 1 FROM <same table> ...) reads the rows earlier INSERTs wrote. Inside one CREATE OR REPLACE the table is still the previous build, so the guard reads a CTE of the earlier rows instead (same meaning as T-SQL); BigQuery also needs a FROM before WHERE, so the guard row selects from a one-row table."
+07_load_dimensions.sql batch 4,R1_national_literal,2 INSERT(s) into dw.dim_product,T-SQL N'...' literals are generated unchanged; BigQuery has no N prefix (syntax error).
+07_load_dimensions.sql batch 4,R2_decimal_cast,2 INSERT(s) into dw.dim_product,"BigQuery rejects parameterized types in CAST. CAST(x AS DECIMAL(p,s)) rounds to s places in T-SQL, so it becomes ROUND(CAST(x AS NUMERIC), s)."
+07_load_dimensions.sql batch 4,R5_insert_to_ctas,2 INSERT(s) into dw.dim_product,"The sandbox (no billing account) does not allow DML. Each table's INSERT statements are combined with UNION ALL into CREATE OR REPLACE TABLE ... AS SELECT, every value cast to the column type declared by the Phase 4 DDL, in DDL column order."
+07_load_dimensions.sql batch 5,R9_skip_session,SET,SET statements (SET NOCOUNT ON) have no BigQuery equivalent and are skipped.
+07_load_dimensions.sql batch 5,R1_national_literal,2 INSERT(s) into dw.dim_promotion,T-SQL N'...' literals are generated unchanged; BigQuery has no N prefix (syntax error).
+07_load_dimensions.sql batch 5,R2_decimal_cast,2 INSERT(s) into dw.dim_promotion,"BigQuery rejects parameterized types in CAST. CAST(x AS DECIMAL(p,s)) rounds to s places in T-SQL, so it becomes ROUND(CAST(x AS NUMERIC), s)."
+07_load_dimensions.sql batch 5,R5_insert_to_ctas,2 INSERT(s) into dw.dim_promotion,"The sandbox (no billing account) does not allow DML. Each table's INSERT statements are combined with UNION ALL into CREATE OR REPLACE TABLE ... AS SELECT, every value cast to the column type declared by the Phase 4 DDL, in DDL column order."
+08_load_facts.sql batch 0,R9_skip_session,SET,SET statements (SET NOCOUNT ON) have no BigQuery equivalent and are skipped.
+08_load_facts.sql batch 0,R6_skip_clear,TRUNCATE TABLE dw.fact_sales,DELETE and TRUNCATE before a reload are not needed (and not allowed): the reload replaces the table.
+08_load_facts.sql batch 0,R6_skip_clear,TRUNCATE TABLE dw.fact_returns,DELETE and TRUNCATE before a reload are not needed (and not allowed): the reload replaces the table.
+08_load_facts.sql batch 0,R6_skip_clear,TRUNCATE TABLE dw.fact_inventory,DELETE and TRUNCATE before a reload are not needed (and not allowed): the reload replaces the table.
+08_load_facts.sql batch 0,R6_skip_clear,TRUNCATE TABLE dw.fact_targets,DELETE and TRUNCATE before a reload are not needed (and not allowed): the reload replaces the table.
+08_load_facts.sql batch 0,R6_skip_clear,TRUNCATE TABLE dw.fact_promotion_coverage,DELETE and TRUNCATE before a reload are not needed (and not allowed): the reload replaces the table.
+08_load_facts.sql batch 1,R9_skip_session,SET,SET statements (SET NOCOUNT ON) have no BigQuery equivalent and are skipped.
+08_load_facts.sql batch 1,R11_time_precision,1 INSERT(s) into dw.fact_sales,"CAST(x AS TIME(0)) or DATETIME2(0) becomes TIME or DATETIME (precision is not allowed in CAST). T-SQL also converts 'HH:MM' text to TIME, which BigQuery's cast rejects, so text is read as COALESCE(SAFE_CAST(x AS TIME), SAFE.PARSE_TIME('%H:%M', x))."
+08_load_facts.sql batch 1,R13_integer_types,1 INSERT(s) into dw.fact_sales,"CAST/TRY_CONVERT to TINYINT, SMALLINT, INT or BIT becomes INT64; sqlglot keeps TINYINT as UTINYINT, which BigQuery does not have."
+08_load_facts.sql batch 1,R1_national_literal,1 INSERT(s) into dw.fact_sales,T-SQL N'...' literals are generated unchanged; BigQuery has no N prefix (syntax error).
+08_load_facts.sql batch 1,R2_decimal_cast,1 INSERT(s) into dw.fact_sales,"BigQuery rejects parameterized types in CAST. CAST(x AS DECIMAL(p,s)) rounds to s places in T-SQL, so it becomes ROUND(CAST(x AS NUMERIC), s)."
+08_load_facts.sql batch 1,R5_insert_to_ctas,1 INSERT(s) into dw.fact_sales,"The sandbox (no billing account) does not allow DML. Each table's INSERT statements are combined with UNION ALL into CREATE OR REPLACE TABLE ... AS SELECT, every value cast to the column type declared by the Phase 4 DDL, in DDL column order."
+08_load_facts.sql batch 3,R9_skip_session,SET,SET statements (SET NOCOUNT ON) have no BigQuery equivalent and are skipped.
+08_load_facts.sql batch 3,R10_percentile_cont,1 INSERT(s) into dw.fact_returns,"T-SQL PERCENTILE_CONT(q) WITHIN GROUP (ORDER BY x) OVER (...) is generated unchanged; BigQuery writes the same exact median as PERCENTILE_CONT(x, q) OVER (...)."
+08_load_facts.sql batch 3,R13_integer_types,1 INSERT(s) into dw.fact_returns,"CAST/TRY_CONVERT to TINYINT, SMALLINT, INT or BIT becomes INT64; sqlglot keeps TINYINT as UTINYINT, which BigQuery does not have."
+08_load_facts.sql batch 3,R1_national_literal,1 INSERT(s) into dw.fact_returns,T-SQL N'...' literals are generated unchanged; BigQuery has no N prefix (syntax error).
+08_load_facts.sql batch 3,R2_decimal_cast,1 INSERT(s) into dw.fact_returns,"BigQuery rejects parameterized types in CAST. CAST(x AS DECIMAL(p,s)) rounds to s places in T-SQL, so it becomes ROUND(CAST(x AS NUMERIC), s)."
+08_load_facts.sql batch 3,R5_insert_to_ctas,1 INSERT(s) into dw.fact_returns,"The sandbox (no billing account) does not allow DML. Each table's INSERT statements are combined with UNION ALL into CREATE OR REPLACE TABLE ... AS SELECT, every value cast to the column type declared by the Phase 4 DDL, in DDL column order."
+08_load_facts.sql batch 4,R9_skip_session,SET,SET statements (SET NOCOUNT ON) have no BigQuery equivalent and are skipped.
+08_load_facts.sql batch 4,R13_integer_types,1 INSERT(s) into dw.fact_inventory,"CAST/TRY_CONVERT to TINYINT, SMALLINT, INT or BIT becomes INT64; sqlglot keeps TINYINT as UTINYINT, which BigQuery does not have."
+08_load_facts.sql batch 4,R1_national_literal,1 INSERT(s) into dw.fact_inventory,T-SQL N'...' literals are generated unchanged; BigQuery has no N prefix (syntax error).
+08_load_facts.sql batch 4,R5_insert_to_ctas,1 INSERT(s) into dw.fact_inventory,"The sandbox (no billing account) does not allow DML. Each table's INSERT statements are combined with UNION ALL into CREATE OR REPLACE TABLE ... AS SELECT, every value cast to the column type declared by the Phase 4 DDL, in DDL column order."
+08_load_facts.sql batch 6,R9_skip_session,SET,SET statements (SET NOCOUNT ON) have no BigQuery equivalent and are skipped.
+08_load_facts.sql batch 6,R13_integer_types,1 INSERT(s) into dw.fact_targets,"CAST/TRY_CONVERT to TINYINT, SMALLINT, INT or BIT becomes INT64; sqlglot keeps TINYINT as UTINYINT, which BigQuery does not have."
+08_load_facts.sql batch 6,R2_decimal_cast,1 INSERT(s) into dw.fact_targets,"BigQuery rejects parameterized types in CAST. CAST(x AS DECIMAL(p,s)) rounds to s places in T-SQL, so it becomes ROUND(CAST(x AS NUMERIC), s)."
+08_load_facts.sql batch 6,R5_insert_to_ctas,1 INSERT(s) into dw.fact_targets,"The sandbox (no billing account) does not allow DML. Each table's INSERT statements are combined with UNION ALL into CREATE OR REPLACE TABLE ... AS SELECT, every value cast to the column type declared by the Phase 4 DDL, in DDL column order."
+08_load_facts.sql batch 7,R9_skip_session,SET,SET statements (SET NOCOUNT ON) have no BigQuery equivalent and are skipped.
+08_load_facts.sql batch 7,R13_integer_types,1 INSERT(s) into dw.fact_promotion_coverage,"CAST/TRY_CONVERT to TINYINT, SMALLINT, INT or BIT becomes INT64; sqlglot keeps TINYINT as UTINYINT, which BigQuery does not have."
+08_load_facts.sql batch 7,R2_decimal_cast,1 INSERT(s) into dw.fact_promotion_coverage,"BigQuery rejects parameterized types in CAST. CAST(x AS DECIMAL(p,s)) rounds to s places in T-SQL, so it becomes ROUND(CAST(x AS NUMERIC), s)."
+08_load_facts.sql batch 7,R5_insert_to_ctas,1 INSERT(s) into dw.fact_promotion_coverage,"The sandbox (no billing account) does not allow DML. Each table's INSERT statements are combined with UNION ALL into CREATE OR REPLACE TABLE ... AS SELECT, every value cast to the column type declared by the Phase 4 DDL, in DDL column order."
+09_reconciliation.sql batch 0,R13_integer_types,,"CAST/TRY_CONVERT to TINYINT, SMALLINT, INT or BIT becomes INT64; sqlglot keeps TINYINT as UTINYINT, which BigQuery does not have."
+09_reconciliation.sql batch 0,R2_decimal_cast,,"BigQuery rejects parameterized types in CAST. CAST(x AS DECIMAL(p,s)) rounds to s places in T-SQL, so it becomes ROUND(CAST(x AS NUMERIC), s)."
+09_reconciliation.sql batch 0,R7_replace_objects,,"CREATE OR ALTER VIEW and SELECT ... INTO become CREATE OR REPLACE, so a rebuild is re-runnable."
+09_reconciliation.sql batch 1,R9_skip_session,SET,SET statements (SET NOCOUNT ON) have no BigQuery equivalent and are skipped.
+09_reconciliation.sql batch 1,R7_replace_objects,,"CREATE OR ALTER VIEW and SELECT ... INTO become CREATE OR REPLACE, so a rebuild is re-runnable."
+09_reconciliation.sql batch 1,R6_skip_clear,DELETE FROM recon.actual,DELETE and TRUNCATE before a reload are not needed (and not allowed): the reload replaces the table.
+09_reconciliation.sql batch 1,R13_integer_types,1 INSERT(s) into recon.actual,"CAST/TRY_CONVERT to TINYINT, SMALLINT, INT or BIT becomes INT64; sqlglot keeps TINYINT as UTINYINT, which BigQuery does not have."
+09_reconciliation.sql batch 1,R1_national_literal,1 INSERT(s) into recon.actual,T-SQL N'...' literals are generated unchanged; BigQuery has no N prefix (syntax error).
+09_reconciliation.sql batch 1,R5_insert_to_ctas,1 INSERT(s) into recon.actual,"The sandbox (no billing account) does not allow DML. Each table's INSERT statements are combined with UNION ALL into CREATE OR REPLACE TABLE ... AS SELECT, every value cast to the column type declared by the Phase 4 DDL, in DDL column order."
+09_reconciliation.sql batch 2,R1_national_literal,,T-SQL N'...' literals are generated unchanged; BigQuery has no N prefix (syntax error).
+09_reconciliation.sql batch 2,R7_replace_objects,,"CREATE OR ALTER VIEW and SELECT ... INTO become CREATE OR REPLACE, so a rebuild is re-runnable."
+10_analytical_views.sql batch 0,R13_integer_types,,"CAST/TRY_CONVERT to TINYINT, SMALLINT, INT or BIT becomes INT64; sqlglot keeps TINYINT as UTINYINT, which BigQuery does not have."
+10_analytical_views.sql batch 0,R2_decimal_cast,,"BigQuery rejects parameterized types in CAST. CAST(x AS DECIMAL(p,s)) rounds to s places in T-SQL, so it becomes ROUND(CAST(x AS NUMERIC), s)."
+10_analytical_views.sql batch 0,R7_replace_objects,,"CREATE OR ALTER VIEW and SELECT ... INTO become CREATE OR REPLACE, so a rebuild is re-runnable."
+10_analytical_views.sql batch 1,R13_integer_types,,"CAST/TRY_CONVERT to TINYINT, SMALLINT, INT or BIT becomes INT64; sqlglot keeps TINYINT as UTINYINT, which BigQuery does not have."
+10_analytical_views.sql batch 1,R2_decimal_cast,,"BigQuery rejects parameterized types in CAST. CAST(x AS DECIMAL(p,s)) rounds to s places in T-SQL, so it becomes ROUND(CAST(x AS NUMERIC), s)."
+10_analytical_views.sql batch 1,R7_replace_objects,,"CREATE OR ALTER VIEW and SELECT ... INTO become CREATE OR REPLACE, so a rebuild is re-runnable."
+10_analytical_views.sql batch 2,R7_replace_objects,,"CREATE OR ALTER VIEW and SELECT ... INTO become CREATE OR REPLACE, so a rebuild is re-runnable."
+10_analytical_views.sql batch 3,R7_replace_objects,,"CREATE OR ALTER VIEW and SELECT ... INTO become CREATE OR REPLACE, so a rebuild is re-runnable."
+10_analytical_views.sql batch 4,R1_national_literal,,T-SQL N'...' literals are generated unchanged; BigQuery has no N prefix (syntax error).
+10_analytical_views.sql batch 4,R7_replace_objects,,"CREATE OR ALTER VIEW and SELECT ... INTO become CREATE OR REPLACE, so a rebuild is re-runnable."
+10_analytical_views.sql batch 5,R12_concat_to_string,,"T-SQL CONCAT converts numbers to text implicitly; BigQuery CONCAT needs STRING arguments, so non-string arguments are cast to STRING (NULLs still become empty text, as in T-SQL)."
+10_analytical_views.sql batch 5,R1_national_literal,,T-SQL N'...' literals are generated unchanged; BigQuery has no N prefix (syntax error).
+10_analytical_views.sql batch 5,R7_replace_objects,,"CREATE OR ALTER VIEW and SELECT ... INTO become CREATE OR REPLACE, so a rebuild is re-runnable."
+10_analytical_views.sql batch 6,R13_integer_types,,"CAST/TRY_CONVERT to TINYINT, SMALLINT, INT or BIT becomes INT64; sqlglot keeps TINYINT as UTINYINT, which BigQuery does not have."
+10_analytical_views.sql batch 6,R1_national_literal,,T-SQL N'...' literals are generated unchanged; BigQuery has no N prefix (syntax error).
+10_analytical_views.sql batch 6,R7_replace_objects,,"CREATE OR ALTER VIEW and SELECT ... INTO become CREATE OR REPLACE, so a rebuild is re-runnable."
+10_analytical_views.sql batch 7,R7_replace_objects,,"CREATE OR ALTER VIEW and SELECT ... INTO become CREATE OR REPLACE, so a rebuild is re-runnable."
+10_analytical_views.sql batch 8,R7_replace_objects,,"CREATE OR ALTER VIEW and SELECT ... INTO become CREATE OR REPLACE, so a rebuild is re-runnable."
+10_analytical_views.sql batch 9,R13_integer_types,,"CAST/TRY_CONVERT to TINYINT, SMALLINT, INT or BIT becomes INT64; sqlglot keeps TINYINT as UTINYINT, which BigQuery does not have."
+10_analytical_views.sql batch 9,R2_decimal_cast,,"BigQuery rejects parameterized types in CAST. CAST(x AS DECIMAL(p,s)) rounds to s places in T-SQL, so it becomes ROUND(CAST(x AS NUMERIC), s)."
+10_analytical_views.sql batch 9,R7_replace_objects,,"CREATE OR ALTER VIEW and SELECT ... INTO become CREATE OR REPLACE, so a rebuild is re-runnable."
+10_analytical_views.sql batch 10,R1_national_literal,,T-SQL N'...' literals are generated unchanged; BigQuery has no N prefix (syntax error).
+10_analytical_views.sql batch 10,R7_replace_objects,,"CREATE OR ALTER VIEW and SELECT ... INTO become CREATE OR REPLACE, so a rebuild is re-runnable."
+10_analytical_views.sql batch 11,R13_integer_types,,"CAST/TRY_CONVERT to TINYINT, SMALLINT, INT or BIT becomes INT64; sqlglot keeps TINYINT as UTINYINT, which BigQuery does not have."
+10_analytical_views.sql batch 11,R7_replace_objects,,"CREATE OR ALTER VIEW and SELECT ... INTO become CREATE OR REPLACE, so a rebuild is re-runnable."
+10_analytical_views.sql batch 12,R13_integer_types,,"CAST/TRY_CONVERT to TINYINT, SMALLINT, INT or BIT becomes INT64; sqlglot keeps TINYINT as UTINYINT, which BigQuery does not have."
+10_analytical_views.sql batch 12,R7_replace_objects,,"CREATE OR ALTER VIEW and SELECT ... INTO become CREATE OR REPLACE, so a rebuild is re-runnable."
+10_analytical_views.sql batch 13,R13_integer_types,,"CAST/TRY_CONVERT to TINYINT, SMALLINT, INT or BIT becomes INT64; sqlglot keeps TINYINT as UTINYINT, which BigQuery does not have."
+10_analytical_views.sql batch 13,R7_replace_objects,,"CREATE OR ALTER VIEW and SELECT ... INTO become CREATE OR REPLACE, so a rebuild is re-runnable."
+10_analytical_views.sql batch 14,R13_integer_types,,"CAST/TRY_CONVERT to TINYINT, SMALLINT, INT or BIT becomes INT64; sqlglot keeps TINYINT as UTINYINT, which BigQuery does not have."
+10_analytical_views.sql batch 14,R7_replace_objects,,"CREATE OR ALTER VIEW and SELECT ... INTO become CREATE OR REPLACE, so a rebuild is re-runnable."
+10_analytical_views.sql batch 15,R13_integer_types,,"CAST/TRY_CONVERT to TINYINT, SMALLINT, INT or BIT becomes INT64; sqlglot keeps TINYINT as UTINYINT, which BigQuery does not have."
+10_analytical_views.sql batch 15,R7_replace_objects,,"CREATE OR ALTER VIEW and SELECT ... INTO become CREATE OR REPLACE, so a rebuild is re-runnable."
+10_analytical_views.sql batch 16,R7_replace_objects,,"CREATE OR ALTER VIEW and SELECT ... INTO become CREATE OR REPLACE, so a rebuild is re-runnable."
+10_analytical_views.sql batch 17,R9_skip_session,SET,SET statements (SET NOCOUNT ON) have no BigQuery equivalent and are skipped.
+10_analytical_views.sql batch 17,R8_table_ddl,,"CREATE TABLE keeps column names and types; PRIMARY KEY, NOT NULL and other constraints are dropped (BigQuery does not enforce keys)."
+10_analytical_views.sql batch 17,R1_national_literal,1 INSERT(s) into mart.kpi_definition,T-SQL N'...' literals are generated unchanged; BigQuery has no N prefix (syntax error).
+10_analytical_views.sql batch 17,R5_insert_to_ctas,1 INSERT(s) into mart.kpi_definition,"The sandbox (no billing account) does not allow DML. Each table's INSERT statements are combined with UNION ALL into CREATE OR REPLACE TABLE ... AS SELECT, every value cast to the column type declared by the Phase 4 DDL, in DDL column order."
+11_kpi_validation.sql batch 0,R9_skip_session,SET,SET statements (SET NOCOUNT ON) have no BigQuery equivalent and are skipped.
+11_kpi_validation.sql batch 0,R2_decimal_cast,,"BigQuery rejects parameterized types in CAST. CAST(x AS DECIMAL(p,s)) rounds to s places in T-SQL, so it becomes ROUND(CAST(x AS NUMERIC), s)."
+11_kpi_validation.sql batch 0,R7_replace_objects,,"CREATE OR ALTER VIEW and SELECT ... INTO become CREATE OR REPLACE, so a rebuild is re-runnable."
+11_kpi_validation.sql batch 0,R7_replace_objects,,"CREATE OR ALTER VIEW and SELECT ... INTO become CREATE OR REPLACE, so a rebuild is re-runnable."
+11_kpi_validation.sql batch 0,R2_decimal_cast,,"BigQuery rejects parameterized types in CAST. CAST(x AS DECIMAL(p,s)) rounds to s places in T-SQL, so it becomes ROUND(CAST(x AS NUMERIC), s)."
+11_kpi_validation.sql batch 0,R7_replace_objects,,"CREATE OR ALTER VIEW and SELECT ... INTO become CREATE OR REPLACE, so a rebuild is re-runnable."
+11_kpi_validation.sql batch 0,R2_decimal_cast,,"BigQuery rejects parameterized types in CAST. CAST(x AS DECIMAL(p,s)) rounds to s places in T-SQL, so it becomes ROUND(CAST(x AS NUMERIC), s)."
+11_kpi_validation.sql batch 0,R7_replace_objects,,"CREATE OR ALTER VIEW and SELECT ... INTO become CREATE OR REPLACE, so a rebuild is re-runnable."
+11_kpi_validation.sql batch 0,R1_national_literal,,T-SQL N'...' literals are generated unchanged; BigQuery has no N prefix (syntax error).
+11_kpi_validation.sql batch 0,R7_replace_objects,,"CREATE OR ALTER VIEW and SELECT ... INTO become CREATE OR REPLACE, so a rebuild is re-runnable."
+11_kpi_validation.sql batch 1,R12_concat_to_string,,"T-SQL CONCAT converts numbers to text implicitly; BigQuery CONCAT needs STRING arguments, so non-string arguments are cast to STRING (NULLs still become empty text, as in T-SQL)."
+11_kpi_validation.sql batch 1,R1_national_literal,,T-SQL N'...' literals are generated unchanged; BigQuery has no N prefix (syntax error).
+11_kpi_validation.sql batch 1,R7_replace_objects,,"CREATE OR ALTER VIEW and SELECT ... INTO become CREATE OR REPLACE, so a rebuild is re-runnable."
+11_kpi_validation.sql batch 2,R9_skip_session,SET,SET statements (SET NOCOUNT ON) have no BigQuery equivalent and are skipped.
+11_kpi_validation.sql batch 2,R7_replace_objects,,"CREATE OR ALTER VIEW and SELECT ... INTO become CREATE OR REPLACE, so a rebuild is re-runnable."
+query,R1_national_literal,,T-SQL N'...' literals are generated unchanged; BigQuery has no N prefix (syntax error).

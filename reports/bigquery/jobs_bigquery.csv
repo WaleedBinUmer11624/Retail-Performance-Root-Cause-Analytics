@@ -1,0 +1,105 @@
+label,statement_type,bytes_processed,bytes_billed,seconds
+02_create_staging_tables.sql batch 0,CREATE_TABLE,0.0,0,4.49
+02_create_staging_tables.sql batch 1,CREATE_TABLE,0.0,0,2.77
+02_create_staging_tables.sql batch 2,CREATE_TABLE,0.0,0,6.51
+02_create_staging_tables.sql batch 3,CREATE_TABLE,0.0,0,14.3
+02_create_staging_tables.sql batch 4,CREATE_TABLE,0.0,0,19.22
+02_create_staging_tables.sql batch 5,CREATE_TABLE,0.0,0,5.43
+02_create_staging_tables.sql batch 6,CREATE_TABLE,0.0,0,9.44
+02_create_staging_tables.sql batch 7,CREATE_TABLE,0.0,0,41.55
+02_create_staging_tables.sql batch 8,DROP_TABLE,0.0,0,4.54
+02_create_staging_tables.sql batch 8,DROP_TABLE,0.0,0,3.47
+02_create_staging_tables.sql batch 8,DROP_TABLE,0.0,0,1.44
+02_create_staging_tables.sql batch 8,DROP_TABLE,0.0,0,3.3
+02_create_staging_tables.sql batch 8,DROP_TABLE,0.0,0,1.73
+02_create_staging_tables.sql batch 8,DROP_TABLE,0.0,0,2.56
+02_create_staging_tables.sql batch 8,DROP_TABLE,0.0,0,4.83
+02_create_staging_tables.sql batch 8,DROP_TABLE,0.0,0,13.09
+02_create_staging_tables.sql batch 8,CREATE_TABLE,0.0,0,2.43
+02_create_staging_tables.sql batch 8,DROP_TABLE,0.0,0,1.31
+02_create_staging_tables.sql batch 8,CREATE_TABLE,0.0,0,0.93
+reuse stg.dim_date,REUSED,0.0,0,0.0
+reuse stg.dim_store,REUSED,0.0,0,0.0
+reuse stg.dim_product,REUSED,0.0,0,0.0
+reuse stg.fact_sales,REUSED,0.0,0,0.0
+reuse stg.fact_returns,REUSED,0.0,0,0.0
+reuse stg.fact_inventory,REUSED,0.0,0,0.0
+reuse stg.fact_promotions,REUSED,0.0,0,0.0
+reuse stg.fact_targets,REUSED,0.0,0,0.0
+load recon.expected,LOAD,,0,
+03_create_dimension_tables.sql batch 0,DROP_TABLE,0.0,0,2.61
+03_create_dimension_tables.sql batch 0,DROP_TABLE,0.0,0,2.07
+03_create_dimension_tables.sql batch 0,DROP_TABLE,0.0,0,1.09
+03_create_dimension_tables.sql batch 0,DROP_TABLE,0.0,0,0.97
+03_create_dimension_tables.sql batch 0,DROP_TABLE,0.0,0,1.41
+03_create_dimension_tables.sql batch 0,DROP_TABLE,0.0,0,0.87
+03_create_dimension_tables.sql batch 0,DROP_TABLE,0.0,0,1.25
+03_create_dimension_tables.sql batch 0,DROP_TABLE,0.0,0,0.78
+03_create_dimension_tables.sql batch 0,DROP_TABLE,0.0,0,0.72
+03_create_dimension_tables.sql batch 0,DROP_TABLE,0.0,0,0.92
+03_create_dimension_tables.sql batch 1,CREATE_TABLE,0.0,0,0.96
+03_create_dimension_tables.sql batch 2,CREATE_TABLE,0.0,0,0.85
+03_create_dimension_tables.sql batch 3,CREATE_TABLE,0.0,0,0.93
+03_create_dimension_tables.sql batch 4,CREATE_TABLE,0.0,0,0.88
+03_create_dimension_tables.sql batch 5,CREATE_TABLE,0.0,0,1.57
+04_create_fact_tables.sql batch 0,DROP_TABLE,0.0,0,1.11
+04_create_fact_tables.sql batch 0,DROP_TABLE,0.0,0,1.76
+04_create_fact_tables.sql batch 0,DROP_TABLE,0.0,0,0.78
+04_create_fact_tables.sql batch 0,DROP_TABLE,0.0,0,0.95
+04_create_fact_tables.sql batch 0,DROP_TABLE,0.0,0,1.02
+04_create_fact_tables.sql batch 1,CREATE_TABLE,0.0,0,1.3
+04_create_fact_tables.sql batch 2,CREATE_TABLE,0.0,0,1.57
+04_create_fact_tables.sql batch 3,CREATE_TABLE,0.0,0,0.76
+04_create_fact_tables.sql batch 4,CREATE_TABLE,0.0,0,0.74
+04_create_fact_tables.sql batch 5,CREATE_TABLE,0.0,0,0.78
+07_load_dimensions.sql batch 1,CREATE_TABLE_AS_SELECT,18877.0,10485760,1.8
+07_load_dimensions.sql batch 2,CREATE_TABLE_AS_SELECT,82285.0,10485760,1.6
+07_load_dimensions.sql batch 3,CREATE_TABLE_AS_SELECT,2322.0,10485760,1.87
+07_load_dimensions.sql batch 4,CREATE_TABLE_AS_SELECT,93056.0,10485760,1.81
+07_load_dimensions.sql batch 5,CREATE_TABLE_AS_SELECT,4933002.0,20971520,1.91
+08_load_facts.sql batch 1,CREATE_TABLE_AS_SELECT,238213382.0,239075328,8.42
+08_load_facts.sql batch 3,CREATE_TABLE_AS_SELECT,106096984.0,106954752,3.93
+08_load_facts.sql batch 4,CREATE_TABLE_AS_SELECT,70580157.0,71303168,3.53
+08_load_facts.sql batch 6,CREATE_TABLE_AS_SELECT,132062.0,31457280,1.85
+08_load_facts.sql batch 7,CREATE_TABLE_AS_SELECT,3931370.0,41943040,2.22
+09_reconciliation.sql batch 0,CREATE_VIEW,0.0,0,0.82
+09_reconciliation.sql batch 1,DROP_TABLE,0.0,0,0.7
+09_reconciliation.sql batch 1,CREATE_TABLE_AS_SELECT,161095096.0,161480704,2.98
+09_reconciliation.sql batch 1,CREATE_TABLE_AS_SELECT,178121467.0,188743680,3.03
+09_reconciliation.sql batch 2,CREATE_VIEW,0.0,0,0.94
+10_analytical_views.sql batch 0,CREATE_VIEW,0.0,0,0.78
+10_analytical_views.sql batch 1,CREATE_VIEW,0.0,0,0.99
+10_analytical_views.sql batch 2,CREATE_VIEW,0.0,0,1.18
+10_analytical_views.sql batch 3,CREATE_VIEW,0.0,0,0.97
+10_analytical_views.sql batch 4,CREATE_VIEW,0.0,0,1.12
+10_analytical_views.sql batch 5,CREATE_VIEW,0.0,0,1.14
+10_analytical_views.sql batch 6,CREATE_VIEW,0.0,0,1.34
+10_analytical_views.sql batch 7,CREATE_VIEW,0.0,0,1.19
+10_analytical_views.sql batch 8,CREATE_VIEW,0.0,0,1.57
+10_analytical_views.sql batch 9,CREATE_VIEW,0.0,0,0.9
+10_analytical_views.sql batch 10,CREATE_VIEW,0.0,0,1.8
+10_analytical_views.sql batch 11,CREATE_VIEW,0.0,0,14.94
+10_analytical_views.sql batch 12,CREATE_VIEW,0.0,0,4.29
+10_analytical_views.sql batch 13,CREATE_VIEW,0.0,0,1.27
+10_analytical_views.sql batch 14,CREATE_VIEW,0.0,0,1.99
+10_analytical_views.sql batch 15,CREATE_VIEW,0.0,0,1.2
+10_analytical_views.sql batch 16,CREATE_VIEW,0.0,0,0.92
+10_analytical_views.sql batch 17,DROP_TABLE,0.0,0,1.72
+10_analytical_views.sql batch 17,CREATE_TABLE,0.0,0,0.99
+10_analytical_views.sql batch 17,CREATE_TABLE_AS_SELECT,0.0,0,3.69
+11_kpi_validation.sql batch 0,DROP_TABLE,0.0,0,0.88
+11_kpi_validation.sql batch 0,CREATE_TABLE_AS_SELECT,157042136.0,157286400,3.58
+11_kpi_validation.sql batch 0,DROP_TABLE,0.0,0,0.71
+11_kpi_validation.sql batch 0,CREATE_TABLE_AS_SELECT,172150572.0,173015040,3.85
+11_kpi_validation.sql batch 0,DROP_TABLE,0.0,0,0.73
+11_kpi_validation.sql batch 0,CREATE_TABLE_AS_SELECT,70807724.0,71303168,4.22
+11_kpi_validation.sql batch 0,DROP_TABLE,0.0,0,0.75
+11_kpi_validation.sql batch 0,CREATE_TABLE_AS_SELECT,43999421.0,52428800,2.95
+11_kpi_validation.sql batch 0,DROP_TABLE,0.0,0,0.82
+11_kpi_validation.sql batch 0,CREATE_TABLE_AS_SELECT,103508956.0,103809024,4.16
+11_kpi_validation.sql batch 1,CREATE_VIEW,0.0,0,1.67
+11_kpi_validation.sql batch 2,DROP_TABLE,0.0,0,2.0
+11_kpi_validation.sql batch 2,CREATE_TABLE_AS_SELECT,106936978.0,167772160,74.32
+query,SELECT,6892.0,20971520,1.16
+query,SELECT,2810.0,10485760,0.67
+query,SELECT,44017524.0,62914560,1.34
