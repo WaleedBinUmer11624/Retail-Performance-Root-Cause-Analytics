@@ -232,7 +232,7 @@ git clone https://github.com/WaleedBinUmer11624/Retail-Performance-Root-Cause-An
 cd Retail-Performance-Root-Cause-Analytics
 ```
 
-You can clone to any folder; remember its full path for Step 7.
+You can clone to any folder with a short path (up to about 80 characters, such as the one above); remember its full path for Step 7. Windows limits full file paths to 260 characters, and some Power BI files sit deep in the project.
 
 **Step 2. Create and activate a virtual environment outside the project folder.**
 
@@ -260,33 +260,32 @@ Your prompt should now start with `(rpca-venv)`. Activate it again every time yo
 pip install -r requirements.txt
 ```
 
-**Step 4. Generate the synthetic data.**
+**Step 4. Download the synthetic data.**
 
-The data is not stored on GitHub because it is large (about 230 MB). The generator recreates exactly the same data from a fixed random seed.
-
-```powershell
-python -m src.data_generation.generate_data --mode full
-python -m src.data_generation.validate_generated --data data/raw --out reports/phase2_full_validation.csv
-```
-
-This takes about 30 seconds.
-
-**Step 5. Run the analysis pipeline (Phases 3 to 10).**
-
-Run these one at a time, in order. Each phase checks the previous phase's outputs before it starts.
+The generated data is not stored in the repository because it is large (about 333 MB of CSV files). Download it from the project's GitHub release as one 51 MB zip, check that the file arrived intact, and extract it in the project folder. It creates `data\raw` (the generated extracts, read by Phase 3) and `data\powerbi` (the star-schema extracts the Power BI dashboard reads in Step 7):
 
 ```powershell
-python -m src.data_quality.run_dq                        # Phase 3, about 2 minutes
-python -m src.sql_model.run_model --engine duckdb        # Phase 4
-python -m src.analytics.run_phase5 --engine duckdb       # Phase 5, about 25 seconds
-python -m src.rca.run_phase6 --engine duckdb             # Phase 6, about 40 seconds
-python -m src.powerbi.run_phase7 --engine duckdb --extract   # Phase 7, also writes the dashboard data
-python -m src.actions.run_phase8 --engine duckdb         # Phase 8, about 25 seconds
-python -m src.monitoring.run_phase9 --engine duckdb      # Phase 9, about 50 seconds
-python -m src.forecasting.run_phase10 --engine duckdb    # Phase 10
+Invoke-WebRequest -Uri "https://github.com/WaleedBinUmer11624/Retail-Performance-Root-Cause-Analytics/releases/download/v1.0-data/brightwater_raw_data.zip" -OutFile brightwater_raw_data.zip
+(Get-FileHash brightwater_raw_data.zip -Algorithm SHA256).Hash
+Expand-Archive brightwater_raw_data.zip -DestinationPath .
 ```
 
-Results are written to `reports/phase3` to `reports/phase10`. Start with the executive summaries, for example `reports/phase6/phase6_root_cause_report.md`.
+The hash must print `90A845CB362718EFDB451A31F7CAEB6BE967BF500C2A02B1DA3C2F1590B12FC0`. If it does not, download the file again; do not use it.
+
+Mac/Linux: `curl -L -o brightwater_raw_data.zip "https://github.com/WaleedBinUmer11624/Retail-Performance-Root-Cause-Analytics/releases/download/v1.0-data/brightwater_raw_data.zip"`, then `shasum -a 256 brightwater_raw_data.zip` (same value, in lower case), then `unzip brightwater_raw_data.zip -d .`.
+
+The zip holds only the generated extracts and the Power BI model extracts, no evaluation file. Regenerating the data from scratch needs a private scenario file that is kept out of the repository by design, so the blind evaluation stays blind (see KI-09 in [docs/known_issues.md](docs/known_issues.md)). For the same reason, `src.data_generation.validate_generated` (which checks the files against the private answer key) cannot run on a clone; Phase 3 runs its own data-quality checks on the extracts.
+
+**Step 5. Run Phase 3 (data quality), then restore the committed reports.**
+
+Phase 3 profiles, cleans and validates the extracts and writes the curated data that the tests and later phases read (`data\processed\curated`). Its data is byte-identical to the governed build. It also rewrites its own report files with run details (the time and your folder path), so restore the committed reports straight after:
+
+```powershell
+python -m src.data_quality.run_dq      # Phase 3, about 2 to 6 minutes
+git checkout -- reports
+```
+
+Phases 4 to 10 do not need to be run again: their governed results are committed in `reports/phase4` to `reports/phase10`, `powerbi/` and `docs/data/`. Start with the executive summaries, for example `reports/phase6/phase6_root_cause_report.md`. Each later phase checks the earlier phases' report files byte for byte against its freeze manifest, so re-running them only works on the original build machine (see KI-10 in [docs/known_issues.md](docs/known_issues.md)).
 
 **Step 6. Run the tests.**
 
@@ -294,7 +293,7 @@ Results are written to `reports/phase3` to `reports/phase10`. Start with the exe
 python -m pytest
 ```
 
-583 tests. Expected result on Windows (verified with SQL Server available and no BigQuery project): 545 passed, 34 skipped and 4 known failures: the Phase 7 line-ending test (KI-03) and three Phase 9 tests that expect the environment at `.venv/` inside the project (KI-06). The skips: 27 need the optional sample data (`--mode sample`), 2 need evaluation-only files that are not in the repository, and 5 need a BigQuery project (see [docs/bigquery_engine.md](docs/bigquery_engine.md)). Without SQL Server, 9 paginated-report tests also skip; without the optional BigQuery client, 1 more. See [docs/known_issues.md](docs/known_issues.md).
+615 tests. Expected result on Windows, verified in a clean reviewer clone after Steps 1 to 5 (SQL Server available, no BigQuery project): 576 passed, 38 skipped and 1 known failure, the Phase 7 line-ending test (KI-03). The skips: 27 need the optional sample data (`--mode sample`), 6 need evaluation-only files that are kept out of the repository and the data release by design (KI-09), and 5 need a BigQuery project (see [docs/bigquery_engine.md](docs/bigquery_engine.md)). Without SQL Server, 9 paginated-report tests also skip; without the optional BigQuery client, 1 more; without Node.js and Chrome or Edge, the 18 browser checks. See [docs/known_issues.md](docs/known_issues.md).
 
 **Step 7. Open the Power BI dashboard (manual steps, Windows only).**
 
@@ -314,6 +313,7 @@ python -m pytest
    | DqFolder | `<your clone folder>\powerbi\dq_data` |
 
    For example, if you cloned to `C:\Retail-Performance-Root-Cause-Analytics`, ModelFolder is `C:\Retail-Performance-Root-Cause-Analytics\data\powerbi`.
+   `data\powerbi` comes from the Step 4 zip; the other three folders are part of the repository.
 4. Click **OK**, then **Apply changes** on the yellow banner. If asked about privacy levels, choose **Organizational**. If asked for file access, choose **Anonymous**.
 5. Click **Refresh** on the Home ribbon and wait for the data to load (a few minutes; the sales table is large).
 6. On Page 1, select **H2 2025** in the Period slicer. The cards should show **€9M** net revenue and **-7.18%** year on year.
@@ -367,9 +367,9 @@ Optional: the same star schema also builds in Google BigQuery (free sandbox), so
 - [ ] Project cloned
 - [ ] Virtual environment created and activated
 - [ ] Packages installed
-- [ ] Data generated and validated
+- [ ] Data downloaded, hash checked and extracted to `data/raw`
 - [ ] Phases 3 to 10 run
-- [ ] Tests run, with only the four known failures (KI-03, KI-06)
+- [ ] Tests run, with only the one known failure (KI-03)
 - [ ] Dashboard parameters set, refreshed, Page 1 shows -7.18%
 - [ ] AI assistant tests pass
 
@@ -381,13 +381,13 @@ Optional: the same star schema also builds in Google BigQuery (free sandbox), so
 |---|---|
 | `python` is not recognised | Reinstall Python and tick **"Add python.exe to PATH"**, or use `py` instead of `python`. |
 | Activation blocked in PowerShell | Run `Set-ExecutionPolicy -Scope CurrentUser RemoteSigned` once. |
-| A phase stops with a checksum or freeze error | Phases must run in order. Rerun from the phase named in the error. |
+| A phase stops with "inputs changed since the ... freeze" | Phases 3 and 4 rewrite their reports with run details (time, folder paths), so a later phase's byte-level freeze check fails even though the data is identical. Run `git checkout -- reports` and use the committed results of Phases 4 to 10. See KI-10. |
 | `test_assets_and_reports_are_reproducible` fails on Windows | Known failure: the frozen Phase 7 runner writes CRLF line endings on Windows. It passes on Linux and macOS. See KI-03 in [docs/known_issues.md](docs/known_issues.md). |
-| Three tests in `tests/test_phase9_monitoring.py` fail | Known: they expect the environment at `.venv/` inside the project, which Step 2 avoids. See KI-06. |
 | `FileNotFoundError` for `data\processed\curated\...csv` when running Phase 4 | The data has not been generated or Phase 3 has not run. Run Steps 4 and 5 in order. See KI-08 in [docs/known_issues.md](docs/known_issues.md). |
 | The web dashboard says browsers block pages opened directly from disk | Use the live page, or run `python -m http.server` in the `docs` folder and open http://localhost:8000/dashboard.html. |
 | The web dashboard shows cards but no charts | The chart library (Chart.js) could not load, for example because a network blocks cdnjs.cloudflare.com or you are offline. Refresh, or try another network. |
 | `pip install -r requirements.txt` fails | Use Python 3.14, the version the project is tested on. |
+| `git clone` reports "Filename too long" | The clone folder path is too long for Windows (260 characters in total). Clone to a short folder such as `C:\Retail-Performance-Root-Cause-Analytics`, or run `git config --global core.longpaths true` once and clone again. |
 | BigQuery tests skip with "sandbox tables expire after 60 days" | Rebuild with `python -m src.bigquery_model.run_bigquery` (see [docs/bigquery_engine.md](docs/bigquery_engine.md)). |
 | Report Builder cannot find an `rpt` view | Run `sql/reporting/01_rpt_views.sql` again: each SQL Server build recreates the database. |
 | Power BI says a file was not found | The four folder parameters in Step 7 still point to the original author's drive. Set them to your clone folder. |

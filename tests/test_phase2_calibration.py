@@ -8,7 +8,7 @@ import json
 
 import pytest
 
-from src.data_generation.config_loader import PROJECT_ROOT
+from src.data_generation.config_loader import CONFIG_DIR, PROJECT_ROOT
 
 REPORT = PROJECT_ROOT / "reports" / "phase2_calibration_report.json"
 
@@ -50,6 +50,8 @@ def test_projected_volume(report):
 
 
 @pytest.mark.slow
+@pytest.mark.skipif(not (CONFIG_DIR / "_hidden_scenario.yaml").exists(),
+                    reason="needs the private scenario file config/_hidden_scenario.yaml, kept out of the repository by design so the blind evaluation stays blind (KI-09)")
 def test_dry_run_reproduces_report(report):
     """The full pipeline is deterministic: a fresh dry run must give identical headline figures."""
     from src.data_generation.generate_data import run

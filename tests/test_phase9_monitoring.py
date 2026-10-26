@@ -13,12 +13,23 @@ from __future__ import annotations
 
 import math
 import re
+import sys
+from pathlib import Path
 
 import numpy as np
 import pandas as pd
 import pytest
 
 from src.analytics.model_access import PROJECT_ROOT, InputError
+
+# Paths inside the interpreter environment that is running these tests, wherever it lives: inside the
+# project as .venv/, or outside it as README Step 2 recommends (KI-06). The guard resolves project root
+# plus path, and an absolute path resolves to itself, so these work in both layouts.
+ENV = Path(sys.prefix).resolve()
+
+
+def env_path(*parts: str) -> str:
+    return ENV.joinpath(*parts).as_posix()
 from src.monitoring import access as AC
 from src.monitoring import alerts as AL
 from src.monitoring import backtest as BT
@@ -544,11 +555,11 @@ def test_committed_outputs_match_fresh_run(p9):
 # Python import reads from the active interpreter environment from real project-data violations.
 def test_environment_import_reads_are_not_false_positives():
     from src.monitoring.access import is_environment_read
-    for rel in (".venv/Lib/site-packages/duckdb/__pycache__/_version.cpython-314.pyc",
-                ".venv/Lib/site-packages/duckdb/__pycache__/_dbapi_type_object.cpython-314.pyc",
-                ".venv/Lib/site-packages/sqlglot/__pycache__/_typing.cpython-314.pyc",
-                ".venv/Lib/site-packages/sqlglot/__pycache__/_version.cpython-314.pyc",
-                ".venv/Lib/site-packages/numpy/_core/__pycache__/_multiarray_umath.cpython-314.pyc"):
+    for rel in (env_path("Lib", "site-packages", "duckdb", "__pycache__", "_version.cpython-314.pyc"),
+                env_path("Lib", "site-packages", "duckdb", "__pycache__", "_dbapi_type_object.cpython-314.pyc"),
+                env_path("Lib", "site-packages", "sqlglot", "__pycache__", "_typing.cpython-314.pyc"),
+                env_path("Lib", "site-packages", "sqlglot", "__pycache__", "_version.cpython-314.pyc"),
+                env_path("Lib", "site-packages", "numpy", "_core", "__pycache__", "_multiarray_umath.cpython-314.pyc")):
         assert is_environment_read(rel), rel
 
 
@@ -603,7 +614,7 @@ def test_a_pyc_suffix_alone_never_grants_exemption():
     and markers, not its extension."""
     from src.monitoring.access import is_environment_read
     # inside the environment but not an answer key -> environment read
-    assert is_environment_read(".venv/Lib/site-packages/pkg/__pycache__/_mod.cpython-314.pyc")
+    assert is_environment_read(env_path("Lib", "site-packages", "pkg", "__pycache__", "_mod.cpython-314.pyc"))
     # same extension, but in project data -> never exempt, and refused by the underscore rule
     assert not is_environment_read("data/processed/curated/_planted_issues_log.pyc")
     assert not is_environment_read("data/processed/curated/_secret.pyc")
@@ -632,13 +643,14 @@ def test_classify_opened_keeps_project_violations_and_splits_runtime_reads():
         "count": 4,
         "project_files": ["data/processed/curated/fact_sales.csv", "reports/phase3/dq_issue_log.csv"],
         "written": [],
-        "refused": [".venv/Lib/site-packages/sqlglot/__pycache__/_typing.cpython-314.pyc",
+        "refused": [env_path("Lib", "site-packages", "sqlglot", "__pycache__", "_typing.cpython-314.pyc"),
                     "data/processed/curated/_planted_issues_log.csv",
-                    ".venv/_hidden_scenario.yaml"],
+                    env_path("_hidden_scenario.yaml")],
     }
     out = classify_opened(opened)
-    assert out["refused"] == sorted(["data/processed/curated/_planted_issues_log.csv", ".venv/_hidden_scenario.yaml"])
-    assert out["runtime_reads"] == [".venv/Lib/site-packages/sqlglot/__pycache__/_typing.cpython-314.pyc"]
+    # an evaluation-only name stays refused even inside the environment
+    assert out["refused"] == sorted(["data/processed/curated/_planted_issues_log.csv", env_path("_hidden_scenario.yaml")])
+    assert out["runtime_reads"] == [env_path("Lib", "site-packages", "sqlglot", "__pycache__", "_typing.cpython-314.pyc")]
     # project-input recording is untouched
     assert out["project_files"] == opened["project_files"]
     assert out["count"] == opened["count"]

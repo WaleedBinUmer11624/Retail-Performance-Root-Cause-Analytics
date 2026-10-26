@@ -15,6 +15,18 @@ CALIB = PROJECT_ROOT / "reports" / "phase2_calibration_report.json"
 pytestmark = pytest.mark.skipif(not (RAW / "fact_sales.csv").exists(), reason="full dataset not generated")
 
 PLANTED_LOG = RAW / "_planted_issues_log.csv"
+# The data release (README Step 4) holds only the generated extracts; these evaluation-only files stay
+# private (KI-09). Only their presence is checked here.
+requires_answer_key = pytest.mark.skipif(
+    not (RAW / "_scenario_answer_key.csv").exists(),
+    reason="needs the evaluation-only answer key data/raw/_scenario_answer_key.csv, which is not in the "
+           "repository or the data release by design (KI-09)",
+)
+requires_generation_manifest = pytest.mark.skipif(
+    not (RAW / "_generation_manifest.json").exists(),
+    reason="needs data/raw/_generation_manifest.json, written only when the data is generated from the private "
+           "scenario (KI-09)",
+)
 requires_planted_log = pytest.mark.skipif(
     not PLANTED_LOG.exists(),
     reason="evaluation-only planted-issues log is not present in this checkout",
@@ -42,11 +54,13 @@ def test_full_validation_suite_passes(full_results):
     assert failed.empty, "\n" + failed.to_string(index=False)
 
 
+@requires_generation_manifest
 def test_row_counts_match_calibration_projection(calib):
     manifest = json.loads((RAW / "_generation_manifest.json").read_text())
     assert manifest["row_counts"] == calib["projected_full_row_counts"]
 
 
+@requires_answer_key
 def test_persisted_answer_key_matches_calibration(calib):
     import pandas as pd
     ak = pd.read_csv(RAW / "_scenario_answer_key.csv").set_index("behaviour")

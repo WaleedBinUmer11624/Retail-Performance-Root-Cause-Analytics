@@ -6,7 +6,13 @@ import pandas as pd
 import pytest
 
 from src.data_generation import calendar_builder, demand, dimensions, promotions, simulation
-from src.data_generation.config_loader import load_generator_config
+from src.data_generation.config_loader import CONFIG_DIR, load_generator_config
+
+# Generation reads the private scenario file, which a clone does not have (KI-09); only its presence is checked.
+requires_private_scenario = pytest.mark.skipif(
+    not (CONFIG_DIR / "_hidden_scenario.yaml").exists(),
+    reason="needs the private scenario file config/_hidden_scenario.yaml, kept out of the repository by design so the blind evaluation stays blind (KI-09)",
+)
 from src.data_generation.validate_generated import compute_kpis
 
 
@@ -107,6 +113,7 @@ def _hash_dir(path):
 
 
 @pytest.mark.slow
+@requires_private_scenario
 def test_generation_is_reproducible(tmp_path):
     """Same config + seed must give byte-identical files."""
     from src.data_generation.generate_data import run

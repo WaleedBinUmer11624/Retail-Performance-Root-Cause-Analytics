@@ -68,7 +68,10 @@ async function open(url, { width = 1280, height = 900, mobile = false, scheme = 
 }
 
 // Send one chat message through the real form and return what the page shows for it.
+// If the chat never starts (for example a script still loading), the result says so instead of throwing.
 const ask = text => evaluate(`(async () => {
+  for (let i = 0; i < 50 && !document.getElementById("cb-panel"); i++) await new Promise(r => setTimeout(r, 200));
+  if (!document.getElementById("cb-panel")) return { ms: 0, users: [], bots: [], events: [], noChat: true };
   const launcher = document.getElementById("cb-launcher");
   if (document.getElementById("cb-panel").hidden) { launcher.click(); await new Promise(r => setTimeout(r, 300)); }
   const log = document.getElementById("cb-log"); const before = log.children.length; const evBefore = window.__ev.length;
@@ -152,9 +155,11 @@ try {
   record("all_filter_combinations", "dashboard.html", combos.n === 2 * 21 * 9 && !combos.notice && combos.cards > 0 && exceptions.length === 0,
          JSON.stringify({ ...combos, exceptions }));
 
-  // 9. Opened from disk (file://): a clear instruction instead of a blank page
+  // 9. Opened from disk (file://): a clear instruction instead of a blank page. Opened offline, so the
+  // check does not depend on how quickly the chart library arrives from the CDN (a pending script can
+  // hold up the page); the blocked library is then reported by the charts notice as in check 10.
   const fileUrl = page => pathToFileURL(join(docsDir, page)).href;
-  await open(fileUrl("dashboard.html"));
+  await open(fileUrl("dashboard.html"), { block: ["*chart.umd.min.js*", "*gc.zgo.at*"] });
   // Browsers differ: some block a page opened from disk from reading its data, some allow it. Either the
   // page works, or it shows the instruction; never a blank page or an error.
   const fromDisk = await evaluate(`({ shown: !document.getElementById("load-error").hidden, text: document.getElementById("load-error").textContent,
@@ -165,7 +170,7 @@ try {
   const chatFromDisk = await ask("Why did H2 2025 revenue fall?");
   const chatOk = chatFromDisk.bots.length === 1 && (/could not be loaded/.test(chatFromDisk.bots[0])
                  || norm(chatFromDisk.bots[0]).includes(norm(qa.questions.find(q => q.id === "revenue-fall").answer)));
-  record("chat_from_disk", "dashboard.html", chatOk, chatFromDisk.bots[0]);
+  record("chat_from_disk", "dashboard.html", chatOk, chatFromDisk.noChat ? "chat did not start" : chatFromDisk.bots[0]);
 
   // 10. Chart.js blocked or offline: the cards still render and a notice explains the missing charts
   await open(`${base}/dashboard.html`, { block: ["*chart.umd.min.js*"] });

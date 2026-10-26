@@ -321,7 +321,7 @@ reached: `reconciliation_results_mssql.csv` and `kpi_validation_mssql.csv` (236 
 
 ## KI-06 Three Phase 9 tests fail when the environment is outside the project root
 
-**Status:** open; no code changed, analysis unaffected
+**Status:** resolved 2026-10-26 in the tests; no project code changed, analysis unaffected
 **Found:** full test run on an isolated copy, 2026-10-18
 **Files:** `src/monitoring/access.py` (`is_environment_read`, line 74), `tests/test_phase9_monitoring.py`
 
@@ -356,10 +356,14 @@ fail) against this entry (environment outside: these three tests fail).
 
 ### Resolution
 
-None yet. A fix belongs in the tests (build the paths from the active `sys.prefix` instead of a
-fixed `.venv/`), not in the frozen runners. Until then, the expected Windows result with the
-environment outside the project is 515 passed, 29 skipped and 4 known failures (this entry and
-KI-03).
+The three tests now build their environment paths from the running interpreter (`sys.prefix`)
+instead of a fixed `.venv/`. The guard resolves the project root plus the path, and an absolute path
+resolves to itself, so the tests work wherever the environment lives: inside the project or outside
+it as README Step 2 recommends. They test the same behaviour as before: library files inside the
+environment are runtime reads whatever their extension, project files never are, and an
+evaluation-only name stays refused even inside the environment. `src/monitoring/access.py` is not
+changed. Verified on 2026-10-26 with the environment inside the project (this machine) and outside it
+(a clean reviewer clone): 3 of 3 pass in both.
 
 ---
 
@@ -421,3 +425,64 @@ or changed; the message is only less friendly than the later phases' own checks.
 The friendly message belongs in `verify_curated`, which is frozen, so it is not changed. README
 section 9 lists the error with the fix (run Steps 4 and 5 in order), and the test above reproduces it
 in a fresh copy whose path contains spaces, which also confirms that such paths work.
+
+---
+
+## KI-09 A clone cannot regenerate the data: the scenario file is private by design
+
+**Status:** resolved for reviewers by a data release; regeneration stays private by design
+**Found:** reviewer simulation in the robustness audit, 2026-10-25
+**Files:** `src/data_generation/generate_data.py` (not changed), `README.md` (Step 4),
+`tests/test_data_generation_units.py`, `tests/test_phase2_calibration.py`, `tests/test_phase2_full_data.py`
+
+### What happens
+
+The generator plants known business events and data problems from `config/_hidden_scenario.yaml`, and
+writes an answer key, a generation manifest and a planted-issues log next to the data. These files are
+evaluation-only: they are git-ignored, and the analysis code refuses to open them, so the evaluation
+of Phases 3 to 11 stays blind. A clone therefore has none of them, and
+`python -m src.data_generation.generate_data` stops with "Configuration file not found". Without the
+data, Phases 3 to 10 cannot run. The previous README told reviewers to generate the data, which only
+worked on the author's machine.
+
+### Resolution
+
+- **Data release.** README Step 4 now downloads one zip from the project's GitHub release
+  (`brightwater_raw_data.zip`, 50,647,028 bytes, SHA-256 `90a845cb362718efdb451a31f7caeb6be967bf500c2a02b1da3c2f1590b12fc0`), checks the SHA-256 and extracts it
+  at the project root: the nine generated extracts (`data/raw`) and the eight Power BI model extracts
+  (`data/powerbi`, normally written by Phase 7 and pinned by the protected-hash check). The zip
+  contains no evaluation-only file.
+- **Generator checks.** `src.data_generation.validate_generated` compares the files with the private
+  answer key, so it cannot run on a clone; Phase 3 runs its own data-quality checks on the extracts.
+- **Tests.** Tests that need a private file now skip with a reason naming the file and this entry,
+  instead of failing: `test_generation_is_reproducible` and `test_dry_run_reproduces_report` (scenario
+  file), `test_persisted_answer_key_matches_calibration` (answer key) and
+  `test_row_counts_match_calibration_projection` (generation manifest). Only the files' presence is
+  checked; they are never opened. On the author's machine, where the files exist, the tests run as
+  before.
+
+---
+
+## KI-10 Re-running Phases 4 to 10 on another machine stops at a freeze check
+
+**Status:** open; documented, frozen code not changed
+**Found:** reviewer simulation, 2026-10-26
+**Files:** the phase runners' freeze checks (frozen), `README.md` (Steps 5 and 7, section 9)
+
+### What happens
+
+Every phase verifies the earlier phases' report files byte for byte against its freeze manifest before
+it runs. Phases 3 and 4 rewrite some of those files with run details: `reports/phase3/lineage.json`
+records the run time, runtime, Python version and the absolute data folder (the committed copy was
+built on a Linux path), and `reports/phase4/kpi_validation_duckdb.csv` lists the same rows in a
+different order. On any other machine, Phase 5 therefore stops with "Phase 1 to 4 inputs changed since
+the Phase 5 freeze", although every data SHA-256, row count and quarantine figure is identical to the
+governed build (verified in a clean reviewer copy on 2026-10-26).
+
+### Resolution
+
+A reviewer runs Phase 3 only, which produces the byte-identical curated data, and then restores the
+committed reports with `git checkout -- reports`. The governed results of Phases 4 to 10 are already
+committed (`reports/`, `powerbi/`, `docs/data/`), and the one git-ignored folder the dashboard needs,
+`data/powerbi`, is in the data release (KI-09). Making the reports reproducible byte for byte would
+need changes to frozen phase code, so the README documents this path instead.
