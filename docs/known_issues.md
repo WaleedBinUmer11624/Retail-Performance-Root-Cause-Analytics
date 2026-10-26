@@ -486,3 +486,50 @@ committed reports with `git checkout -- reports`. The governed results of Phases
 committed (`reports/`, `powerbi/`, `docs/data/`), and the one git-ignored folder the dashboard needs,
 `data/powerbi`, is in the data release (KI-09). Making the reports reproducible byte for byte would
 need changes to frozen phase code, so the README documents this path instead.
+
+---
+
+## KI-11 dbt port: what differs from the governed build
+
+**Status:** open; documented, no figure differs
+**Found:** building the dbt port, 2026-10-26
+**Files:** `dbt/`, `requirements-dbt.txt`, `tests/test_dbt_project.py`, `README.md` (Path C)
+
+### What was compared
+
+The dbt project (DuckDB through dbt-duckdb) ports the Phase 3 data-quality pipeline and the Phase 4 star
+schema. Verified on 2026-10-26: all 85 Phase 3 rules give Phase 3's exact rows_failed and rows_checked;
+the curated sales, returns, inventory, targets and promotions files are reproduced key for key and value
+for value; reconciliation is 45/45 and KPI validation 38/38; and every reconciliation metric and KPI check
+equals `reports/phase4/reconciliation_results_duckdb.csv` and `kpi_validation_duckdb.csv`. No figure
+differs. The differences below are in method, not in results.
+
+### Differences
+
+1. **Fuzzy category matching is approximated.** Phase 3 matches a misspelt category label with Python's
+   difflib (ratio 0.85 or more). SQL has no difflib, so `int_dq__category_map` scores labels with a
+   Levenshtein-based ratio instead. It maps every label in this data the same way (checked against
+   `reports/phase3/category_mapping.csv` and through the curated sales equality test); a new misspelling
+   could in principle map differently.
+2. **dbt reports 0 failures for a passing test.** A data-quality test passes only when its failure count
+   equals Phase 3's (dbt `error_if` and `warn_if` set to "!= rows_failed"), but dbt then records 0 in
+   `run_results.json`. The failing rows are therefore stored as views in schema `dq_audit`, and
+   `tests/test_dbt_project.py` counts them. The same test file proves a wrong expectation fails the build.
+3. **Three rule definitions only agree when the rule passes or in their count.** DD-01 lists missing,
+   extra and repeated dates, while Phase 3 counts the difference in row numbers; both are 0 on this data.
+   DP-05 and TC-04 count a record twice when it fails both halves of the rule, exactly as Phase 3 does.
+4. **No `THROW`.** The governed scripts stop a SQL Server build with `THROW` when reconciliation or KPI
+   validation fails; those batches are T-SQL only and are skipped in every DuckDB build. In dbt the
+   singular tests `reconciliation_45_of_45` and `kpi_validation_38_of_38` take their place.
+5. **The BigQuery target was not run.** `dbt/profiles.yml` has an optional BigQuery target (gcloud login,
+   project ID from `BQ_PROJECT_ID`); only the DuckDB target is verified.
+6. **The expectations are Phase 3's files.** Rule expectations come from
+   `reports/phase3/dq_rule_results.csv`: `dbt/scripts/generate_dq_rule_tests.py` writes them into the 71
+   generic tests, the 14 singular tests state them in their SQL, and a pytest fails if any differs.
+   The reconciliation reads `reports/phase3/lineage.json` and `kpi_reconciliation.csv`, as the governed
+   runner does.
+
+### Resolution
+
+None needed for the figures. The dbt project is a reconciled port: the governed build stays the system
+of record.

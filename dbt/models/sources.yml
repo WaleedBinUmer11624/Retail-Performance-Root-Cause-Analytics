@@ -1,0 +1,64 @@
+version: 2
+
+# Every input is a file a reviewer has after README Steps 4 and 5: the raw extracts from the data
+# release (data/raw) and the Phase 3 outputs (data/processed/curated, reports/phase3). Each file is
+# named explicitly; evaluation-only files (names starting with "_") are never read.
+sources:
+  - name: raw
+    description: "The nine approved raw extracts (Phase 3 inputs, config/dq_config.yaml section inputs), read as text."
+    meta:
+      external_location: "read_csv('{{ var('project_root') }}/data/raw/{name}.csv', all_varchar = true, header = true)"
+    tables:
+      - name: dim_store
+      - name: dim_product
+      - name: dim_date
+      - name: fact_sales
+      - name: fact_sales_late_batch
+      - name: fact_inventory
+      - name: fact_returns
+      - name: fact_promotions
+      - name: fact_targets
+
+  - name: curated
+    description: "Phase 3 curated outputs (data/processed/curated), the governed Phase 4 staging input, read as text."
+    meta:
+      external_location: "read_csv('{{ var('project_root') }}/data/processed/curated/{name}.csv', all_varchar = true, header = true)"
+    tables:
+      - name: dim_date
+      - name: dim_store
+      - name: dim_product
+      - name: fact_sales
+      - name: fact_returns
+      - name: fact_inventory
+      - name: fact_promotions
+      - name: fact_targets
+
+  - name: phase3_reports
+    description: "Phase 3 reports the governed build reconciles to (reports/phase3)."
+    tables:
+      - name: kpi_reconciliation
+        description: "Trusted KPI values; column clean_complete is the expected value."
+        meta:
+          external_location: "read_csv('{{ var('project_root') }}/reports/phase3/kpi_reconciliation.csv', header = true)"
+      - name: lineage
+        description: "Curated row counts and SHA-256 per curated file."
+        meta:
+          external_location: "read_json_auto('{{ var('project_root') }}/reports/phase3/lineage.json')"
+      - name: dq_rule_catalogue
+        description: "The 85 rule definitions with their treatment (used for each curated line's dq_status)."
+        meta:
+          external_location: "read_csv('{{ var('project_root') }}/reports/phase3/dq_rule_catalogue.csv', header = true, all_varchar = true)"
+      - name: dq_rule_results
+        description: "The 85 Phase 3 rule results. Each dbt data-quality test asserts the same rows_failed."
+        meta:
+          external_location: "read_csv('{{ var('project_root') }}/reports/phase3/dq_rule_results.csv', header = true, all_varchar = true)"
+
+  - name: phase4_reports
+    description: "Governed Phase 4 DuckDB results, used to prove the dbt build lands on the same figures."
+    tables:
+      - name: reconciliation_results_duckdb
+        meta:
+          external_location: "read_csv('{{ var('project_root') }}/reports/phase4/reconciliation_results_duckdb.csv', header = true)"
+      - name: kpi_validation_duckdb
+        meta:
+          external_location: "read_csv('{{ var('project_root') }}/reports/phase4/kpi_validation_duckdb.csv', header = true)"

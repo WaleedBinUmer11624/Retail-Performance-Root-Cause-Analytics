@@ -1,0 +1,22 @@
+# No credentials live here. The DuckDB target writes a local file (git-ignored).
+# The optional BigQuery target uses your own gcloud login (application default credentials)
+# and reads the project ID from BQ_PROJECT_ID (as the BigQuery engine does), never from a tracked file.
+# The BigQuery target is optional and was not run for this port; the DuckDB target is the verified one.
+brightwater:
+  target: duckdb
+  outputs:
+    duckdb:
+      type: duckdb
+      path: "{{ env_var('RPCA_DBT_DUCKDB_PATH', 'brightwater_dbt.duckdb') }}"
+      threads: 4
+      settings:
+        preserve_insertion_order: true
+    bigquery:
+      type: bigquery
+      method: oauth
+      project: "{{ env_var('BQ_PROJECT_ID', 'set-BQ_PROJECT_ID') }}"
+      dataset: brightwater_dbt
+      location: EU
+      threads: 4
+      maximum_bytes_billed: 2147483648      # 2 GiB per query, as config/bigquery_config.yaml
+      job_execution_timeout_seconds: 600

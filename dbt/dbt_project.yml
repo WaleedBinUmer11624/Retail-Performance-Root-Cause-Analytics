@@ -1,0 +1,107 @@
+# dbt port of the governed Brightwater layer (Phase 3 data quality + Phase 4 star schema).
+# A reconciled port, not a replacement: the governed build (src/data_quality, src/sql_model,
+# sql/) stays the system of record, and every figure here is tested against it.
+name: brightwater
+version: "1.0.0"
+config-version: 2
+profile: brightwater
+
+model-paths: ["models"]
+macro-paths: ["macros"]
+test-paths: ["tests"]
+seed-paths: ["seeds"]
+analysis-paths: ["analyses"]
+target-path: "target"
+log-path: "logs"
+clean-targets: ["target", "logs"]
+
+vars:
+  # Project root, relative to this folder. Only the files named in models/sources.yml are read;
+  # evaluation-only files (names starting with "_") never are.
+  project_root: ".."
+  # Mirrors of config/dq_config.yaml and config/sql_model_config.yaml. tests/test_dbt_project.py
+  # fails if they drift from the governed configuration.
+  period_start: "2024-01-01"
+  period_end: "2025-12-31"
+  money_tolerance: 0.011
+  price_reference_tolerance: 0.01
+  decimal_shift_ratio: [95, 105]
+  max_plausible_line_quantity: 20
+  max_discount_share: 0.60
+  target_outlier_ratio: 10
+  target_decimal_shift_band: [0.25, 4]
+  low_volume_day_ratio: 0.30
+  expected_max_lag_days: 2
+  return_policy_days: 30
+  christmas_return_window: {purchase_from: "11-15", purchase_to: "12-24", return_by: "01-31"}
+  categories: ["Home & Kitchen", "Electronics & Tech", "Health & Beauty", "Toys & Games", "Garden & Outdoor",
+               "Stationery & Crafts", "Seasonal & Gifts"]
+  regions: ["Dublin", "Leinster", "Munster", "Connacht", "Ulster (ROI)"]
+  store_formats: ["Flagship", "Standard", "Compact"]
+  return_reasons: ["Changed mind", "Faulty", "Not as described", "Damaged", "Gift return"]
+  promotion_types: ["Percent Off", "Clearance"]
+  product_status: ["Active", "Discontinued"]
+  recon_tolerances: {row_count: 0, eur: 0.01, ratio: 0.000001, yoy_pct_points: 0.0001}
+  kpi_tolerance_class:
+    sales_lines: row_count
+    gross_sales: eur
+    discount_value: eur
+    sales_revenue: eur
+    returns_value: eur
+    net_revenue: eur
+    cogs: eur
+    gross_margin: eur
+    gross_margin_pct: ratio
+    transactions: row_count
+    units: row_count
+    aov: ratio
+    upt: ratio
+    asp: ratio
+    return_rate_value: ratio
+    promo_revenue_share: ratio
+    returns_rows: row_count
+    stock_availability_2024: ratio
+    h2_2024_net_revenue: eur
+    h2_2025_net_revenue: eur
+    h2_yoy_pct: yoy_pct_points
+  # Added to every data-quality expectation; tests/test_dbt_project.py sets it to 1 to prove a wrong
+  # expectation fails the build.
+  dq_failed_offset: 0
+  curated_tables: [dim_date, dim_store, dim_product, fact_sales, fact_returns, fact_inventory, fact_promotions,
+                   fact_targets]
+
+models:
+  brightwater:
+    staging:
+      raw:
+        +schema: stg_raw
+        +materialized: table
+      curated:
+        +schema: stg
+        +materialized: table
+    intermediate:
+      dq:
+        +schema: int_dq
+        +materialized: table
+      dw:
+        +schema: dw
+        +materialized: table
+    marts:
+      +schema: mart
+      +materialized: view
+    recon:
+      +schema: recon
+      +materialized: table
+
+data_tests:
+  brightwater:
+    +severity: error
+    # Failing rows of every test are kept as a view in schema dq_audit, so each rule's rows_failed can be
+    # counted after a run (dbt itself records 0 failures for a passing test).
+    +store_failures: true
+    +store_failures_as: view
+    +schema: dq_audit
+
+flags:
+  send_anonymous_usage_stats: false
+  partial_parse: true

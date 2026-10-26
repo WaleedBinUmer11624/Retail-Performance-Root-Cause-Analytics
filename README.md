@@ -293,7 +293,7 @@ Phases 4 to 10 do not need to be run again: their governed results are committed
 python -m pytest
 ```
 
-615 tests. Expected result on Windows, verified in a clean reviewer clone after Steps 1 to 5 (SQL Server available, no BigQuery project): 576 passed, 38 skipped and 1 known failure, the Phase 7 line-ending test (KI-03). The skips: 27 need the optional sample data (`--mode sample`), 6 need evaluation-only files that are kept out of the repository and the data release by design (KI-09), and 5 need a BigQuery project (see [docs/bigquery_engine.md](docs/bigquery_engine.md)). Without SQL Server, 9 paginated-report tests also skip; without the optional BigQuery client, 1 more; without Node.js and Chrome or Edge, the 18 browser checks. See [docs/known_issues.md](docs/known_issues.md).
+628 tests. Expected result on Windows, verified in one full run on 2026-10-26 after Steps 1 to 5 with dbt installed (Path C; SQL Server available, no BigQuery project): 593 passed, 34 skipped and 1 known failure, the Phase 7 line-ending test (KI-03). The skips need the optional sample data (`--mode sample`), evaluation-only files that are kept out of the repository and the data release by design (KI-09), or a BigQuery project (see [docs/bigquery_engine.md](docs/bigquery_engine.md)). Without dbt, the 6 tests in `tests/test_dbt_project.py` that run `dbt build` skip; without SQL Server, 9 paginated-report tests also skip; without the optional BigQuery client, 1 more; without Node.js and Chrome or Edge, the 18 browser checks. See [docs/known_issues.md](docs/known_issues.md).
 
 **Step 7. Open the Power BI dashboard (manual steps, Windows only).**
 
@@ -361,6 +361,47 @@ The connection settings (server, database, driver) are in `config/project_config
 
 Optional: the same star schema also builds in Google BigQuery (free sandbox), so it runs on three engines (SQL Server, DuckDB and BigQuery), each reconciling 45/45 and 38/38. See [docs/bigquery_engine.md](docs/bigquery_engine.md). Differences between the engines are recorded in KI-07.
 
+### Path C: the dbt port (optional)
+
+`dbt/` is a reconciled port of the governed layer, not a replacement. The governed build (`src/data_quality`, `src/sql_model`, `sql/`) stays the system of record, and every figure in the dbt project is tested against it. It runs locally on DuckDB through the dbt-duckdb adapter: free, no account, nothing that expires. It reads the same files a reviewer has after Steps 4 and 5: the raw extracts from the data release and the Phase 3 outputs.
+
+| dbt layer | Schema | Governed stage it ports |
+|---|---|---|
+| `models/staging/raw` | `stg_raw` | Phase 3 inputs: the nine raw extracts, as text |
+| `models/intermediate/dq` | `int_dq` | Phase 3 data-quality stages (`src/data_quality`), in Phase 3 order |
+| `models/staging/curated` | `stg` | Phase 4 staging: the Phase 3 curated files, as text |
+| `models/intermediate/dw` | `dw` | Phase 4 star schema (`sql/transformations/07`, `08`) |
+| `models/marts` | `mart` | Phase 4 governed KPI views (`sql/analysis/10`) |
+| `models/recon` | `recon` | Phase 4 reconciliation and KPI validation (`sql/validation/09`, `11`) |
+
+The `dw`, `mart` and `recon` models are generated from the governed T-SQL by `dbt/scripts/generate_governed_models.py`, using the same T-SQL to DuckDB translation as the governed DuckDB build; a test fails if they drift from the scripts. The data-quality stages are hand-ported SQL. The generic rule tests are written from a compact spec by `dbt/scripts/generate_dq_rule_tests.py`, with each rule's expected counts read from Phase 3's results; a test fails if the committed YAML differs from what it writes.
+
+Run it in its own virtual environment, so dbt's dependencies never touch the governed one:
+
+```powershell
+python -m venv ..\rpca-dbt-venv
+..\rpca-dbt-venv\Scripts\python -m pip install -r requirements-dbt.txt
+cd dbt
+..\..\rpca-dbt-venv\Scripts\dbt build --profiles-dir .
+..\..\rpca-dbt-venv\Scripts\dbt docs generate --profiles-dir . --static
+```
+
+`dbt build` takes about 2 minutes and runs 163 nodes: 72 models, 1 seed and 90 tests. The DuckDB file (`dbt/brightwater_dbt.duckdb`), `dbt/target/` and `dbt/logs/` are git-ignored. `dbt docs generate --static` writes `dbt/target/static_index.html`, which opens straight from disk. An optional BigQuery target in `dbt/profiles.yml` uses your own gcloud login and the `BQ_PROJECT_ID` environment variable; it holds no credentials and was not run for this port.
+
+What the 90 tests prove (verified 2026-10-26):
+
+- **All 85 Phase 3 data-quality rules.** Each test returns the rule's failing rows and passes only when it finds exactly Phase 3's `rows_failed` among exactly Phase 3's `rows_checked` (from `reports/phase3/dq_rule_results.csv`). 7 rules are generic tests run directly on a raw extract (DS-01, DS-02, DS-04, DD-02, FP-01, FR-01, FI-01). 64 are generic tests over the intermediate models, because they test values after earlier treatments that needed custom SQL to port. 14 are singular tests with custom SQL (DD-01, DD-03, DP-05, DP-09, FS-26, FP-03, SCH-01, SCH-02, TC-02 to TC-07). Failing rows are kept as views in schema `dq_audit`, so each count can be inspected.
+- **The port reproduces the curated files**: every key and every value of `fact_sales` (all 24 columns, including each line's `dq_status` and `dq_rules`), `fact_returns`, `fact_inventory` and `fact_targets`, and the rows of `fact_promotions`.
+- **Reconciliation 45/45 and KPI validation 38/38**, replacing the governed scripts' `THROW` checks.
+- **The headline figures**: retail H2 2025 net revenue EUR 9,457,457.05 (-7.18% on H2 2024) and H1 2025 EUR 8,629,984.78 (+1.438%).
+- **The same figures as the governed DuckDB build**: every reconciliation metric and KPI check equals `reports/phase4`, money totals to the cent.
+
+![dbt lineage: raw extracts through the Phase 3 data-quality stages](docs/screenshots/dbt_lineage_data_quality.png)
+
+![dbt lineage: curated files through the star schema to the reconciliation](docs/screenshots/dbt_lineage_star_schema.png)
+
+`tests/test_dbt_project.py` runs `dbt build` into a temporary folder and asserts these figures. It finds dbt through the `RPCA_DBT` environment variable, a sibling `..\rpca-dbt-venv`, or `PATH`, and skips cleanly when dbt is not installed. Differences from the governed build are recorded in KI-11 in [docs/known_issues.md](docs/known_issues.md).
+
 ### Setup checklist
 
 - [ ] Python and Git installed
@@ -388,6 +429,7 @@ Optional: the same star schema also builds in Google BigQuery (free sandbox), so
 | The web dashboard shows cards but no charts | The chart library (Chart.js) could not load, for example because a network blocks cdnjs.cloudflare.com or you are offline. Refresh, or try another network. |
 | `pip install -r requirements.txt` fails | Use Python 3.14, the version the project is tested on. |
 | `git clone` reports "Filename too long" | The clone folder path is too long for Windows (260 characters in total). Clone to a short folder such as `C:\Retail-Performance-Root-Cause-Analytics`, or run `git config --global core.longpaths true` once and clone again. |
+| The 18 browser checks (`tests/test_web_robustness.py`) error with `TimeoutExpired` after 600 seconds | Run them on their own: `python -m pytest tests/test_web_robustness.py`. On 2026-10-26 they timed out in one of two full runs that included the dbt build; they passed when run alone and in the other full run (about a minute). The cause was not established. |
 | BigQuery tests skip with "sandbox tables expire after 60 days" | Rebuild with `python -m src.bigquery_model.run_bigquery` (see [docs/bigquery_engine.md](docs/bigquery_engine.md)). |
 | Report Builder cannot find an `rpt` view | Run `sql/reporting/01_rpt_views.sql` again: each SQL Server build recreates the database. |
 | Power BI says a file was not found | The four folder parameters in Step 7 still point to the original author's drive. Set them to your clone folder. |
@@ -416,6 +458,8 @@ tests/                  Automated tests (pytest)
 tmp/                    Dashboard generator and validators (build_pbip.py, validate_pbip.py,
                         tmdl_grammar_check.py) and governance checks (hash_check.py)
 requirements-bigquery.txt  Optional BigQuery dependency
+dbt/                    Optional dbt port of the governed layer (DuckDB), see Path C
+requirements-dbt.txt    Optional dbt dependencies (own virtual environment)
 ```
 
 ## 11. Data, governance and limitations

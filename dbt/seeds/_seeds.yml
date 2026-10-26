@@ -1,0 +1,11 @@
+version: 2
+
+seeds:
+  - name: dq_contract
+    description: >
+      Column contract of the nine raw extracts (config/dq_config.yaml section contract: one row per column with
+      its contract type). Read by the SCH-01 and SCH-02 tests. tests/test_dbt_project.py fails if it drifts
+      from the governed configuration.
+    config:
+      schema: int_dq
+      column_types: {table_name: varchar, column_name: varchar, contract_type: varchar}

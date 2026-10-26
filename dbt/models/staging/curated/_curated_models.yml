@@ -1,0 +1,19 @@
+version: 2
+
+models:
+  - name: stg_dim_date
+    description: "Governed stg.dim_date: the Phase 3 curated file data/processed/curated/dim_date.csv as text, blanks as NULL (sql/staging/02 and the runner step @load_staging)."
+  - name: stg_dim_store
+    description: "Governed stg.dim_store: the Phase 3 curated file data/processed/curated/dim_store.csv as text, blanks as NULL (sql/staging/02 and the runner step @load_staging)."
+  - name: stg_dim_product
+    description: "Governed stg.dim_product: the Phase 3 curated file data/processed/curated/dim_product.csv as text, blanks as NULL (sql/staging/02 and the runner step @load_staging)."
+  - name: stg_fact_sales
+    description: "Governed stg.fact_sales: the Phase 3 curated file data/processed/curated/fact_sales.csv as text, blanks as NULL (sql/staging/02 and the runner step @load_staging)."
+  - name: stg_fact_returns
+    description: "Governed stg.fact_returns: the Phase 3 curated file data/processed/curated/fact_returns.csv as text, blanks as NULL (sql/staging/02 and the runner step @load_staging)."
+  - name: stg_fact_inventory
+    description: "Governed stg.fact_inventory: the Phase 3 curated file data/processed/curated/fact_inventory.csv as text, blanks as NULL (sql/staging/02 and the runner step @load_staging)."
+  - name: stg_fact_promotions
+    description: "Governed stg.fact_promotions: the Phase 3 curated file data/processed/curated/fact_promotions.csv as text, blanks as NULL (sql/staging/02 and the runner step @load_staging)."
+  - name: stg_fact_targets
+    description: "Governed stg.fact_targets: the Phase 3 curated file data/processed/curated/fact_targets.csv as text, blanks as NULL (sql/staging/02 and the runner step @load_staging)."

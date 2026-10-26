@@ -1,0 +1,8 @@
+version: 2
+
+models:
+  - name: expected
+    description: >
+      recon.expected: the expected value and absolute tolerance of each of the 45 reconciliation metrics, taken
+      only from Phase 3 outputs (reports/phase3/lineage.json, reports/phase3/kpi_reconciliation.csv, the curated
+      files). Ported from the governed runner step @load_expected (src/sql_model/inputs.py expected_metrics).

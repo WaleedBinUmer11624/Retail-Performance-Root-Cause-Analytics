@@ -1,0 +1,11 @@
+# Optional: the dbt port of the governed layer (dbt/, README section "dbt port").
+# Install in its own virtual environment, separate from requirements.txt, so dbt's dependencies never
+# change the governed environment:
+#   python -m venv ..\rpca-dbt-venv
+#   ..\rpca-dbt-venv\Scripts\python -m pip install -r requirements-dbt.txt
+# duckdb is pinned to 1.5.6, the version the governed DuckDB build was verified with.
+dbt-core==1.12.6
+dbt-duckdb==1.11.0
+duckdb==1.5.6
+# Optional BigQuery target (profiles.yml target "bigquery"); not needed for the DuckDB build.
+# dbt-bigquery==1.12.1

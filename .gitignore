@@ -55,3 +55,11 @@ Thumbs.db
 
 # BigQuery build: local project ID (never tracked; see config/bigquery_config.yaml)
 config/bigquery_local.yaml
+
+# dbt port (dbt/): build outputs, logs and the local DuckDB file are never tracked
+dbt/target/
+dbt/logs/
+dbt/dbt_packages/
+dbt/.user.yml
+dbt/*.duckdb
+dbt/*.duckdb.wal
