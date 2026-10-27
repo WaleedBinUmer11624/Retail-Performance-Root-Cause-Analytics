@@ -180,7 +180,10 @@ def query(built, sql):
 def test_dbt_build_passes_and_every_node_ran(built):
     assert built["run"].returncode == 0, built["run"].stdout[-3000:]
     res = built["results"]
-    assert len(res) == 163, "72 models, 1 seed, 90 tests"
+    # 163 nodes (72 models, 1 seed, 90 tests) plus the on-run-start input check, which dbt records as an operation
+    kinds = [r["unique_id"].split(".")[0] for r in res]
+    assert len(res) == 164 and kinds.count("operation") == 1, kinds
+    assert kinds.count("model") == 72 and kinds.count("seed") == 1
     assert all(r["status"] in ("success", "pass") for r in res)
     tests = [r for r in res if r["unique_id"].startswith("test.")]
     assert len(tests) == 90
@@ -225,3 +228,11 @@ def test_a_wrong_expectation_fails_the_build(built):
     run = dbt_command(built["dbt"], ["test", "--select", "dq_FS_09", "--vars", "{dq_failed_offset: 1}"], built["work"])
     assert run.returncode != 0
     assert "Got 40 results, configured to fail if !=41" in run.stdout
+
+
+def test_a_second_run_over_the_same_database_passes(built):
+    """Running dbt again over an existing database (a stale file or a second build) replaces every relation."""
+    if built["run"].returncode != 0:
+        pytest.skip("build failed; reported by test_dbt_build_passes_and_every_node_ran")
+    run = dbt_command(built["dbt"], ["build", "--select", "path:models/recon", "path:tests/recon"], built["work"])
+    assert run.returncode == 0, run.stdout[-2000:]

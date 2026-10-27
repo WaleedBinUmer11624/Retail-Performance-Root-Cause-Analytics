@@ -49,7 +49,7 @@ await send("Page.enable"); await send("Runtime.enable"); await send("Network.ena
 const results = [];
 const record = (check, page, ok, detail = "") => results.push({ check, page, ok: Boolean(ok), detail: String(detail).slice(0, 400) });
 
-async function open(url, { width = 1280, height = 900, mobile = false, scheme = "light", block = [], fake = null } = {}) {
+async function open(url, { width = 1280, height = 900, mobile = false, scheme = "light", block = [], fake = null, chat = true } = {}) {
   exceptions = [];
   await send("Emulation.setDeviceMetricsOverride", { width, height, deviceScaleFactor: 1, mobile });
   await send("Emulation.setEmulatedMedia", { features: [{ name: "prefers-color-scheme", value: scheme }] });
@@ -60,11 +60,11 @@ async function open(url, { width = 1280, height = 900, mobile = false, scheme = 
   // Wait until the page has loaded and the chat has started (a slow CDN delays both), then let data load.
   for (let i = 0; i < 75; i++) {
     await sleep(200);
-    const ready = await evaluate(`document.readyState === "complete" && !!document.getElementById("cb-panel")`).catch(() => false);
+    const ready = await evaluate(`document.readyState === "complete" && (${!chat} || !!document.getElementById("cb-panel"))`).catch(() => false);
     if (ready) break;
   }
   await sleep(1500);
-  await evaluate(`window.__ev = []; document.addEventListener("chatbot:track", e => window.__ev.push(String(e.detail.name))); true`);
+  if (chat) await evaluate(`window.__ev = []; document.addEventListener("chatbot:track", e => window.__ev.push(String(e.detail.name))); true`);
 }
 
 // Send one chat message through the real form and return what the page shows for it.
@@ -193,6 +193,79 @@ try {
     const row = await evaluate(`document.getElementById("cb-row").textContent`);
     record(label, "index.html", /could not be loaded/.test(r.bots[0] || "") && hi.bots.length === 1 && /unavailable/.test(row)
            && exceptions.length === 0, JSON.stringify({ reply: r.bots[0], row, exceptions }));
+  }
+
+  // 13 to 16 (audit round 2): the dbt port in the chat and the published dbt docs.
+  // Chips added to the chat log after the last message, with where they point and whether same-site links load.
+  const newChips = before => evaluate(`(async () => {
+    const chips = [...document.querySelectorAll("#cb-log a.cb-chip")].slice(${before});
+    return Promise.all(chips.map(async c => ({ text: c.textContent, href: c.getAttribute("href"), target: c.target, rel: c.rel,
+      status: c.origin === location.origin ? (await fetch(c.href, { method: "HEAD" })).status : "external" })));
+  })()`);
+  const chipCount = () => evaluate(`document.querySelectorAll("#cb-log a.cb-chip").length`);
+  const ENGINES = "chatbot_conversational_response/engines";
+  for (const [page, scheme] of [["index.html", "light"], ["index.html", "dark"], ["dashboard.html", "light"], ["dashboard.html", "dark"]]) {
+    await open(`${base}/${page}`, { scheme });
+    // 13. The new triggers, with a typo and as a phrase, give the engines reply and both chips
+    for (const text of ["dbt", "DBT?", "lineage", "linage", "data build tool", "tell me about the dbt port", "bigquery"]) {
+      const before = await chipCount();
+      const r = await ask(text);
+      const chips = await newChips(before);
+      const dbtChip = chips.find(c => c.text === "dbt docs and lineage");
+      const ok = r.bots.length === 1 && /dbt port on DuckDB: 72 models and 90 tests/.test(r.bots[0]) && r.events.length === 1
+        && r.events[0] === ENGINES && chips.length === 2 && chips.some(c => c.text === "How it was ported")
+        && dbtChip && dbtChip.href === "dbt/" && dbtChip.status === 200 && chips.every(c => c.target === "_blank" && c.rel === "noopener");
+      record("dbt_triggers", `${page}/${scheme}`, ok, JSON.stringify({ text, events: r.events, chips }));
+    }
+    // 14. The new words do not take over other intents or near words
+    for (const [text, expected] of [["what can you do", "chatbot_conversational_response/capabilities"],
+                                    ["who are you", "chatbot_conversational_response/identity"],
+                                    ["pdf", "chatbot_conversational_response/paginated"],
+                                    ["tool", null], ["build", null], ["linear", null], ["dbx", null]]) {
+      const r = await ask(text);
+      const ok = r.bots.length === 1 && !r.events.includes(ENGINES) && (expected === null || r.events.includes(expected));
+      record("dbt_no_hijack", `${page}/${scheme}`, ok, JSON.stringify({ text, events: r.events }));
+    }
+    // 15. HTML or script typed next to a trigger is shown as text, never run, and still answered
+    for (const [i, text] of [`<script>window.__xss=7</script> dbt`, `<img src=x onerror="window.__xss=8"> lineage`].entries()) {
+      const r = await ask(text);
+      const dom = await evaluate(`({ xss: window.__xss === undefined ? null : window.__xss,
+        injected: document.querySelectorAll("#cb-log img, #cb-log script").length })`);
+      record("dbt_with_html", `${page}/${scheme}`, dom.xss === null && dom.injected === 0 && r.users[0] === text
+             && r.events.length === 1 && r.events[0] === ENGINES, JSON.stringify({ i, dom, events: r.events }));
+    }
+    // 16. A question that names an engine and a stored topic gets the governed answer, word for word, with the
+    // engine links added; a message about the engines alone still gets the engines reply
+    for (const text of ["dbt revenue fall", "why did revenue fall in the database", "which stores drove the decline in the warehouse",
+                        "lineage of the H2 revenue figure", "is the data quality lineage documented"]) {
+      const before = await chipCount();
+      const r = await ask(text);
+      const chips = await newChips(before);
+      const id = (r.events[0] || "").replace(/^ask\//, "");
+      const q = qa.questions.find(x => x.id === id);
+      const ok = r.events.length === 1 && r.events[0].startsWith("ask/") && q && norm(r.bots.join(" ")).includes(norm(q.answer))
+        && chips.some(c => c.text === "dbt docs and lineage") && chips.some(c => c.text === "How it was ported");
+      record("dbt_mixed_questions", `${page}/${scheme}`, ok, JSON.stringify({ text, events: r.events, chips: chips.map(c => c.text) }));
+    }
+    for (const text of ["which database", "which warehouse does it use", "is there a data warehouse", "what is the dbt port", "lineage"]) {
+      const r = await ask(text);
+      record("dbt_mixed_questions", `${page}/${scheme}`, r.events.length === 1 && r.events[0] === ENGINES,
+             JSON.stringify({ text, events: r.events }));
+    }
+    record("no_uncaught_errors", `${page}/${scheme}/dbt`, exceptions.length === 0, exceptions.join(" | "));
+  }
+
+  // 17. The published dbt docs: they load on a desktop and on a phone, show the project, and make no request
+  // to any other site (no tracking, no CDN)
+  for (const [label, opts] of [["desktop", {}], ["phone", { width: 390, height: 844, mobile: true }]]) {
+    requests.length = 0;
+    await open(`${base}/dbt/index.html#!/overview`, { ...opts, chat: false });
+    await sleep(1500);
+    const r = await evaluate(`({ title: document.title, overview: document.body.innerText.includes("dbt port of the governed layer"),
+      models: document.body.innerText.includes("Projects") })`);
+    const external = requests.filter(u => !u.startsWith(base) && !u.startsWith("data:") && !u.startsWith("blob:"));
+    record("dbt_docs_page", label, r.overview && exceptions.length === 0, JSON.stringify({ ...r, exceptions }));
+    record("dbt_docs_no_tracking", label, external.length === 0, JSON.stringify(external.slice(0, 5)));
   }
 
   // 12. Phone width (320 px): no sideways scrolling, and the open chat fits the screen

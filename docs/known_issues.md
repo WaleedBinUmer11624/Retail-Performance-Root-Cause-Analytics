@@ -521,8 +521,10 @@ differs. The differences below are in method, not in results.
 4. **No `THROW`.** The governed scripts stop a SQL Server build with `THROW` when reconciliation or KPI
    validation fails; those batches are T-SQL only and are skipped in every DuckDB build. In dbt the
    singular tests `reconciliation_45_of_45` and `kpi_validation_38_of_38` take their place.
-5. **The BigQuery target was not run.** `dbt/profiles.yml` has an optional BigQuery target (gcloud login,
-   project ID from `BQ_PROJECT_ID`); only the DuckDB target is verified.
+5. **DuckDB only.** The models read the CSV files with DuckDB's `read_csv` and use DuckDB SQL, so the
+   port cannot run on another adapter. The `bigquery` target in `dbt/profiles.yml` (gcloud login, project
+   ID from `BQ_PROJECT_ID`) therefore stops at parse time, before any connection, with a message pointing
+   to the BigQuery build of the star schema (`src/bigquery_model`).
 6. **The expectations are Phase 3's files.** Rule expectations come from
    `reports/phase3/dq_rule_results.csv`: `dbt/scripts/generate_dq_rule_tests.py` writes them into the 71
    generic tests, the 14 singular tests state them in their SQL, and a pytest fails if any differs.
@@ -533,3 +535,26 @@ differs. The differences below are in method, not in results.
 
 None needed for the figures. The dbt project is a reconciled port: the governed build stays the system
 of record.
+
+---
+
+## KI-12 Phase 3 without the data release stops with a raw Python traceback
+
+**Status:** open; documented, frozen code not changed
+**Found:** robustness audit round 2, 2026-10-27
+**Files:** `src/data_quality/run_dq.py` (frozen: its code hashes are recorded in `reports/phase3/lineage.json`),
+`README.md` (Step 4 and section 9), `dbt/macros/check_inputs.sql`
+
+### What happens
+
+If Step 4 is skipped, or the zip is extracted into a subfolder (Windows Explorer's Extract All creates
+`brightwater_raw_data\data\raw`), Phase 3 stops with a Python traceback ending in
+`FileNotFoundError: ... data\raw\dim_store.csv`. The message names the missing file, but not the cause.
+Nothing is written. This is the Phase 3 counterpart of KI-08.
+
+### Resolution
+
+Phase 3 is frozen, so its message is not changed. README Step 4 now says to extract with the command in the
+project folder itself (with `-Force` and `unzip -o`, so a second extract works), and section 9 has a row for
+this error. The dbt port, which is not frozen, checks its inputs before any model runs and names the cause,
+including a zip extracted into a subfolder (`tests/test_robustness_round2.py`).

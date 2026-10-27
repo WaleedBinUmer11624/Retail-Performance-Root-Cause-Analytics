@@ -63,3 +63,6 @@ dbt/dbt_packages/
 dbt/.user.yml
 dbt/*.duckdb
 dbt/*.duckdb.wal
+# the same file when dbt is started from the project root by mistake
+/brightwater_dbt.duckdb
+/brightwater_dbt.duckdb.wal

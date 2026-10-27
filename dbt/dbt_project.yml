@@ -5,6 +5,12 @@ name: brightwater
 version: "1.0.0"
 config-version: 2
 profile: brightwater
+# 1.10 or later: the generic tests use the arguments: property.
+require-dbt-version: [">=1.10.0", "<2.0.0"]
+
+# Stop with one plain instruction when the inputs are missing or dbt runs from the wrong folder.
+on-run-start:
+  - "{{ check_inputs() }}"
 
 model-paths: ["models"]
 macro-paths: ["macros"]

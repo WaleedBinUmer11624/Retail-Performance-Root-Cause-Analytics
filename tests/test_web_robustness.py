@@ -3,8 +3,9 @@
 The pages are served from docs/ by a local HTTP server on a free port, and a temporary Chrome profile
 is used, so nothing in the repository or the user's own browser is touched. The checks cover hostile
 and unusual chat input, the page opened from disk, a blocked chart library, corrupted data files, a
-320 px phone screen, every filter combination, and every governed answer word for word. Skips cleanly
-when Node.js or Chrome/Edge is not installed.
+320 px phone screen, every filter combination, every governed answer word for word, the dbt-port chat
+triggers (no hijacking of other intents), and the published dbt docs on a desktop and a phone with no
+request to any other site. Skips cleanly when Node.js or Chrome/Edge is not installed.
 """
 import functools
 import http.server
@@ -24,7 +25,10 @@ SCRIPT = ROOT / "tmp" / "web_robustness_check.mjs"
 CHECKS = ["html_in_chat_is_text", "long_input", "non_latin_input", "rapid_sends", "whitespace_ignored",
           "governed_answer_unchanged", "analytics_no_typed_text", "no_uncaught_errors", "all_filter_combinations",
           "dashboard_from_disk", "chat_from_disk", "chart_library_blocked", "dashboard_json_corrupt",
-          "dashboard_json_incomplete", "qa_json_corrupt", "qa_json_incomplete", "phone_320px"]
+          "dashboard_json_incomplete", "qa_json_corrupt", "qa_json_incomplete", "phone_320px",
+          # audit round 2: the dbt port in the chat and the published dbt docs
+          "dbt_triggers", "dbt_no_hijack", "dbt_with_html", "dbt_mixed_questions", "dbt_docs_page",
+          "dbt_docs_no_tracking"]
 
 
 def _browser() -> str | None:
